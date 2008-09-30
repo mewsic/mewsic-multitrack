@@ -1,0 +1,97 @@
+<song>
+  <user>BillieJean</user>       
+  <author>Guns'n'Roses</author>     
+  <title>Don't Cry</title>     
+  <instruments>4</instruments>  
+  <genre>908923416</genre>     
+	<bpm>60</bpm>        
+	<tone>A</tone>       
+	<description>Cover</description>
+	<rating>3.0</rating>     
+  <id>2</id>         
+  <filename>/audio/f86d2c7df38f0f4f692ad2913cccf14126b95461.mp3</filename>
+      <siblings type="direct">
+       
+    </siblings>
+    <siblings type="indirect">
+       
+    </siblings>
+        <tracks>
+              <track>
+  <user>BillieJean</user>       
+  <author>Guns'n'Roses</author>     
+  <title>Don't Cry</title>     
+  <instrument>986324941</instrument>  
+  <genre>Hard Rock</genre>     
+	<bpm>60</bpm>        
+	<tone></tone>       
+	<description>Played On Epiphone Thuderbird</description>
+	<rating>3.0</rating>     
+  <id>6</id>         
+  <filename>/audio/ba0cd81a873463947e46c947d4342e62b39914a3.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>BillieJean</user>       
+  <author>Guns'n'Roses</author>     
+  <title>Don't Cry</title>     
+  <instrument>395600960</instrument>  
+  <genre>Hard Rock</genre>     
+	<bpm>60</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>7</id>         
+  <filename>/audio/dad95e6eca025a18c0f5c539b77b38b1c1561659.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>BillieJean</user>       
+  <author>Guns'n'Roses</author>     
+  <title>Don't Cry</title>     
+  <instrument>986324943</instrument>  
+  <genre>Hard Rock</genre>     
+	<bpm>60</bpm>        
+	<tone></tone>       
+	<description>Played On GIBSON SG</description>
+	<rating>5.0</rating>     
+  <id>8</id>         
+  <filename>/audio/6db32cc3083e803f50b5c0de94406faf8d4ad494.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>BillieJean</user>       
+  <author>Guns'n'Roses</author>     
+  <title>Don't Cry</title>     
+  <instrument>986324943</instrument>  
+  <genre>Hard Rock</genre>     
+	<bpm>60</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>5.0</rating>     
+  <id>9</id>         
+  <filename>/audio/0c95db3b2a16e469e7004bc09eef6f213ae10e7f.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>BillieJean</user>       
+  <author>Guns'n'Roses</author>     
+  <title>Don't Cry</title>     
+  <instrument>986324935</instrument>  
+  <genre>Hard Rock</genre>     
+	<bpm>60</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>5.0</rating>     
+  <id>10</id>         
+  <filename>/audio/5818fa2f12a568e1f72a8590b7917a518fe1ce03.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+          </tracks>    
+  </song>
+  

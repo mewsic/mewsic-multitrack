@@ -1,0 +1,172 @@
+<song>
+  <user>BillieJean</user>       
+  <author>The Beatles</author>     
+  <title>Girl</title>     
+  <instruments>4</instruments>  
+  <genre>831871872</genre>     
+	<bpm>130</bpm>        
+	<tone>E</tone>       
+	<description>Cover</description>
+	<rating>2.5</rating>     
+  <id>14</id>         
+  <filename>/audio/7249544635966e609f4a8290c366a477f6527805.mp3</filename>
+      <siblings type="direct">
+      <song>
+  <user>al540</user>       
+  <author>The Beatles</author>     
+  <title>Girl</title>     
+  <instruments>4</instruments>  
+  <genre>1062813928</genre>     
+	<bpm>100</bpm>        
+	<tone>E</tone>       
+	<description>Cover</description>
+	<rating>5.0</rating>     
+  <id>1138</id>         
+  <filename>/audio/14b21beaa0a15070ac9fe49c6f005267.mp3</filename>
+        <tracks>
+              <track>
+  <user>NDSTR</user>       
+  <author>The Beatles</author>     
+  <title>Girl</title>     
+  <instrument>395600960</instrument>  
+  <genre>Emo-Core</genre>     
+	<bpm>100</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>1.0</rating>     
+  <id>347</id>         
+  <filename>/audio/43acb4d8ff4b7e20af92ca31a9766d24.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>al540</user>       
+  <author>The Beatles</author>     
+  <title>Girl</title>     
+  <instrument>986324941</instrument>  
+  <genre>Emo-Core</genre>     
+	<bpm>100</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>348</id>         
+  <filename>/audio/79bbf010aa96ccc038ee1b34a016b6ae.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>al540</user>       
+  <author>The Beatles</author>     
+  <title>Girl</title>     
+  <instrument>986324943</instrument>  
+  <genre>Emo-Core</genre>     
+	<bpm>100</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>349</id>         
+  <filename>/audio/c17d80309d6e5196c831c10154340d6a.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>al540</user>       
+  <author>The Beatles</author>     
+  <title>Girl</title>     
+  <instrument>986324943</instrument>  
+  <genre>Emo-Core</genre>     
+	<bpm>100</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>350</id>         
+  <filename>/audio/61d048b9a96c00ecae646f776768a0cd.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>BillieJean</user>       
+  <author>The Beatles</author>     
+  <title>Girl</title>     
+  <instrument>986324935</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>57</id>         
+  <filename>/audio/675550686f66ed98d0927117d35ce2f5a8d5d525.mp3</filename>
+  <song_count>2</song_count>
+  </track>
+    
+          </tracks>    
+  </song>
+
+    </siblings>
+    <siblings type="indirect">
+       
+    </siblings>
+        <tracks>
+              <track>
+  <user>BillieJean</user>       
+  <author>The Beatles</author>     
+  <title>Girl</title>     
+  <instrument>986324941</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description>Played On Epiphone Viola Bass</description>
+	<rating>0.0</rating>     
+  <id>54</id>         
+  <filename>/audio/55f617bf9694283b558f6aba6451f5e42a4a03f9.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>BillieJean</user>       
+  <author>The Beatles</author>     
+  <title>Girl</title>     
+  <instrument>395600960</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description>Played On Tama</description>
+	<rating>0.0</rating>     
+  <id>55</id>         
+  <filename>/audio/80316e08dc24861796ebc52e4ce81193446118bd.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>BillieJean</user>       
+  <author>The Beatles</author>     
+  <title>Girl</title>     
+  <instrument>986324943</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>56</id>         
+  <filename>/audio/ba9ba8ba0914e81958dc4c213140373406141200.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>BillieJean</user>       
+  <author>The Beatles</author>     
+  <title>Girl</title>     
+  <instrument>986324935</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>57</id>         
+  <filename>/audio/675550686f66ed98d0927117d35ce2f5a8d5d525.mp3</filename>
+  <song_count>2</song_count>
+  </track>
+    
+          </tracks>    
+  </song>
+  

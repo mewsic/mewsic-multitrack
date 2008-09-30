@@ -1,0 +1,464 @@
+<results>
+  <songs>
+  <song>
+  <user>Wii-Fi</user>       
+  <author>The Beatles</author>     
+  <title>Can't Buy Me Love</title>     
+  <instruments>4</instruments>  
+  <genre>831871872</genre>     
+	<bpm>180</bpm>        
+	<tone>E</tone>       
+	<description>Cover</description>
+	<rating>3.0</rating>     
+  <id>8</id>         
+  <filename>/audio/6934cf5a7f52c695fa2dab3ce56314cff846d75e.mp3</filename>
+		<siblings_count>1</siblings_count>
+        <tracks>
+              <track>
+  <user>Wii-Fi</user>       
+  <author>The Beatles</author>     
+  <title>Can't Buy Me Love</title>     
+  <instrument>986324941</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>2.0</rating>     
+  <id>30</id>         
+  <filename>/audio/6f1f5977e4384c730a371403f65fea15b771f5ea.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Wii-Fi</user>       
+  <author>The Beatles</author>     
+  <title>Can't Buy Me Love</title>     
+  <instrument>395600960</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>3.0</rating>     
+  <id>31</id>         
+  <filename>/audio/522a745d28ea479559e5274498e7bfb27fca2052.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Wii-Fi</user>       
+  <author>The Beatles</author>     
+  <title>Can't Buy Me Love</title>     
+  <instrument>986324943</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>5.0</rating>     
+  <id>32</id>         
+  <filename>/audio/ec32225b4830712c420243b9841e658b4c675b52.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Wii-Fi</user>       
+  <author>The Beatles</author>     
+  <title>Can't Buy Me Love</title>     
+  <instrument>986324935</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>3.0</rating>     
+  <id>33</id>         
+  <filename>/audio/73a19067e3ca17932360c11c4944666485ce360d.mp3</filename>
+  <song_count>2</song_count>
+  </track>
+    
+          </tracks>    
+  </song>
+<song>
+  <user>ShinyPeople</user>       
+  <author>The Beatles</author>     
+  <title>She's A Woman</title>     
+  <instruments>4</instruments>  
+  <genre>831871872</genre>     
+	<bpm>180</bpm>        
+	<tone>A</tone>       
+	<description>Cover</description>
+	<rating>3.0</rating>     
+  <id>9</id>         
+  <filename>/audio/50b0239824cc4a670a88355487691184e8f6e562.mp3</filename>
+		<siblings_count>1</siblings_count>
+        <tracks>
+              <track>
+  <user>ShinyPeople</user>       
+  <author>The Beatles</author>     
+  <title>She's A Woman</title>     
+  <instrument>986324941</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>2.0</rating>     
+  <id>34</id>         
+  <filename>/audio/301fde6f5282ac7e1c834a7b1ffb6133aa2758aa.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>ShinyPeople</user>       
+  <author>The Beatles</author>     
+  <title>She's A Woman</title>     
+  <instrument>395600960</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description>by Jammer69</description>
+	<rating>4.0</rating>     
+  <id>35</id>         
+  <filename>/audio/86408109f3fda92d3a69df5942bf51d1fee129f4.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>ShinyPeople</user>       
+  <author>The Beatles</author>     
+  <title>She's A Woman</title>     
+  <instrument>986324943</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>4.0</rating>     
+  <id>36</id>         
+  <filename>/audio/ee3ff9f5856219a971cf211366fd7114635a4a2e.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>ShinyPeople</user>       
+  <author>The Beatles</author>     
+  <title>She's A Woman</title>     
+  <instrument>986324935</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>2.0</rating>     
+  <id>37</id>         
+  <filename>/audio/89027c7c467ecb4807af87ac0322160483dc0015.mp3</filename>
+  <song_count>2</song_count>
+  </track>
+    
+          </tracks>    
+  </song>
+<song>
+  <user>Jorge</user>       
+  <author>The Beatles</author>     
+  <title>You Are Gonna Lose That Girl</title>     
+  <instruments>4</instruments>  
+  <genre>831871872</genre>     
+	<bpm>130</bpm>        
+	<tone>E</tone>       
+	<description>Cover</description>
+	<rating>2.5</rating>     
+  <id>11</id>         
+  <filename>/audio/f8af8f15920bce1e04d90ba45df2f9bbeb8d9173.mp3</filename>
+		<siblings_count>1</siblings_count>
+        <tracks>
+              <track>
+  <user>Jorge</user>       
+  <author>The Beatles</author>     
+  <title>You Are Gonna Lose That Girl</title>     
+  <instrument>986324941</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>4.0</rating>     
+  <id>42</id>         
+  <filename>/audio/d44f1ff19c7d41174e4794bf437a312cfb344d01.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Jorge</user>       
+  <author>The Beatles</author>     
+  <title>You Are Gonna Lose That Girl</title>     
+  <instrument>395600960</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description>Played On Tama</description>
+	<rating>2.0</rating>     
+  <id>43</id>         
+  <filename>/audio/8eb1804578edbbdd470d5c61351691268dc0e2cd.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Jorge</user>       
+  <author>The Beatles</author>     
+  <title>You Are Gonna Lose That Girl</title>     
+  <instrument>986324943</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description>Played On Gretsch/epiphone</description>
+	<rating>3.0</rating>     
+  <id>44</id>         
+  <filename>/audio/5463855109dfe88fff48c00f0e32045f66831b4b.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Jorge</user>       
+  <author>The Beatles</author>     
+  <title>You Are Gonna Lose That Girl</title>     
+  <instrument>986324935</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>2.0</rating>     
+  <id>45</id>         
+  <filename>/audio/51397612c0ba992ea3e198630c158ac639ab6159.mp3</filename>
+  <song_count>2</song_count>
+  </track>
+    
+          </tracks>    
+  </song>
+<song>
+  <user>BillieJean</user>       
+  <author>The Beatles</author>     
+  <title>Girl</title>     
+  <instruments>4</instruments>  
+  <genre>831871872</genre>     
+	<bpm>130</bpm>        
+	<tone>E</tone>       
+	<description>Cover</description>
+	<rating>2.5</rating>     
+  <id>14</id>         
+  <filename>/audio/7249544635966e609f4a8290c366a477f6527805.mp3</filename>
+		<siblings_count>1</siblings_count>
+        <tracks>
+              <track>
+  <user>BillieJean</user>       
+  <author>The Beatles</author>     
+  <title>Girl</title>     
+  <instrument>986324941</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description>Played On Epiphone Viola Bass</description>
+	<rating>0.0</rating>     
+  <id>54</id>         
+  <filename>/audio/55f617bf9694283b558f6aba6451f5e42a4a03f9.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>BillieJean</user>       
+  <author>The Beatles</author>     
+  <title>Girl</title>     
+  <instrument>395600960</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description>Played On Tama</description>
+	<rating>0.0</rating>     
+  <id>55</id>         
+  <filename>/audio/80316e08dc24861796ebc52e4ce81193446118bd.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>BillieJean</user>       
+  <author>The Beatles</author>     
+  <title>Girl</title>     
+  <instrument>986324943</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>56</id>         
+  <filename>/audio/ba9ba8ba0914e81958dc4c213140373406141200.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>BillieJean</user>       
+  <author>The Beatles</author>     
+  <title>Girl</title>     
+  <instrument>986324935</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>57</id>         
+  <filename>/audio/675550686f66ed98d0927117d35ce2f5a8d5d525.mp3</filename>
+  <song_count>2</song_count>
+  </track>
+    
+          </tracks>    
+  </song>
+<song>
+  <user>Midola</user>       
+  <author>The Beatles</author>     
+  <title>Hey Jude</title>     
+  <instruments>4</instruments>  
+  <genre>831871872</genre>     
+	<bpm>140</bpm>        
+	<tone>F</tone>       
+	<description>Cover</description>
+	<rating>4.0</rating>     
+  <id>16</id>         
+  <filename>/audio/bdd464a71d9e909b68ee9b4b578c08090f50746b.mp3</filename>
+		<siblings_count>0</siblings_count>
+        <tracks>
+              <track>
+  <user>Midola</user>       
+  <author>The Beatles</author>     
+  <title>Hey Jude</title>     
+  <instrument>986324941</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>140</bpm>        
+	<tone></tone>       
+	<description>Played On Epiphone Viola Bass</description>
+	<rating>3.0</rating>     
+  <id>61</id>         
+  <filename>/audio/ec6590f3e011a0ddfd4b63143ee5630db7ef5a08.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Midola</user>       
+  <author>The Beatles</author>     
+  <title>Hey Jude</title>     
+  <instrument>395600960</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>140</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>5.0</rating>     
+  <id>62</id>         
+  <filename>/audio/a1b326bb77ae30f3bbad0a452bb44422b288e898.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Midola</user>       
+  <author>The Beatles</author>     
+  <title>Hey Jude</title>     
+  <instrument>986324943</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>140</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>5.0</rating>     
+  <id>63</id>         
+  <filename>/audio/288d70ec5ebc1b46ee1f7d65724d6d90a087e942.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Midola</user>       
+  <author>The Beatles</author>     
+  <title>Hey Jude</title>     
+  <instrument>986324935</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>140</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>1.0</rating>     
+  <id>64</id>         
+  <filename>/audio/4fd806c9cd80fc9416d868d2799bda3198d3cab7.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+          </tracks>    
+  </song>
+<song>
+  <user>Rastamankind</user>       
+  <author>The Beatles</author>     
+  <title>Nowhere Man</title>     
+  <instruments>4</instruments>  
+  <genre>831871872</genre>     
+	<bpm>120</bpm>        
+	<tone>E</tone>       
+	<description>Cover</description>
+	<rating>2.0</rating>     
+  <id>18</id>         
+  <filename>/audio/062d74d6c1ecbf3c0234a68eb11a908ce3765d9b.mp3</filename>
+		<siblings_count>2</siblings_count>
+        <tracks>
+              <track>
+  <user>Rastamankind</user>       
+  <author>The Beatles</author>     
+  <title>Nowhere Man</title>     
+  <instrument>986324941</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>120</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>68</id>         
+  <filename>/audio/bc7869a1f6fedead9445f069a889ff249fdac713.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Rastamankind</user>       
+  <author>The Beatles</author>     
+  <title>Nowhere Man</title>     
+  <instrument>395600960</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>120</bpm>        
+	<tone></tone>       
+	<description>Played On Tama</description>
+	<rating>2.0</rating>     
+  <id>69</id>         
+  <filename>/audio/fbaa89984f4b65e1dfe3e3475d338db2b57ddd5d.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Rastamankind</user>       
+  <author>The Beatles</author>     
+  <title>Nowhere Man</title>     
+  <instrument>986324943</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>120</bpm>        
+	<tone></tone>       
+	<description>Played On Gretsch/epiphone</description>
+	<rating>3.0</rating>     
+  <id>70</id>         
+  <filename>/audio/2fff616f3e4654cc254ebf1554b89ed0cf5861ec.mp3</filename>
+  <song_count>3</song_count>
+  </track>
+    
+              <track>
+  <user>Rastamankind</user>       
+  <author>The Beatles</author>     
+  <title>Nowhere Man</title>     
+  <instrument>986324935</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>120</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>71</id>         
+  <filename>/audio/88d2e6f7a6877e5b3315693395fd32e4efec6b23.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+          </tracks>    
+  </song>
+
+</songs>
+  <tracks>
+   
+</tracks>
+</results>

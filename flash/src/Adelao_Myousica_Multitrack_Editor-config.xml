@@ -1,0 +1,37 @@
+<flex-config>
+
+
+
+	<!-- ============= -->
+	<!-- = Meta data = -->
+	<!-- ============= -->
+
+	<metadata>
+		<title>Myousica Multitrack Editor</title>
+		<description></description>
+		<publisher>Adelao Group</publisher>
+		<creator>Vaclav Vancura (vaclav.vancura.org)</creator>
+		<language>EN</language>
+	</metadata>
+
+
+
+	<!-- ============================ -->
+	<!-- = Compiler override config = -->
+	<!-- ============================ -->
+
+	<compiler>
+		<accessible>false</accessible>
+    	<debug>false</debug>
+		<optimize>true</optimize>
+		<library-path>
+			<path-element>../lib/swc</path-element>
+			<path-element>/Developer/Applications/FlexSDK3/frameworks/libs</path-element>
+			<path-element>/Developer/Applications/FlexSDK3/frameworks/libs/player</path-element>
+			<path-element>/Developer/Applications/FlexSDK3/frameworks/locale/en_US</path-element>
+		</library-path>
+	</compiler>
+
+
+
+</flex-config>

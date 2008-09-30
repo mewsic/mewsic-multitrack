@@ -1,0 +1,157 @@
+<song>
+  <user>Wii-Fi</user>       
+  <author>The Beatles</author>     
+  <title>Can't Buy Me Love</title>     
+  <instruments>4</instruments>  
+  <genre>831871872</genre>     
+	<bpm>180</bpm>        
+	<tone>E</tone>       
+	<description>Cover</description>
+	<rating>3.0</rating>     
+  <id>8</id>         
+  <filename>/audio/6934cf5a7f52c695fa2dab3ce56314cff846d75e.mp3</filename>
+      <siblings type="direct">
+      <song>
+  <user>al540</user>       
+  <author>the Beatles</author>     
+  <title>Can't Buy Me Love</title>     
+  <instruments>4</instruments>  
+  <genre>292721413</genre>     
+	<bpm>180</bpm>        
+	<tone>E</tone>       
+	<description>Cover</description>
+	<rating>4.0</rating>     
+  <id>1126</id>         
+  <filename>/audio/0d2ac3036f3709ed3808283f3f186221.mp3</filename>
+        <tracks>
+              <track>
+  <user>al540</user>       
+  <author>the Beatles</author>     
+  <title>Can't Buy Me Love</title>     
+  <instrument>986324941</instrument>  
+  <genre>Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description>Played on Yamaha BB615</description>
+	<rating>0.0</rating>     
+  <id>341</id>         
+  <filename>/audio/c3d255cc7ec8d409942ecc8fa32167c1.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>zintunhell</user>       
+  <author>the Beatles</author>     
+  <title>Can't Buy Me Love</title>     
+  <instrument>986324943</instrument>  
+  <genre>Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>3.0</rating>     
+  <id>342</id>         
+  <filename>/audio/182449ed6ba9db722e5e185cdd447416.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>NDSTR</user>       
+  <author>the Beatles</author>     
+  <title>Can't Buy Me Love</title>     
+  <instrument>395600960</instrument>  
+  <genre>Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>4.0</rating>     
+  <id>343</id>         
+  <filename>/audio/19db432f9a879441753f845fe1275976.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Wii-Fi</user>       
+  <author>The Beatles</author>     
+  <title>Can't Buy Me Love</title>     
+  <instrument>986324935</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>3.0</rating>     
+  <id>33</id>         
+  <filename>/audio/73a19067e3ca17932360c11c4944666485ce360d.mp3</filename>
+  <song_count>2</song_count>
+  </track>
+    
+          </tracks>    
+  </song>
+
+    </siblings>
+    <siblings type="indirect">
+       
+    </siblings>
+        <tracks>
+              <track>
+  <user>Wii-Fi</user>       
+  <author>The Beatles</author>     
+  <title>Can't Buy Me Love</title>     
+  <instrument>986324941</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>2.0</rating>     
+  <id>30</id>         
+  <filename>/audio/6f1f5977e4384c730a371403f65fea15b771f5ea.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Wii-Fi</user>       
+  <author>The Beatles</author>     
+  <title>Can't Buy Me Love</title>     
+  <instrument>395600960</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>3.0</rating>     
+  <id>31</id>         
+  <filename>/audio/522a745d28ea479559e5274498e7bfb27fca2052.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Wii-Fi</user>       
+  <author>The Beatles</author>     
+  <title>Can't Buy Me Love</title>     
+  <instrument>986324943</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>5.0</rating>     
+  <id>32</id>         
+  <filename>/audio/ec32225b4830712c420243b9841e658b4c675b52.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Wii-Fi</user>       
+  <author>The Beatles</author>     
+  <title>Can't Buy Me Love</title>     
+  <instrument>986324935</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>3.0</rating>     
+  <id>33</id>         
+  <filename>/audio/73a19067e3ca17932360c11c4944666485ce360d.mp3</filename>
+  <song_count>2</song_count>
+  </track>
+    
+          </tracks>    
+  </song>
+  

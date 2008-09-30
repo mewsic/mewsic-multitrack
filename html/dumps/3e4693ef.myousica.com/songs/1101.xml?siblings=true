@@ -1,0 +1,157 @@
+<song>
+  <user>al540</user>       
+  <author>the Beatles</author>     
+  <title>She Loves You</title>     
+  <instruments>4</instruments>  
+  <genre>380844773</genre>     
+	<bpm>150</bpm>        
+	<tone>G</tone>       
+	<description>Cover</description>
+	<rating>0.0</rating>     
+  <id>1101</id>         
+  <filename>/audio/53914799a141e516b22ce2b5ad419001.mp3</filename>
+      <siblings type="direct">
+      <song>
+  <user>al540</user>       
+  <author>the Beatles</author>     
+  <title>She Loves You</title>     
+  <instruments>4</instruments>  
+  <genre>26740752</genre>     
+	<bpm>150</bpm>        
+	<tone>G</tone>       
+	<description>Cover</description>
+	<rating>4.0</rating>     
+  <id>1162</id>         
+  <filename>/audio/68fb23fe14636476cad86139390045b8.mp3</filename>
+        <tracks>
+              <track>
+  <user>al540</user>       
+  <author>the Beatles</author>     
+  <title>She Loves You</title>     
+  <instrument>986324941</instrument>  
+  <genre>Latin</genre>     
+	<bpm>150</bpm>        
+	<tone></tone>       
+	<description>Played on Yamaha BB615</description>
+	<rating>0.0</rating>     
+  <id>376</id>         
+  <filename>/audio/19dfe9d700b7f164b84de826bf4d5db7.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>NDSTR</user>       
+  <author>the Beatles</author>     
+  <title>She Loves You</title>     
+  <instrument>395600960</instrument>  
+  <genre>Latin</genre>     
+	<bpm>150</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>3.0</rating>     
+  <id>377</id>         
+  <filename>/audio/c3917da83c4ae2d12d5ebb56e6be2594.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>zintunhell</user>       
+  <author>the Beatles</author>     
+  <title>She Loves You</title>     
+  <instrument>986324943</instrument>  
+  <genre>Latin</genre>     
+	<bpm>150</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>378</id>         
+  <filename>/audio/7c3e19e0b87a11a9d894a3cb1d52a88c.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>al540</user>       
+  <author>the Beatles</author>     
+  <title>She Loves You</title>     
+  <instrument>986324935</instrument>  
+  <genre>British Pop</genre>     
+	<bpm>150</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>312</id>         
+  <filename>/audio/9a2c99352229b72d232e3cb79d0a7961.mp3</filename>
+  <song_count>2</song_count>
+  </track>
+    
+          </tracks>    
+  </song>
+
+    </siblings>
+    <siblings type="indirect">
+       
+    </siblings>
+        <tracks>
+              <track>
+  <user>al540</user>       
+  <author>the Beatles</author>     
+  <title>She Loves You</title>     
+  <instrument>986324941</instrument>  
+  <genre>British Pop</genre>     
+	<bpm>150</bpm>        
+	<tone></tone>       
+	<description>Played on Epiphone Viola Bass</description>
+	<rating>0.0</rating>     
+  <id>309</id>         
+  <filename>/audio/d633556c7a142c56f1d1e1ca2f980894.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>al540</user>       
+  <author>the Beatles</author>     
+  <title>She Loves You</title>     
+  <instrument>395600960</instrument>  
+  <genre>British Pop</genre>     
+	<bpm>150</bpm>        
+	<tone></tone>       
+	<description>Played on Tama</description>
+	<rating>0.0</rating>     
+  <id>310</id>         
+  <filename>/audio/fa72e882bc3120cec7db0eb87facd66c.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>al540</user>       
+  <author>the Beatles</author>     
+  <title>She Loves You</title>     
+  <instrument>986324943</instrument>  
+  <genre>British Pop</genre>     
+	<bpm>150</bpm>        
+	<tone></tone>       
+	<description>Played on Gretsch/Epiphone</description>
+	<rating>0.0</rating>     
+  <id>311</id>         
+  <filename>/audio/b2d15e9510eca2a88301dc332613aeb9.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>al540</user>       
+  <author>the Beatles</author>     
+  <title>She Loves You</title>     
+  <instrument>986324935</instrument>  
+  <genre>British Pop</genre>     
+	<bpm>150</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>312</id>         
+  <filename>/audio/9a2c99352229b72d232e3cb79d0a7961.mp3</filename>
+  <song_count>2</song_count>
+  </track>
+    
+          </tracks>    
+  </song>
+  

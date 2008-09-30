@@ -1,0 +1,79 @@
+<track>
+  <user>al540</user>       
+  <author>Cicoria/Beneventi/Caruso</author>     
+  <title>Let It Rock</title>     
+  <instrument>986324941</instrument>  
+  <genre>Hard Rock</genre>     
+	<bpm>140</bpm>        
+	<tone></tone>       
+	<description>Played on Peavy Fury 5</description>
+	<rating>0.0</rating>     
+  <id>267</id>         
+  <filename>/audio/c1713538609eb6bfc9298c363e1d1612.mp3</filename>
+  <song_count>1</song_count>
+      <siblings type="direct">
+      <songs>
+        <song>
+  <user>al540</user>       
+  <author>Cicoria/Beneventi/Caruso</author>     
+  <title>Let It Rock</title>     
+  <instruments>3</instruments>  
+  <genre>908923416</genre>     
+	<bpm>140</bpm>        
+	<tone>A</tone>       
+	<description>Inedito</description>
+	<rating>4.0</rating>     
+  <id>1078</id>         
+  <filename>/audio/0cdea43dc7cf6533347eec7381429ded.mp3</filename>
+        <tracks>
+              <track>
+  <user>al540</user>       
+  <author>Cicoria/Beneventi/Caruso</author>     
+  <title>Let It Rock</title>     
+  <instrument>986324941</instrument>  
+  <genre>Hard Rock</genre>     
+	<bpm>140</bpm>        
+	<tone></tone>       
+	<description>Played on Peavy Fury 5</description>
+	<rating>0.0</rating>     
+  <id>267</id>         
+  <filename>/audio/c1713538609eb6bfc9298c363e1d1612.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>al540</user>       
+  <author>Cicoria/Beneventi/Caruso</author>     
+  <title>Let It Rock</title>     
+  <instrument>395600960</instrument>  
+  <genre>Hard Rock</genre>     
+	<bpm>140</bpm>        
+	<tone></tone>       
+	<description>Played on Pearl Export</description>
+	<rating>0.0</rating>     
+  <id>268</id>         
+  <filename>/audio/4639cf58fe11c4707737d55bc14c4e05.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>al540</user>       
+  <author>Cicoria/Beneventi/Caruso</author>     
+  <title>Let It Rock</title>     
+  <instrument>986324943</instrument>  
+  <genre>Hard Rock</genre>     
+	<bpm>140</bpm>        
+	<tone></tone>       
+	<description>Played on Ltd Kh3</description>
+	<rating>0.0</rating>     
+  <id>269</id>         
+  <filename>/audio/e3e18f34fab8e4512a3b5e466bd85f40.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+          </tracks>    
+  </song>
+
+      </songs>
+    </siblings>
+  </track>

@@ -1,0 +1,157 @@
+<song>
+  <user>ShinyPeople</user>       
+  <author>The Beatles</author>     
+  <title>She's A Woman</title>     
+  <instruments>4</instruments>  
+  <genre>831871872</genre>     
+	<bpm>180</bpm>        
+	<tone>A</tone>       
+	<description>Cover</description>
+	<rating>3.0</rating>     
+  <id>9</id>         
+  <filename>/audio/50b0239824cc4a670a88355487691184e8f6e562.mp3</filename>
+      <siblings type="direct">
+      <song>
+  <user>al540</user>       
+  <author>The Beatles</author>     
+  <title>She's A Woman</title>     
+  <instruments>4</instruments>  
+  <genre>337050706</genre>     
+	<bpm>180</bpm>        
+	<tone>A</tone>       
+	<description>Cover</description>
+	<rating>3.0</rating>     
+  <id>1147</id>         
+  <filename>/audio/2df404d19d67ecf00882ab4c36ca4c9c.mp3</filename>
+        <tracks>
+              <track>
+  <user>NDSTR</user>       
+  <author>The Beatles</author>     
+  <title>She's A Woman</title>     
+  <instrument>395600960</instrument>  
+  <genre>Reggae</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>4.0</rating>     
+  <id>359</id>         
+  <filename>/audio/f47db9824eaaec326dfa23316dcef117.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>al540</user>       
+  <author>The Beatles</author>     
+  <title>She's A Woman</title>     
+  <instrument>986324941</instrument>  
+  <genre>Reggae</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>360</id>         
+  <filename>/audio/1604a5d16344c9963dea940ae2fb4dc1.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>zintunhell</user>       
+  <author>The Beatles</author>     
+  <title>She's A Woman</title>     
+  <instrument>986324943</instrument>  
+  <genre>Reggae</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>361</id>         
+  <filename>/audio/e7387de15ec65db02dfe48adff5e46de.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>ShinyPeople</user>       
+  <author>The Beatles</author>     
+  <title>She's A Woman</title>     
+  <instrument>986324935</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>2.0</rating>     
+  <id>37</id>         
+  <filename>/audio/89027c7c467ecb4807af87ac0322160483dc0015.mp3</filename>
+  <song_count>2</song_count>
+  </track>
+    
+          </tracks>    
+  </song>
+
+    </siblings>
+    <siblings type="indirect">
+       
+    </siblings>
+        <tracks>
+              <track>
+  <user>ShinyPeople</user>       
+  <author>The Beatles</author>     
+  <title>She's A Woman</title>     
+  <instrument>986324941</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>2.0</rating>     
+  <id>34</id>         
+  <filename>/audio/301fde6f5282ac7e1c834a7b1ffb6133aa2758aa.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>ShinyPeople</user>       
+  <author>The Beatles</author>     
+  <title>She's A Woman</title>     
+  <instrument>395600960</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description>by Jammer69</description>
+	<rating>4.0</rating>     
+  <id>35</id>         
+  <filename>/audio/86408109f3fda92d3a69df5942bf51d1fee129f4.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>ShinyPeople</user>       
+  <author>The Beatles</author>     
+  <title>She's A Woman</title>     
+  <instrument>986324943</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>4.0</rating>     
+  <id>36</id>         
+  <filename>/audio/ee3ff9f5856219a971cf211366fd7114635a4a2e.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>ShinyPeople</user>       
+  <author>The Beatles</author>     
+  <title>She's A Woman</title>     
+  <instrument>986324935</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>180</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>2.0</rating>     
+  <id>37</id>         
+  <filename>/audio/89027c7c467ecb4807af87ac0322160483dc0015.mp3</filename>
+  <song_count>2</song_count>
+  </track>
+    
+          </tracks>    
+  </song>
+  

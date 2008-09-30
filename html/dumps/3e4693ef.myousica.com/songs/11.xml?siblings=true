@@ -1,0 +1,157 @@
+<song>
+  <user>Jorge</user>       
+  <author>The Beatles</author>     
+  <title>You Are Gonna Lose That Girl</title>     
+  <instruments>4</instruments>  
+  <genre>831871872</genre>     
+	<bpm>130</bpm>        
+	<tone>E</tone>       
+	<description>Cover</description>
+	<rating>2.5</rating>     
+  <id>11</id>         
+  <filename>/audio/f8af8f15920bce1e04d90ba45df2f9bbeb8d9173.mp3</filename>
+      <siblings type="direct">
+      <song>
+  <user>al540</user>       
+  <author>The Beatles</author>     
+  <title>You are gonna lose that girl</title>     
+  <instruments>4</instruments>  
+  <genre>224511787</genre>     
+	<bpm>130</bpm>        
+	<tone>E</tone>       
+	<description>Cover</description>
+	<rating>1.0</rating>     
+  <id>1154</id>         
+  <filename>/audio/fc9618d6dbf4393fc7a9b895f005ee1b.mp3</filename>
+        <tracks>
+              <track>
+  <user>al540</user>       
+  <author>The Beatles</author>     
+  <title>you are gonna lose that girl</title>     
+  <instrument>986324941</instrument>  
+  <genre>Punk-Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>362</id>         
+  <filename>/audio/b74b52c9bd5ed4a24358d334903dc8cc.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Dope-Man</user>       
+  <author>The Beatles</author>     
+  <title>you are gonna lose that girl</title>     
+  <instrument>395600960</instrument>  
+  <genre>Punk-Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>363</id>         
+  <filename>/audio/f36c88e5d8464cf830982eb1e2cdafef.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Dope-Man</user>       
+  <author>The Beatles</author>     
+  <title>you are gonna lose that girl</title>     
+  <instrument>986324943</instrument>  
+  <genre>Punk-Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>0.0</rating>     
+  <id>364</id>         
+  <filename>/audio/c386bfbdb6fda6479ec6edc0614f0b6c.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Jorge</user>       
+  <author>The Beatles</author>     
+  <title>You Are Gonna Lose That Girl</title>     
+  <instrument>986324935</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>2.0</rating>     
+  <id>45</id>         
+  <filename>/audio/51397612c0ba992ea3e198630c158ac639ab6159.mp3</filename>
+  <song_count>2</song_count>
+  </track>
+    
+          </tracks>    
+  </song>
+
+    </siblings>
+    <siblings type="indirect">
+       
+    </siblings>
+        <tracks>
+              <track>
+  <user>Jorge</user>       
+  <author>The Beatles</author>     
+  <title>You Are Gonna Lose That Girl</title>     
+  <instrument>986324941</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>4.0</rating>     
+  <id>42</id>         
+  <filename>/audio/d44f1ff19c7d41174e4794bf437a312cfb344d01.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Jorge</user>       
+  <author>The Beatles</author>     
+  <title>You Are Gonna Lose That Girl</title>     
+  <instrument>395600960</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description>Played On Tama</description>
+	<rating>2.0</rating>     
+  <id>43</id>         
+  <filename>/audio/8eb1804578edbbdd470d5c61351691268dc0e2cd.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Jorge</user>       
+  <author>The Beatles</author>     
+  <title>You Are Gonna Lose That Girl</title>     
+  <instrument>986324943</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description>Played On Gretsch/epiphone</description>
+	<rating>3.0</rating>     
+  <id>44</id>         
+  <filename>/audio/5463855109dfe88fff48c00f0e32045f66831b4b.mp3</filename>
+  <song_count>1</song_count>
+  </track>
+    
+              <track>
+  <user>Jorge</user>       
+  <author>The Beatles</author>     
+  <title>You Are Gonna Lose That Girl</title>     
+  <instrument>986324935</instrument>  
+  <genre>Classic Rock</genre>     
+	<bpm>130</bpm>        
+	<tone></tone>       
+	<description></description>
+	<rating>2.0</rating>     
+  <id>45</id>         
+  <filename>/audio/51397612c0ba992ea3e198630c158ac639ab6159.mp3</filename>
+  <song_count>2</song_count>
+  </track>
+    
+          </tracks>    
+  </song>
+  
