@@ -1,17 +1,18 @@
 package modals {
-	import flash.events.MouseEvent;
-	
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.controls.Button;
-	import org.vancura.graphics.QBitmap;
-	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-	
 	import application.AppEvent;
 	
 	import config.Embeds;
 	import config.Filters;
-	import config.Formats;	
+	import config.Formats;
+	
+	import controls.Button;
+	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.QBitmap;
+	import org.vancura.graphics.QTextField;
+	import org.vancura.util.addChildren;
+	
+	import flash.events.MouseEvent;	
 
 	
 	

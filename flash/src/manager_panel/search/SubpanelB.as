@@ -1,21 +1,21 @@
 package manager_panel.search {
-	import flash.events.MouseEvent;
-	import flash.text.TextFieldAutoSize;
-	
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.graphics.QBitmap;
-	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-	
-	import de.popforge.utils.sprintf;
-	
 	import config.Embeds;
 	import config.Filters;
 	import config.Formats;
 	
 	import manager_panel.search.SearchSongRow;
 	
-	import remoting.data.SongData;	
+	import remoting.data.SongData;
+	
+	import de.popforge.utils.sprintf;
+	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.QBitmap;
+	import org.vancura.graphics.QTextField;
+	import org.vancura.util.addChildren;
+	
+	import flash.events.MouseEvent;
+	import flash.text.TextFieldAutoSize;	
 
 	
 	

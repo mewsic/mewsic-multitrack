@@ -1,14 +1,4 @@
 package editor_panel.tracks {
-	import flash.display.Sprite;
-	
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.graphics.QBitmap;
-	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-	import org.vancura.util.removeChildren;
-	
-	import de.popforge.utils.sprintf;
-	
 	import application.App;
 	
 	import caurina.transitions.Tweener;
@@ -26,7 +16,17 @@ package editor_panel.tracks {
 	
 	import remoting.data.TrackData;
 	import remoting.dynamic_services.UserService;
-	import remoting.events.UserEvent;	
+	import remoting.events.UserEvent;
+	
+	import de.popforge.utils.sprintf;
+	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.QBitmap;
+	import org.vancura.graphics.QTextField;
+	import org.vancura.util.addChildren;
+	import org.vancura.util.removeChildren;
+	
+	import flash.display.Sprite;	
 
 	
 	

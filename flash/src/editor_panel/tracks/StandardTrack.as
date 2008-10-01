@@ -1,31 +1,31 @@
 package editor_panel.tracks {
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.controls.Button;
-	import org.vancura.controls.Knob;
-	import org.vancura.controls.KnobEvent;
-	import org.vancura.controls.Slider;
-	import org.vancura.controls.SliderEvent;
-	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-	import org.vancura.util.removeChildren;
-
-	import de.popforge.utils.sprintf;
-
 	import application.App;
-
+	
 	import caurina.transitions.Tweener;
-
+	
 	import config.Embeds;
 	import config.Filters;
 	import config.Formats;
 	import config.Settings;
-
+	
+	import controls.Button;
+	import controls.Knob;
+	import controls.KnobEvent;
+	import controls.Slider;
+	import controls.SliderEvent;
 	import controls.Thumbnail;
-
-	import remoting.data.TrackData;	
+	
+	import remoting.data.TrackData;
+	
+	import de.popforge.utils.sprintf;
+	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.QTextField;
+	import org.vancura.util.addChildren;
+	import org.vancura.util.removeChildren;
+	
+	import flash.events.Event;
+	import flash.events.MouseEvent;	
 
 	
 	

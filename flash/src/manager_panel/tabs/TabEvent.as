@@ -1,5 +1,5 @@
 package manager_panel.tabs {
-	import flash.events.Event;						
+	import flash.events.Event;							
 
 	
 	

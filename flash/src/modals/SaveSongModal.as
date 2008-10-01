@@ -6,6 +6,8 @@ package modals {
 	import config.Filters;
 	import config.Formats;
 	
+	import controls.Button;
+	
 	import remoting.data.SongData;
 	import remoting.dynamic_services.SongExportService;
 	import remoting.dynamic_services.SongSaveService;
@@ -16,7 +18,6 @@ package modals {
 	import de.popforge.utils.sprintf;
 	
 	import org.osflash.thunderbolt.Logger;
-	import org.vancura.controls.Button;
 	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
 	

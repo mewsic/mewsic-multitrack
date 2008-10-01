@@ -1,26 +1,26 @@
 package manager_panel.search {
-	import flash.events.MouseEvent;
-	import flash.text.TextFieldAutoSize;
-
-	import org.vancura.controls.Button;
-	import org.vancura.controls.Input;
-	import org.vancura.controls.InputEvent;
-	import org.vancura.graphics.QBitmap;
-	import org.vancura.graphics.QSprite;
-	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-
-	import com.gskinner.utils.StringUtils;
-
 	import application.App;
 	import application.AppEvent;
-
+	
 	import config.Embeds;
 	import config.Filters;
 	import config.Formats;
 	import config.Settings;
-
-	import controls.Dropbox;	
+	
+	import controls.Button;
+	import controls.Dropbox;
+	import controls.Input;
+	import controls.InputEvent;
+	
+	import com.gskinner.utils.StringUtils;
+	
+	import org.vancura.graphics.QBitmap;
+	import org.vancura.graphics.QSprite;
+	import org.vancura.graphics.QTextField;
+	import org.vancura.util.addChildren;
+	
+	import flash.events.MouseEvent;
+	import flash.text.TextFieldAutoSize;	
 
 	
 	

@@ -8,6 +8,10 @@ package application {
 	import config.Formats;
 	import config.Settings;
 	
+	import controls.Button;
+	import controls.Input;
+	import controls.Toolbar;
+	
 	import dropbox.DropboxContent;
 	
 	import editor_panel.Editor;
@@ -33,9 +37,6 @@ package application {
 	import de.popforge.utils.sprintf;
 	
 	import org.osflash.thunderbolt.Logger;
-	import org.vancura.controls.Button;
-	import org.vancura.controls.Input;
-	import org.vancura.controls.Toolbar;
 	import org.vancura.graphics.FPS;
 	import org.vancura.util.addChildren;
 	

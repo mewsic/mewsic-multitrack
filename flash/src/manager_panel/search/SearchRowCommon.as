@@ -1,5 +1,8 @@
 package manager_panel.search {
-	import flash.events.MouseEvent;
+	import caurina.transitions.Tweener;
+	
+	import config.Embeds;
+	import config.Settings;
 	
 	import org.vancura.graphics.Drawing;
 	import org.vancura.graphics.QBitmap;
@@ -7,10 +10,7 @@ package manager_panel.search {
 	import org.vancura.util.addChildren;
 	import org.vancura.util.removeChildren;
 	
-	import caurina.transitions.Tweener;
-	
-	import config.Embeds;
-	import config.Settings;	
+	import flash.events.MouseEvent;	
 
 	
 	

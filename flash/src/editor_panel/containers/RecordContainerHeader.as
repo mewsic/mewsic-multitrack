@@ -1,11 +1,11 @@
 package editor_panel.containers {
-	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-	
 	import config.Filters;
 	import config.Formats;
 	
-	import editor_panel.containers.ContainerHeaderCommon;	
+	import editor_panel.containers.ContainerHeaderCommon;
+	
+	import org.vancura.graphics.QTextField;
+	import org.vancura.util.addChildren;	
 
 	
 	

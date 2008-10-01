@@ -1,10 +1,10 @@
 package manager_panel.tabs {
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.graphics.QSprite;
+	import manager_panel.tabs.TabCommon;
 	
 	import de.popforge.utils.sprintf;
 	
-	import manager_panel.tabs.TabCommon;	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.QSprite;	
 
 	
 	

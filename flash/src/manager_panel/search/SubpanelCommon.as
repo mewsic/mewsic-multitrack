@@ -1,13 +1,13 @@
 package manager_panel.search {
-	import flash.text.TextFieldAutoSize;
+	import config.Formats;
+	
+	import de.popforge.utils.sprintf;
 	
 	import org.vancura.graphics.QSprite;
 	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
 	
-	import de.popforge.utils.sprintf;
-	
-	import config.Formats;	
+	import flash.text.TextFieldAutoSize;	
 
 	
 	

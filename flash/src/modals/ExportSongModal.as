@@ -1,16 +1,4 @@
 package modals {
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.events.TimerEvent;
-	import flash.utils.Timer;
-	
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.controls.Button;
-	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-	
-	import de.popforge.utils.sprintf;
-	
 	import application.App;
 	import application.AppEvent;
 	
@@ -19,12 +7,25 @@ package modals {
 	import config.Formats;
 	import config.Settings;
 	
+	import controls.Button;
+	
 	import remoting.data.WorkerStatusData;
 	import remoting.dynamic_services.SongExportService;
 	import remoting.dynamic_services.WorkerExportService;
 	import remoting.events.RemotingEvent;
 	import remoting.events.SongExportEvent;
-	import remoting.events.WorkerEvent;	
+	import remoting.events.WorkerEvent;
+	
+	import de.popforge.utils.sprintf;
+	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.QTextField;
+	import org.vancura.util.addChildren;
+	
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;	
 
 	
 	

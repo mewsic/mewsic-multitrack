@@ -1,24 +1,25 @@
 package dropbox {
-	import flash.display.Bitmap;
-	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
-
+	import caurina.transitions.Tweener;
+	
+	import config.Embeds;
+	
+	import controls.Slider;
+	import controls.SliderEvent;
+	
+	import dropbox.DropboxEvent;
+	import dropbox.DropboxItem;
+	
+	import de.popforge.utils.sprintf;
+	
 	import org.bytearray.display.ScaleBitmap;
 	import org.osflash.thunderbolt.Logger;
-	import org.vancura.controls.Slider;
-	import org.vancura.controls.SliderEvent;
 	import org.vancura.graphics.Drawing;
 	import org.vancura.graphics.QSprite;
 	import org.vancura.util.addChildren;
-
-	import de.popforge.utils.sprintf;
-
-	import caurina.transitions.Tweener;
-
-	import config.Embeds;
-
-	import dropbox.DropboxEvent;
-	import dropbox.DropboxItem;	
+	
+	import flash.display.Bitmap;
+	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;	
 
 	
 	

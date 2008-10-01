@@ -1,5 +1,5 @@
 package manager_panel.search {
-	import flash.events.Event;				
+	import flash.events.Event;					
 
 	
 	

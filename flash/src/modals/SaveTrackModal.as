@@ -1,20 +1,4 @@
 package modals {
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.events.TimerEvent;
-	import flash.text.TextFieldAutoSize;
-	import flash.utils.Timer;
-	
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.controls.Button;
-	import org.vancura.controls.Input;
-	import org.vancura.controls.InputEvent;
-	import org.vancura.controls.Toolbar;
-	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-	
-	import de.popforge.utils.sprintf;
-	
 	import application.App;
 	import application.AppEvent;
 	
@@ -23,7 +7,11 @@ package modals {
 	import config.Formats;
 	import config.Settings;
 	
+	import controls.Button;
 	import controls.Dropbox;
+	import controls.Input;
+	import controls.InputEvent;
+	import controls.Toolbar;
 	
 	import dropbox.DropboxEvent;
 	
@@ -36,7 +24,19 @@ package modals {
 	import remoting.events.RemotingEvent;
 	import remoting.events.TrackCreateEvent;
 	import remoting.events.TrackEncodeEvent;
-	import remoting.events.WorkerEvent;	
+	import remoting.events.WorkerEvent;
+	
+	import de.popforge.utils.sprintf;
+	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.QTextField;
+	import org.vancura.util.addChildren;
+	
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.text.TextFieldAutoSize;
+	import flash.utils.Timer;	
 
 	
 	

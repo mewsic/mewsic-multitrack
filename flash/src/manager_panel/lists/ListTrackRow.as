@@ -1,9 +1,15 @@
 package manager_panel.lists {
-	import flash.display.Bitmap;
-	import flash.events.MouseEvent;
-	import flash.text.TextFieldAutoSize;
+	import application.App;
 	
-	import org.vancura.controls.Button;
+	import config.Embeds;
+	import config.Filters;
+	import config.Formats;
+	
+	import controls.Button;
+	
+	import remoting.data.InstrumentData;
+	import remoting.data.TrackData;
+	
 	import org.vancura.graphics.Bitmapping;
 	import org.vancura.graphics.Drawing;
 	import org.vancura.graphics.QBitmap;
@@ -12,14 +18,9 @@ package manager_panel.lists {
 	import org.vancura.util.addChildren;
 	import org.vancura.util.removeChildren;
 	
-	import application.App;
-	
-	import config.Embeds;
-	import config.Filters;
-	import config.Formats;
-	
-	import remoting.data.InstrumentData;
-	import remoting.data.TrackData;	
+	import flash.display.Bitmap;
+	import flash.events.MouseEvent;
+	import flash.text.TextFieldAutoSize;	
 
 	
 	

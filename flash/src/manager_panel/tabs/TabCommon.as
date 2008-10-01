@@ -1,7 +1,10 @@
 package manager_panel.tabs {
-	import flash.display.Bitmap;
-	import flash.geom.Rectangle;
-	import flash.text.TextFieldAutoSize;
+	import caurina.transitions.Tweener;
+	
+	import config.Embeds;
+	import config.Filters;
+	import config.Formats;
+	import config.Settings;
 	
 	import org.bytearray.display.ScaleBitmap;
 	import org.vancura.graphics.Drawing;
@@ -9,12 +12,9 @@ package manager_panel.tabs {
 	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
 	
-	import caurina.transitions.Tweener;
-	
-	import config.Embeds;
-	import config.Filters;
-	import config.Formats;
-	import config.Settings;	
+	import flash.display.Bitmap;
+	import flash.geom.Rectangle;
+	import flash.text.TextFieldAutoSize;	
 
 	
 	

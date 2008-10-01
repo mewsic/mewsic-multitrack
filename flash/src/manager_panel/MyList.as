@@ -1,15 +1,4 @@
 package manager_panel {
-	import flash.events.MouseEvent;
-	import flash.text.TextFieldAutoSize;
-	
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.controls.Button;
-	import org.vancura.graphics.QBitmap;
-	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-	
-	import de.popforge.utils.sprintf;
-	
 	import application.App;
 	import application.PanelCommon;
 	
@@ -19,6 +8,8 @@ package manager_panel {
 	import config.Filters;
 	import config.Formats;
 	import config.Settings;
+	
+	import controls.Button;
 	
 	import manager_panel.lists.ListSongRow;
 	import manager_panel.lists.ListTrackRow;
@@ -30,7 +21,17 @@ package manager_panel {
 	import remoting.data.SongData;
 	import remoting.data.TrackData;
 	import remoting.dynamic_services.MyListService;
-	import remoting.events.MyListEvent;	
+	import remoting.events.MyListEvent;
+	
+	import de.popforge.utils.sprintf;
+	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.QBitmap;
+	import org.vancura.graphics.QTextField;
+	import org.vancura.util.addChildren;
+	
+	import flash.events.MouseEvent;
+	import flash.text.TextFieldAutoSize;	
 
 	
 	

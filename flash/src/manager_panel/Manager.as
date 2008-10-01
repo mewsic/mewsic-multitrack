@@ -1,8 +1,4 @@
 package manager_panel {
-	import org.vancura.util.addChildren;
-	
-	import de.popforge.utils.sprintf;
-	
 	import application.AppEvent;
 	import application.PanelCommon;
 	
@@ -12,7 +8,11 @@ package manager_panel {
 	
 	import manager_panel.MyList;
 	import manager_panel.tabs.TabEvent;
-	import manager_panel.tabs.TabManager;	
+	import manager_panel.tabs.TabManager;
+	
+	import de.popforge.utils.sprintf;
+	
+	import org.vancura.util.addChildren;	
 
 	
 	

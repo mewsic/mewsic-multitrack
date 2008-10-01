@@ -1,20 +1,4 @@
 package manager_panel.search {
-	import manager_panel.search.SearchRowCommon;
-	import flash.display.Bitmap;
-	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
-	import flash.text.TextFieldAutoSize;
-	
-	import org.bytearray.display.ScaleBitmap;
-	import org.vancura.controls.Button;
-	import org.vancura.graphics.Bitmapping;
-	import org.vancura.graphics.QBitmap;
-	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-	import org.vancura.util.removeChildren;
-	
-	import de.popforge.utils.sprintf;
-	
 	import application.App;
 	
 	import config.Embeds;
@@ -22,7 +6,25 @@ package manager_panel.search {
 	import config.Formats;
 	import config.Settings;
 	
-	import remoting.data.SongData;	
+	import controls.Button;
+	
+	import manager_panel.search.SearchRowCommon;
+	
+	import remoting.data.SongData;
+	
+	import de.popforge.utils.sprintf;
+	
+	import org.bytearray.display.ScaleBitmap;
+	import org.vancura.graphics.Bitmapping;
+	import org.vancura.graphics.QBitmap;
+	import org.vancura.graphics.QTextField;
+	import org.vancura.util.addChildren;
+	import org.vancura.util.removeChildren;
+	
+	import flash.display.Bitmap;
+	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
+	import flash.text.TextFieldAutoSize;	
 
 	
 	

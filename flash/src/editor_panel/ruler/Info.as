@@ -1,9 +1,9 @@
 package editor_panel.ruler {
+	import config.Formats;
+	
 	import org.vancura.graphics.QSprite;
 	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-	
-	import config.Formats;	
+	import org.vancura.util.addChildren;	
 
 	
 	

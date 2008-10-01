@@ -1,30 +1,4 @@
 package modals {
-	import flash.display.Bitmap;
-	import flash.events.DataEvent;
-	import flash.events.Event;
-	import flash.events.IOErrorEvent;
-	import flash.events.MouseEvent;
-	import flash.events.ProgressEvent;
-	import flash.events.SecurityErrorEvent;
-	import flash.events.TimerEvent;
-	import flash.geom.Rectangle;
-	import flash.net.FileFilter;
-	import flash.net.FileReference;
-	import flash.net.URLRequest;
-	import flash.text.TextFieldAutoSize;
-	import flash.utils.Timer;
-	
-	import org.bytearray.display.ScaleBitmap;
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.controls.Button;
-	import org.vancura.controls.Input;
-	import org.vancura.controls.InputEvent;
-	import org.vancura.controls.Toolbar;
-	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-	
-	import de.popforge.utils.sprintf;
-	
 	import application.App;
 	import application.AppEvent;
 	
@@ -35,7 +9,11 @@ package modals {
 	import config.Formats;
 	import config.Settings;
 	
+	import controls.Button;
 	import controls.Dropbox;
+	import controls.Input;
+	import controls.InputEvent;
+	import controls.Toolbar;
 	
 	import dropbox.DropboxEvent;
 	
@@ -49,7 +27,29 @@ package modals {
 	import remoting.dynamic_services.WorkerEncodeService;
 	import remoting.events.RemotingEvent;
 	import remoting.events.TrackCreateEvent;
-	import remoting.events.WorkerEvent;	
+	import remoting.events.WorkerEvent;
+	
+	import de.popforge.utils.sprintf;
+	
+	import org.bytearray.display.ScaleBitmap;
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.QTextField;
+	import org.vancura.util.addChildren;
+	
+	import flash.display.Bitmap;
+	import flash.events.DataEvent;
+	import flash.events.Event;
+	import flash.events.IOErrorEvent;
+	import flash.events.MouseEvent;
+	import flash.events.ProgressEvent;
+	import flash.events.SecurityErrorEvent;
+	import flash.events.TimerEvent;
+	import flash.geom.Rectangle;
+	import flash.net.FileFilter;
+	import flash.net.FileReference;
+	import flash.net.URLRequest;
+	import flash.text.TextFieldAutoSize;
+	import flash.utils.Timer;	
 
 	
 	

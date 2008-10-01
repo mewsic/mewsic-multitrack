@@ -1,21 +1,21 @@
 package editor_panel.sampler {
+	import application.App;
+	
+	import br.com.stimuli.loading.BulkErrorEvent;
+	import br.com.stimuli.loading.BulkLoader;
+	
+	import de.popforge.utils.sprintf;
+	
+	import com.gskinner.utils.Rnd;
+	
+	import org.osflash.thunderbolt.Logger;
+	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.ProgressEvent;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
-	import flash.media.SoundTransform;
-
-	import org.osflash.thunderbolt.Logger;
-
-	import com.gskinner.utils.Rnd;
-
-	import de.popforge.utils.sprintf;
-
-	import application.App;
-
-	import br.com.stimuli.loading.BulkErrorEvent;
-	import br.com.stimuli.loading.BulkLoader;		
+	import flash.media.SoundTransform;	
 
 	
 	

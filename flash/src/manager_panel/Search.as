@@ -1,20 +1,4 @@
 package manager_panel {
-	import flash.display.MovieClip;
-	import flash.events.MouseEvent;
-	
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.controls.Button;
-	import org.vancura.controls.Input;
-	import org.vancura.controls.InputEvent;
-	import org.vancura.graphics.Drawing;
-	import org.vancura.graphics.QBitmap;
-	import org.vancura.graphics.QSprite;
-	import org.vancura.util.addChildren;
-	
-	import com.gskinner.utils.StringUtils;
-	
-	import de.popforge.utils.sprintf;
-	
 	import application.App;
 	import application.AppEvent;
 	import application.PanelCommon;
@@ -25,6 +9,10 @@ package manager_panel {
 	import config.Filters;
 	import config.Formats;
 	import config.Settings;
+	
+	import controls.Button;
+	import controls.Input;
+	import controls.InputEvent;
 	
 	import manager_panel.search.AdvancedSearch;
 	import manager_panel.search.AdvancedSearchEvent;
@@ -37,7 +25,20 @@ package manager_panel {
 	import remoting.data.GenreData;
 	import remoting.data.InstrumentData;
 	import remoting.dynamic_services.SearchService;
-	import remoting.events.SearchEvent;	
+	import remoting.events.SearchEvent;
+	
+	import de.popforge.utils.sprintf;
+	
+	import com.gskinner.utils.StringUtils;
+	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.Drawing;
+	import org.vancura.graphics.QBitmap;
+	import org.vancura.graphics.QSprite;
+	import org.vancura.util.addChildren;
+	
+	import flash.display.MovieClip;
+	import flash.events.MouseEvent;	
 
 	
 	

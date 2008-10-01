@@ -1,18 +1,18 @@
 package progress_panel {
-	import flash.display.MovieClip;
-	import flash.text.TextFieldAutoSize;
+	import caurina.transitions.Tweener;
+	
+	import config.Embeds;
+	import config.Filters;
+	import config.Formats;
+	import config.Settings;
 	
 	import org.vancura.graphics.QSprite;
 	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
 	import org.vancura.util.removeChildren;
 	
-	import caurina.transitions.Tweener;
-	
-	import config.Embeds;
-	import config.Filters;
-	import config.Formats;
-	import config.Settings;	
+	import flash.display.MovieClip;
+	import flash.text.TextFieldAutoSize;	
 
 	
 	

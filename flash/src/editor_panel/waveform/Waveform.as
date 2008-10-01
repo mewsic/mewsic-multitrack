@@ -1,21 +1,4 @@
 package editor_panel.waveform {
-	import flash.display.BitmapData;
-	import flash.display.BlendMode;
-	import flash.events.Event;
-	import flash.text.TextFieldAutoSize;
-	
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.graphics.Drawing;
-	import org.vancura.graphics.QBitmap;
-	import org.vancura.graphics.QSprite;
-	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-	import org.vancura.util.removeChildren;
-	
-	import com.gskinner.utils.Rnd;
-	
-	import de.popforge.utils.sprintf;
-	
 	import application.App;
 	
 	import br.com.stimuli.loading.BulkLoader;
@@ -26,7 +9,24 @@ package editor_panel.waveform {
 	import config.Formats;
 	import config.Settings;
 	
-	import editor_panel.tracks.TrackCommon;		
+	import editor_panel.tracks.TrackCommon;
+	
+	import de.popforge.utils.sprintf;
+	
+	import com.gskinner.utils.Rnd;
+	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.Drawing;
+	import org.vancura.graphics.QBitmap;
+	import org.vancura.graphics.QSprite;
+	import org.vancura.graphics.QTextField;
+	import org.vancura.util.addChildren;
+	import org.vancura.util.removeChildren;
+	
+	import flash.display.BitmapData;
+	import flash.display.BlendMode;
+	import flash.events.Event;
+	import flash.text.TextFieldAutoSize;	
 
 	
 	

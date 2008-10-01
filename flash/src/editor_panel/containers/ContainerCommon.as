@@ -1,31 +1,19 @@
 package editor_panel.containers {
-	import flash.events.Event;
-
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.graphics.MorphSprite;
-	import org.vancura.graphics.QBitmap;
-	import org.vancura.graphics.QSprite;
-	import org.vancura.util.addChildren;
-
-	import com.gskinner.utils.Rnd;
-
-	import de.popforge.utils.sprintf;
-
 	import application.App;
 	import application.AppEvent;
-
+	
 	import caurina.transitions.Tweener;
-
+	
 	import config.Embeds;
 	import config.Settings;
-
+	
 	import editor_panel.tracks.RecordTrack;
 	import editor_panel.tracks.StandardTrack;
 	import editor_panel.tracks.TrackCommon;
 	import editor_panel.tracks.TrackEvent;
-
+	
 	import modals.MessageModal;
-
+	
 	import remoting.data.SongData;
 	import remoting.data.TrackData;
 	import remoting.data.UserData;
@@ -35,7 +23,19 @@ package editor_panel.containers {
 	import remoting.dynamic_services.TrackFetchService;
 	import remoting.events.RemotingEvent;
 	import remoting.events.SongFetchEvent;
-	import remoting.events.TrackFetchEvent;	
+	import remoting.events.TrackFetchEvent;
+	
+	import de.popforge.utils.sprintf;
+	
+	import com.gskinner.utils.Rnd;
+	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.MorphSprite;
+	import org.vancura.graphics.QBitmap;
+	import org.vancura.graphics.QSprite;
+	import org.vancura.util.addChildren;
+	
+	import flash.events.Event;	
 
 	
 	

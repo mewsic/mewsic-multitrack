@@ -1,14 +1,14 @@
 package editor_panel {
-	import flash.events.EventDispatcher;
-	import flash.media.Sound;
-	import flash.utils.clearTimeout;
-	import flash.utils.setTimeout;
-	
-	import org.osflash.thunderbolt.Logger;
+	import config.Embeds;
 	
 	import de.popforge.utils.sprintf;
 	
-	import config.Embeds;	
+	import org.osflash.thunderbolt.Logger;
+	
+	import flash.events.EventDispatcher;
+	import flash.media.Sound;
+	import flash.utils.clearTimeout;
+	import flash.utils.setTimeout;	
 
 	
 	

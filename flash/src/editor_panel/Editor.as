@@ -1,31 +1,4 @@
 package editor_panel {
-	import flash.display.Bitmap;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.media.SoundMixer;
-	import flash.media.SoundTransform;
-	import flash.system.Capabilities;
-	import flash.utils.ByteArray;
-	import flash.utils.clearInterval;
-	import flash.utils.clearTimeout;
-	import flash.utils.setInterval;
-	import flash.utils.setTimeout;
-	
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.controls.Button;
-	import org.vancura.controls.Input;
-	import org.vancura.controls.InputEvent;
-	import org.vancura.controls.Slider;
-	import org.vancura.controls.SliderEvent;
-	import org.vancura.controls.Toolbar;
-	import org.vancura.controls.VUMeter;
-	import org.vancura.graphics.Drawing;
-	import org.vancura.graphics.MorphSprite;
-	import org.vancura.graphics.QBitmap;
-	import org.vancura.util.addChildren;
-	
-	import de.popforge.utils.sprintf;
-	
 	import application.App;
 	import application.AppEvent;
 	import application.PanelCommon;
@@ -35,6 +8,14 @@ package editor_panel {
 	import config.Embeds;
 	import config.Filters;
 	import config.Settings;
+	
+	import controls.Button;
+	import controls.Input;
+	import controls.InputEvent;
+	import controls.Slider;
+	import controls.SliderEvent;
+	import controls.Toolbar;
+	import controls.VUMeter;
 	
 	import editor_panel.BeatClicker;
 	import editor_panel.containers.ContainerCommon;
@@ -49,7 +30,27 @@ package editor_panel {
 	import modals.MessageModal;
 	
 	import remoting.data.SongData;
-	import remoting.data.TrackData;	
+	import remoting.data.TrackData;
+	
+	import de.popforge.utils.sprintf;
+	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.Drawing;
+	import org.vancura.graphics.MorphSprite;
+	import org.vancura.graphics.QBitmap;
+	import org.vancura.util.addChildren;
+	
+	import flash.display.Bitmap;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.media.SoundMixer;
+	import flash.media.SoundTransform;
+	import flash.system.Capabilities;
+	import flash.utils.ByteArray;
+	import flash.utils.clearInterval;
+	import flash.utils.clearTimeout;
+	import flash.utils.setInterval;
+	import flash.utils.setTimeout;	
 
 	
 	

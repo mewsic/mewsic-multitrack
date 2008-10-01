@@ -1,12 +1,19 @@
 package manager_panel.lists {
-	import flash.display.Bitmap;
-	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
-	import flash.text.TextFieldAutoSize;
+	import application.App;
+	
+	import config.Embeds;
+	import config.Filters;
+	import config.Formats;
+	
+	import controls.Button;
+	
+	import remoting.data.SongData;
+	import remoting.data.TrackData;
+	
+	import de.popforge.utils.sprintf;
 	
 	import org.bytearray.display.ScaleBitmap;
 	import org.osflash.thunderbolt.Logger;
-	import org.vancura.controls.Button;
 	import org.vancura.graphics.Bitmapping;
 	import org.vancura.graphics.Drawing;
 	import org.vancura.graphics.QBitmap;
@@ -15,16 +22,10 @@ package manager_panel.lists {
 	import org.vancura.util.addChildren;
 	import org.vancura.util.removeChildren;
 	
-	import de.popforge.utils.sprintf;
-	
-	import application.App;
-	
-	import config.Embeds;
-	import config.Filters;
-	import config.Formats;
-	
-	import remoting.data.SongData;
-	import remoting.data.TrackData;	
+	import flash.display.Bitmap;
+	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
+	import flash.text.TextFieldAutoSize;	
 
 	
 	

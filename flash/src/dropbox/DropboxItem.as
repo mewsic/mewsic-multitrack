@@ -1,6 +1,7 @@
 package dropbox {
-	import flash.events.MouseEvent;
-	import flash.text.TextFieldAutoSize;
+	import caurina.transitions.Tweener;
+	
+	import config.Formats;
 	
 	import org.vancura.graphics.Drawing;
 	import org.vancura.graphics.QSprite;
@@ -8,9 +9,8 @@ package dropbox {
 	import org.vancura.util.addChildren;
 	import org.vancura.util.removeChildren;
 	
-	import caurina.transitions.Tweener;
-	
-	import config.Formats;		
+	import flash.events.MouseEvent;
+	import flash.text.TextFieldAutoSize;	
 
 	
 	

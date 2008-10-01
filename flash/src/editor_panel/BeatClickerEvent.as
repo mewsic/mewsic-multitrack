@@ -1,5 +1,5 @@
 package editor_panel {
-	import flash.events.Event;		
+	import flash.events.Event;			
 
 	
 	

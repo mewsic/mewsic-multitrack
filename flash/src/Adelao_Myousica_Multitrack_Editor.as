@@ -4,8 +4,7 @@ package {
 
 	import org.osflash.thunderbolt.Logger;
 	import org.vancura.modalwindow.ModalWindow;
-	import org.vancura.util.alert;
-
+	
 	import de.popforge.utils.sprintf;
 
 	import application.App;
@@ -99,8 +98,6 @@ package {
 		 * @param description Error description ('Unknown exception' used if nothing specified)
 		 */
 		public function error(description:String = 'Unknown exception'):void {
-			org.vancura.util.alert(description);
-			// output to standard trace window
 			modalWindow.show(description); // output to modal window
 		}
 

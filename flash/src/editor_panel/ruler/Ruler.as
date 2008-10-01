@@ -1,8 +1,8 @@
 package editor_panel.ruler {
-	import org.vancura.graphics.QSprite;
-	import org.vancura.util.addChildren;
+	import editor_panel.ruler.Info;
 	
-	import editor_panel.ruler.Info;	
+	import org.vancura.graphics.QSprite;
+	import org.vancura.util.addChildren;	
 
 	
 	

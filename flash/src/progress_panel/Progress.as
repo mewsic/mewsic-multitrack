@@ -1,13 +1,4 @@
 package progress_panel {
-	import flash.text.TextFieldAutoSize;
-	
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.graphics.QSprite;
-	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-	
-	import de.popforge.utils.sprintf;
-	
 	import application.AppEvent;
 	import application.PanelCommon;
 	
@@ -15,7 +6,16 @@ package progress_panel {
 	
 	import config.Filters;
 	import config.Formats;
-	import config.Settings;	
+	import config.Settings;
+	
+	import de.popforge.utils.sprintf;
+	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.QSprite;
+	import org.vancura.graphics.QTextField;
+	import org.vancura.util.addChildren;
+	
+	import flash.text.TextFieldAutoSize;	
 
 	
 	

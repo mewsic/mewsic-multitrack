@@ -1,12 +1,13 @@
 package manager_panel.lists {
+	import config.Formats;
+	
 	import manager_panel.lists.ListSongTrackCommon;
-	import flash.text.TextFieldAutoSize;
 	
 	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
 	import org.vancura.util.removeChildren;
 	
-	import config.Formats;	
+	import flash.text.TextFieldAutoSize;	
 
 	
 	

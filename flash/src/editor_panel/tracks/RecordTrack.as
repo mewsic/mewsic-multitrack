@@ -1,25 +1,4 @@
 package editor_panel.tracks {
-	import flash.display.BlendMode;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.events.TimerEvent;
-	import flash.media.Sound;
-	import flash.utils.Timer;
-	import flash.utils.clearTimeout;
-	import flash.utils.setTimeout;
-	
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.controls.Button;
-	import org.vancura.controls.Slider;
-	import org.vancura.controls.SliderEvent;
-	import org.vancura.controls.VUMeter;
-	import org.vancura.graphics.QBitmap;
-	import org.vancura.graphics.QSprite;
-	import org.vancura.util.addChildren;
-	import org.vancura.util.removeChildren;
-	
-	import de.popforge.utils.sprintf;
-	
 	import application.App;
 	
 	import caurina.transitions.Tweener;
@@ -27,9 +6,31 @@ package editor_panel.tracks {
 	import config.Embeds;
 	import config.Filters;
 	
+	import controls.Button;
+	import controls.Slider;
+	import controls.SliderEvent;
+	import controls.VUMeter;
+	
 	import modals.MessageModal;
 	
-	import remoting.data.TrackData;	
+	import remoting.data.TrackData;
+	
+	import de.popforge.utils.sprintf;
+	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.QBitmap;
+	import org.vancura.graphics.QSprite;
+	import org.vancura.util.addChildren;
+	import org.vancura.util.removeChildren;
+	
+	import flash.display.BlendMode;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.media.Sound;
+	import flash.utils.Timer;
+	import flash.utils.clearTimeout;
+	import flash.utils.setTimeout;	
 
 	
 	

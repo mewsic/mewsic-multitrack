@@ -1,6 +1,10 @@
 package editor_panel.ruler {
-	import flash.events.MouseEvent;
-	import flash.text.TextFieldAutoSize;
+	import application.App;
+	
+	import caurina.transitions.Tweener;
+	
+	import config.Embeds;
+	import config.Formats;
 	
 	import org.vancura.graphics.Drawing;
 	import org.vancura.graphics.QBitmap;
@@ -8,12 +12,8 @@ package editor_panel.ruler {
 	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
 	
-	import application.App;
-	
-	import caurina.transitions.Tweener;
-	
-	import config.Embeds;
-	import config.Formats;	
+	import flash.events.MouseEvent;
+	import flash.text.TextFieldAutoSize;	
 
 	
 	

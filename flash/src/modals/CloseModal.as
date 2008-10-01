@@ -1,12 +1,12 @@
 package modals {
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-	
 	import application.AppEvent;
 	
 	import config.Filters;
-	import config.Formats;	
+	import config.Formats;
+	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.QTextField;
+	import org.vancura.util.addChildren;	
 
 	
 	

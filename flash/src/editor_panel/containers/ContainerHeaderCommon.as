@@ -1,8 +1,4 @@
 package editor_panel.containers {
-	import org.vancura.graphics.QBitmap;
-	import org.vancura.graphics.QSprite;
-	import org.vancura.util.addChildren;
-	
 	import application.App;
 	
 	import config.Embeds;
@@ -12,7 +8,11 @@ package editor_panel.containers {
 	import editor_panel.tracks.TrackCommon;
 	
 	import remoting.data.SongData;
-	import remoting.data.UserData;	
+	import remoting.data.UserData;
+	
+	import org.vancura.graphics.QBitmap;
+	import org.vancura.graphics.QSprite;
+	import org.vancura.util.addChildren;	
 
 	
 	

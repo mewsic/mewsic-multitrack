@@ -1,16 +1,4 @@
 package application {
-	import flash.display.Bitmap;
-	import flash.display.Sprite;
-	import flash.geom.Rectangle;
-	
-	import org.bytearray.display.ScaleBitmap;
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.graphics.Drawing;
-	import org.vancura.graphics.QSprite;
-	import org.vancura.util.addChildren;
-	
-	import de.popforge.utils.sprintf;
-	
 	import application.AppEvent;
 	
 	import caurina.transitions.Tweener;
@@ -18,7 +6,19 @@ package application {
 	import config.Embeds;
 	import config.Settings;
 	
-	import manager_panel.tabs.TabEvent;	
+	import manager_panel.tabs.TabEvent;
+	
+	import de.popforge.utils.sprintf;
+	
+	import org.bytearray.display.ScaleBitmap;
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.Drawing;
+	import org.vancura.graphics.QSprite;
+	import org.vancura.util.addChildren;
+	
+	import flash.display.Bitmap;
+	import flash.display.Sprite;
+	import flash.geom.Rectangle;	
 
 	
 	

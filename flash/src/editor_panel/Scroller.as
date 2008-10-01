@@ -1,14 +1,15 @@
 package editor_panel {
-	import flash.events.MouseEvent;
+	import config.Embeds;
+	import config.Filters;
 	
-	import org.vancura.controls.Button;
-	import org.vancura.controls.Slider;
+	import controls.Button;
+	import controls.Slider;
+	
 	import org.vancura.graphics.MorphSprite;
 	import org.vancura.graphics.QBitmap;
 	import org.vancura.util.addChildren;
 	
-	import config.Embeds;
-	import config.Filters;	
+	import flash.events.MouseEvent;	
 
 	
 	

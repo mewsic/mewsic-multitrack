@@ -1,23 +1,13 @@
 package manager_panel.search {
-	import flash.text.TextFieldAutoSize;
-	
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.controls.Slider;
-	import org.vancura.controls.SliderEvent;
-	import org.vancura.graphics.Drawing;
-	import org.vancura.graphics.QBitmap;
-	import org.vancura.graphics.QSprite;
-	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-	
-	import de.popforge.utils.sprintf;
-	
 	import application.App;
 	
 	import config.Embeds;
 	import config.Filters;
 	import config.Formats;
 	import config.Settings;
+	
+	import controls.Slider;
+	import controls.SliderEvent;
 	
 	import manager_panel.search.SubpanelA;
 	
@@ -26,7 +16,18 @@ package manager_panel.search {
 	import remoting.dynamic_services.SongSiblingsService;
 	import remoting.dynamic_services.TrackSiblingsService;
 	import remoting.events.SongSiblingsEvent;
-	import remoting.events.TrackSiblingsEvent;	
+	import remoting.events.TrackSiblingsEvent;
+	
+	import de.popforge.utils.sprintf;
+	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.Drawing;
+	import org.vancura.graphics.QBitmap;
+	import org.vancura.graphics.QSprite;
+	import org.vancura.graphics.QTextField;
+	import org.vancura.util.addChildren;
+	
+	import flash.text.TextFieldAutoSize;	
 
 	
 	
