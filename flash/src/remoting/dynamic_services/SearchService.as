@@ -62,13 +62,16 @@ package remoting.dynamic_services {
 			var query:String = '?';
 			
 			if(params.keyword != '' && params.keyword != undefined) query += '&q=' + escape(params.keyword);
+			
 			if(params.instrument != '' && params.instrument != undefined) query += '&instrument=' + escape(params.instrument);
 			if(params.genre != '' && params.genre != undefined) query += '&genre=' + escape(params.genre);
 			if(params.country != '' && params.country != undefined) query += '&country=' + escape(params.country);
 			if(params.author != '' && params.author != undefined) query += '&author=' + escape(params.author);
 			if(params.title != '' && params.title != undefined) query += '&title=' + escape(params.title);
+			if(params.bpm != '' && params.bpm != undefined) query += '&bpm=' + escape(params.bpm);
+			if(params.key != '' && params.key != undefined) query += '&key=' + escape(params.key);
 			
-			if(query == '?') query = '?q=_EMPTY_';
+			if(query == '?') query = '?q=';
 			 
 			super.request({suffix:query});
 		}
