@@ -183,7 +183,7 @@ package modals {
 		
 		
 		public function postInit():void {
-			_instrumentDropbox.list = App.connection.instrumentsService.instrumentNameList;
+			_instrumentDropbox.list = App.connection.instrumentsService.instrumentsNameList;
 		}
 		
 		

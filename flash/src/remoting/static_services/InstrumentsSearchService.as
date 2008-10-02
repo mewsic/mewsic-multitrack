@@ -15,25 +15,25 @@ package remoting.static_services {
 	
 	
 	/**
-	 * Instrument service.
+	 * Instruments search service.
 	 * 
 	 * @author Vaclav Vancura (http://vaclav.vancura.org)
-	 * @since Jul 4, 2008
+	 * @since Nov 2, 2008
 	 */
-	public class InstrumentService extends ServiceCommon implements IService {
+	public class InstrumentsSearchService extends ServiceCommon implements IService {
 
 		
 		
-		private var _instrumentList:Array;
+		private var _instrumentsList:Array;
 
 		
 		
 		/**
 		 * Constructor.
 		 */
-		public function InstrumentService() {
+		public function InstrumentsSearchService() {
 			super();
-			$serviceID = 'instrument';
+			$serviceID = 'instrumentsSearch';
 			$requestID = $serviceID + '.request';
 			$responseHandler = _onResponse;
 			$errorHandler = _onError;
@@ -42,16 +42,16 @@ package remoting.static_services {
 		
 		
 		/**
-		 * Dump instruments.
-		 * @return Instruments dump
+		 * Dump instruments search.
+		 * @return Instruments search dump
 		 */
 		override public function toString():String {
 			var o:String = '';
 			var sidx:uint = 0;
 			
-			for each(var sd:InstrumentData in _instrumentList) {
+			for each(var sd:InstrumentData in _instrumentsList) {
 				sidx++;
-				o += sprintf('  *  Instrument item data #%u: %s\n', sidx, sd);
+				o += sprintf('  *  Instrument search item data #%u: %s\n', sidx, sd);
 			}
 			o += '\n';
 			
@@ -61,22 +61,22 @@ package remoting.static_services {
 		
 		
 		/**
-		 * Get instrument list.
-		 * @return Instrument list
+		 * Get instruments search list.
+		 * @return Instruments search list
 		 */
-		public function get instrumentList():Array {
-			return _instrumentList;
+		public function get instrumentsList():Array {
+			return _instrumentsList;
 		}
 
 		
 		
 		/**
-		 * Get instrument name list.
-		 * @return Instrument name list
+		 * Get instruments search name list.
+		 * @return Instruments search name list
 		 */
-		public function get instrumentNameList():Array {
+		public function get instrumentsNameList():Array {
 			var o:Array = new Array();
-			for each(var i:InstrumentData in _instrumentList) {
+			for each(var i:InstrumentData in _instrumentsList) {
 				o.push(i.instrumentName);
 			}
 			return o;
@@ -90,7 +90,7 @@ package remoting.static_services {
 		 * @return Instrument data
 		 */
 		public function byID(id:uint):InstrumentData {
-			for each(var gd:InstrumentData in _instrumentList) {
+			for each(var gd:InstrumentData in _instrumentsList) {
 				if(gd.instrumentID == id) return gd;
 			}
 			throw new Error(sprintf('Service %s: Unknown instrument.', $serviceID));
@@ -105,7 +105,7 @@ package remoting.static_services {
 		 */
 		public function byName(name:String):InstrumentData {
 			var n:String = StringUtils.removeExtraWhitespace(name);
-			for each(var gd:InstrumentData in _instrumentList) {
+			for each(var gd:InstrumentData in _instrumentsList) {
 				if(gd.instrumentName == n) return gd;
 			}
 			throw new Error(sprintf('Service %s: Unknown instrument.', $serviceID));
@@ -118,7 +118,7 @@ package remoting.static_services {
 		 */
 		private function _onResponse():void {
 			try {
-				_instrumentList = new Array();
+				_instrumentsList = new Array();
 				
 				for each(var mxml:XML in $responseData.instrument) {
 					var id:InstrumentData = new InstrumentData();
@@ -127,14 +127,14 @@ package remoting.static_services {
 					id.instrumentName = mxml.description;
 					id.instrumentIconURL = mxml.icon;
 					
-					_instrumentList.push(id);
+					_instrumentsList.push(id);
 				}
 				
-				if(Settings.isServiceDumpEnabled) Logger.debug(sprintf('Service %s: Instrument dump:\n%s', $serviceID, this.toString()));
+				if(Settings.isServiceDumpEnabled) Logger.debug(sprintf('Service %s: Instruments dump:\n%s', $serviceID, this.toString()));
 				dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_DONE));
 			}
 			catch(err:Error) {
-				dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_FAILED, false, false, sprintf('Service %s: Could not parse instrument data.\n%s', $serviceID, err.message)));
+				dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_FAILED, false, false, sprintf('Service %s: Could not parse instruments data.\n%s', $serviceID, err.message)));
 			}
 		}
 
@@ -144,7 +144,7 @@ package remoting.static_services {
 		 * Error event handler.
 		 */
 		private function _onError():void {
-			dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_FAILED, false, false, sprintf('Service %s: Could not load instrument data.', $serviceID)));
+			dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_FAILED, false, false, sprintf('Service %s: Could not load instruments data.', $serviceID)));
 		}
 	}
 }

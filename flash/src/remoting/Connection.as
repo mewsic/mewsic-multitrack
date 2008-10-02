@@ -6,10 +6,10 @@ package remoting {
 	import remoting.static_services.ConfigService;
 	import remoting.static_services.CoreSongService;
 	import remoting.static_services.CoreUserService;
-	import remoting.static_services.GenreSearchService;
-	import remoting.static_services.GenreService;
-	import remoting.static_services.InstrumentSearchService;
-	import remoting.static_services.InstrumentService;
+	import remoting.static_services.GenresSearchService;
+	import remoting.static_services.GenresService;
+	import remoting.static_services.InstrumentsSearchService;
+	import remoting.static_services.InstrumentsService;
 	import remoting.static_services.StreamService;
 	
 	import flash.events.EventDispatcher;		
@@ -28,9 +28,9 @@ package remoting {
 		
 		private var _streamService:StreamService;
 		private var _configService:ConfigService;
-		private var _instrumentsService:InstrumentService;
-		private var _instrumentsSearchService:InstrumentSearchService;
-		private var _genresService:GenreService;		private var _genresSearchService:GenreSearchService;
+		private var _instrumentsService:InstrumentsService;
+		private var _instrumentsSearchService:InstrumentsSearchService;
+		private var _genresService:GenresService;		private var _genresSearchService:GenresSearchService;
 		private var _coreSongService:CoreSongService;
 		private var _coreUserService:CoreUserService;
 
@@ -43,9 +43,9 @@ package remoting {
 			// add service handlers
 			_configService = new ConfigService();
 			_streamService = new StreamService();
-			_instrumentsService = new InstrumentService();
-			_instrumentsSearchService = new InstrumentSearchService;
-			_genresService = new GenreService();			_genresSearchService = new GenreSearchService();
+			_instrumentsService = new InstrumentsService();
+			_instrumentsSearchService = new InstrumentsSearchService;
+			_genresService = new GenresService();			_genresSearchService = new GenresSearchService();
 			_coreSongService = new CoreSongService();
 			_coreUserService = new CoreUserService();
 			
@@ -118,7 +118,7 @@ package remoting {
 		 * Get Genres service.
 		 * @return Genres service.
 		 */
-		public function get genresService():GenreService {
+		public function get genresService():GenresService {
 			return _genresService;
 		}
 
@@ -128,7 +128,7 @@ package remoting {
 		 * Get Genres search service.
 		 * @return Genres search service.
 		 */
-		public function get genresSearchService():GenreSearchService {
+		public function get genresSearchService():GenresSearchService {
 			return _genresSearchService;
 		}
 
@@ -138,7 +138,7 @@ package remoting {
 		 * Get Instruments service.
 		 * @return Instruments service
 		 */
-		public function get instrumentsService():InstrumentService {
+		public function get instrumentsService():InstrumentsService {
 			return _instrumentsService;
 		}
 
@@ -148,7 +148,7 @@ package remoting {
 		 * Get Instruments search service.
 		 * @return Instruments search service
 		 */
-		public function get instrumentsSearchService():InstrumentSearchService {
+		public function get instrumentsSearchService():InstrumentsSearchService {
 			return _instrumentsSearchService;
 		}
 

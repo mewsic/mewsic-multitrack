@@ -15,25 +15,25 @@ package remoting.static_services {
 	
 	
 	/**
-	 * Genre search service.
+	 * Genres service.
 	 * 
 	 * @author Vaclav Vancura (http://vaclav.vancura.org)
 	 * @since Jul 4, 2008
 	 */
-	public class GenreSearchService extends ServiceCommon implements IService {
+	public class GenresService extends ServiceCommon implements IService {
 
 		
 		
-		private var _genreList:Array;
+		private var _genresList:Array;
 
 		
 		
 		/**
 		 * Constructor.
 		 */
-		public function GenreSearchService() {
+		public function GenresService() {
 			super();
-			$serviceID = 'genreSearch';
+			$serviceID = 'genres';
 			$requestID = $serviceID + '.request';
 			$responseHandler = _onResponse;
 			$errorHandler = _onError;
@@ -42,14 +42,14 @@ package remoting.static_services {
 		
 		
 		/**
-		 * Dump genres search.
-		 * @return Genres search dump
+		 * Dump genres.
+		 * @return Genres dump
 		 */		
 		override public function toString():String {
 			var o:String = '';
 			var sidx:uint = 0;
 			
-			for each(var sd:GenreData in _genreList) {
+			for each(var sd:GenreData in _genresList) {
 				sidx++;
 				o += sprintf('  *  Genre item #%u: %s\n', sidx, sd);
 			}
@@ -61,22 +61,22 @@ package remoting.static_services {
 		
 		
 		/**
-		 * Get genre search list.
-		 * @return Genre search list
+		 * Get genres list.
+		 * @return Genres list
 		 */
-		public function get genreList():Array {
-			return _genreList;
+		public function get genresList():Array {
+			return _genresList;
 		}
 
 		
 		
 		/**
-		 * Get genre search name list.
-		 * @return Genre search name list
+		 * Get genres name list.
+		 * @return Genres name list
 		 */
-		public function get genreNameList():Array {
+		public function get genresNameList():Array {
 			var o:Array = new Array();
-			for each(var i:GenreData in _genreList) {
+			for each(var i:GenreData in _genresList) {
 				o.push(i.genreName);
 			}
 			return o;
@@ -90,7 +90,7 @@ package remoting.static_services {
 		 * @return Genre data
 		 */
 		public function byID(id:uint):GenreData {
-			for each(var gd:GenreData in _genreList) {
+			for each(var gd:GenreData in _genresList) {
 				if(gd.genreID == id) return gd;
 			}
 			throw new Error(sprintf('Service %s: Unknown genre.', $serviceID));
@@ -105,7 +105,7 @@ package remoting.static_services {
 		 */
 		public function byName(name:String):GenreData {
 			var n:String = StringUtils.removeExtraWhitespace(name);
-			for each(var gd:GenreData in _genreList) {
+			for each(var gd:GenreData in _genresList) {
 				if(gd.genreName == n) return gd;
 			}
 			throw new Error(sprintf('Service %s: Unknown genre.', $serviceID));
@@ -118,20 +118,20 @@ package remoting.static_services {
 		 */
 		private function _onResponse():void {
 			try {
-				_genreList = new Array();
+				_genresList = new Array();
 				
 				for each(var mxml:XML in $responseData.genre) {
 					var gd:GenreData = new GenreData();
 					gd.genreID = mxml.id;
 					gd.genreName = mxml.name;
-					_genreList.push(gd);
+					_genresList.push(gd);
 				}
 				
-				if(Settings.isServiceDumpEnabled) Logger.debug(sprintf('Service %s: Genre dump:\n%s', $serviceID, this.toString()));
+				if(Settings.isServiceDumpEnabled) Logger.debug(sprintf('Service %s: Genres dump:\n%s', $serviceID, this.toString()));
 				dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_DONE));
 			}
 			catch(err:Error) {
-				dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_FAILED, false, false, sprintf('Service %s: Could not parse genre data.\n%s', $serviceID, err.message)));
+				dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_FAILED, false, false, sprintf('Service %s: Could not parse genres data.\n%s', $serviceID, err.message)));
 			}
 		}
 
@@ -141,7 +141,7 @@ package remoting.static_services {
 		 * Error event handler.
 		 */
 		private function _onError():void {
-			dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_FAILED, false, false, sprintf('Service %s: Could not load genre data.', $serviceID)));
+			dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_FAILED, false, false, sprintf('Service %s: Could not load genres data.', $serviceID)));
 		}
 	}
 }
