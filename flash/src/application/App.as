@@ -453,6 +453,8 @@ package application {
 			manager.y = editor.height + 30;
 			worker.y = editor.height + manager.height + 30;
 			editor.height + manager.height + worker.height + 30;
+			
+			sum += 40; // dropbox fix
 
 			stageHeight = sum;
 		}
