@@ -28,6 +28,7 @@ package remoting.static_services {
 		private var _mySongsRequestURL:String; // My Songs service (e.g. '/users/{:id}/songs.xml')
 		private var _searchRequestURL:String; // Search service (e.g. '/search/new.xml')
 		private var _instrumentsRequestURL:String; // Instruments service (e.g. '/instruments.xml')
+		private var _instrumentsSearchRequestURL:String; // Instruments search service (e.g. '/instruments.xml')
 		private var _genresRequestURL:String; // Genres service (e.g. '/genres.xml')
 		private var _userRequestURL:String; // User service (e.g. '/user/{:id}.xml')
 		
@@ -89,6 +90,7 @@ package remoting.static_services {
 				'  *  mySongsRequestURL = ' + mySongsRequestURL + '\n' +
 				'  *  searchRequestURL = ' + searchRequestURL + '\n' +
 				'  *  instrumentsRequestURL = ' + instrumentsRequestURL + '\n' +
+				'  *  instrumentsSearchRequestURL = ' + instrumentsSearchRequestURL + '\n' +
 				'  *  genresRequestURL = ' + genresRequestURL + '\n' +
 				'  *  userRequestURL = ' + userRequestURL + '\n' +
 				
@@ -134,6 +136,7 @@ package remoting.static_services {
 				_mySongsRequestURL = $responseData.url_request.mysongs;
 				_searchRequestURL = $responseData.url_request.search;
 				_instrumentsRequestURL = $responseData.url_request.instruments;
+				_instrumentsSearchRequestURL = $responseData.url_request.instruments_search; 
 				_genresRequestURL = $responseData.url_request.genres;
 				_userRequestURL = $responseData.url_request.user; // !
 				
@@ -235,6 +238,16 @@ package remoting.static_services {
 		 */
 		public function get instrumentsRequestURL():String {
 			return _instrumentsRequestURL;
+		}
+
+		
+		
+		/**
+		 * Get instruments search request URL.
+		 * @return Instruments search request URL
+		 */
+		public function get instrumentsSearchRequestURL():String {
+			return _instrumentsSearchRequestURL;
 		}
 
 		

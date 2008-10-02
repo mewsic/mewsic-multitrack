@@ -152,6 +152,7 @@ package application {
 			// add static services events
 			connection.genresService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
 			connection.instrumentsService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
+			connection.instrumentsSearchService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
 			connection.coreSongService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
 			connection.coreSongService.addEventListener(RemotingEvent.REFRESH_DONE, _onSongRefreshResponse, false, 0, true);
 			connection.coreUserService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
@@ -311,6 +312,10 @@ package application {
 					dsc = 'Could not load instruments data.' + l8r;
 					break;
 					
+				case connection.instrumentsSearchService:
+					dsc = 'Could not load instruments search data.' + l8r;
+					break;
+					
 				case connection.coreSongService:
 					dsc = 'Could not load core song.' + l8r;
 					break;
@@ -361,6 +366,7 @@ package application {
 				connection.streamService.url = connection.configService.streamGatewayURL;
 				connection.genresService.url = connection.serverPath + connection.configService.genresRequestURL;
 				connection.instrumentsService.url = connection.serverPath + connection.configService.instrumentsRequestURL;
+				connection.instrumentsSearchService.url = connection.serverPath + connection.configService.instrumentsSearchRequestURL;
 				connection.coreSongService.url = connection.serverPath + connection.configService.songFetchRequestURL;
 				connection.coreUserService.url = connection.serverPath + connection.configService.userRequestURL;
 
@@ -368,6 +374,7 @@ package application {
 				connection.streamService.connect();
 				connection.genresService.request();
 				connection.instrumentsService.request();
+				connection.instrumentsSearchService.request();
 				connection.coreSongService.request({songID:connection.coreSongData.songID});
 
 				// get core user data
@@ -445,7 +452,7 @@ package application {
 		 * @param event Event data
 		 */
 		private function _onHelpServicesDone(event:RemotingEvent):void {
-			if(++_helpServicesCounter == 4) {
+			if(++_helpServicesCounter == 5) {
 				editor.postInit();
 				manager.tabMyList.postInit();
 				manager.tabMySongs.postInit();

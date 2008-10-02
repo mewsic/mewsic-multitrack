@@ -1,4 +1,6 @@
 package remoting {
+	import remoting.static_services.InstrumentSearchService;	
+	
 	import flash.events.EventDispatcher;
 	
 	import remoting.ServiceCommon;
@@ -27,6 +29,7 @@ package remoting {
 		private var _streamService:StreamService;
 		private var _configService:ConfigService;
 		private var _instrumentsService:InstrumentService;
+		private var _instrumentsSearchService:InstrumentSearchService;
 		private var _genresService:GenreService;
 		private var _coreSongService:CoreSongService;
 		private var _coreUserService:CoreUserService;
@@ -41,6 +44,7 @@ package remoting {
 			_configService = new ConfigService();
 			_streamService = new StreamService();
 			_instrumentsService = new InstrumentService();
+			_instrumentsSearchService = new InstrumentSearchService;
 			_genresService = new GenreService();
 			_coreSongService = new CoreSongService();
 			_coreUserService = new CoreUserService();
@@ -66,6 +70,11 @@ package remoting {
 			_instrumentsService.addEventListener(RemotingEvent.TIMEOUT, _onTimeout, false, 0, true);
 			_instrumentsService.addEventListener(RemotingEvent.REQUEST_DONE, _onInstrumentsRequestDone, false, 0, true);
 			_instrumentsService.addEventListener(RemotingEvent.REQUEST_FAILED, _onFailed, false, 0, true);
+			
+			// add instruments search event listener
+			_instrumentsSearchService.addEventListener(RemotingEvent.TIMEOUT, _onTimeout, false, 0, true);
+			_instrumentsSearchService.addEventListener(RemotingEvent.REQUEST_DONE, _onInstrumentsSearchRequestDone, false, 0, true);
+			_instrumentsSearchService.addEventListener(RemotingEvent.REQUEST_FAILED, _onFailed, false, 0, true);
 			
 			// add core song event listeners
 			_coreSongService.addEventListener(RemotingEvent.TIMEOUT, _onTimeout, false, 0, true);
@@ -116,6 +125,16 @@ package remoting {
 		 */
 		public function get instrumentsService():InstrumentService {
 			return _instrumentsService;
+		}
+
+		
+		
+		/**
+		 * Get Instruments search service.
+		 * @return Instruments search service
+		 */
+		public function get instrumentsSearchService():InstrumentSearchService {
+			return _instrumentsSearchService;
 		}
 
 		
@@ -237,6 +256,16 @@ package remoting {
 		 */
 		private function _onInstrumentsRequestDone(event:RemotingEvent):void {
 			dispatchEvent(new RemotingEvent(RemotingEvent.INSTRUMENTS_REQUEST_DONE));
+		}
+
+		
+		
+		/**
+		 * Instruments search request done.
+		 * @param e Event data
+		 */
+		private function _onInstrumentsSearchRequestDone(event:RemotingEvent):void {
+			dispatchEvent(new RemotingEvent(RemotingEvent.INSTRUMENTS_SEARCH_REQUEST_DONE));
 		}
 
 		
