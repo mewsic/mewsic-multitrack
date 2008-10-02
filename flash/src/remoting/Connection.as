@@ -6,13 +6,14 @@ package remoting {
 	import remoting.static_services.ConfigService;
 	import remoting.static_services.CoreSongService;
 	import remoting.static_services.CoreUserService;
+	import remoting.static_services.CountriesSearchService;
 	import remoting.static_services.GenresSearchService;
 	import remoting.static_services.GenresService;
 	import remoting.static_services.InstrumentsSearchService;
 	import remoting.static_services.InstrumentsService;
 	import remoting.static_services.StreamService;
 	
-	import flash.events.EventDispatcher;		
+	import flash.events.EventDispatcher;	
 
 	
 	
@@ -30,7 +31,7 @@ package remoting {
 		private var _configService:ConfigService;
 		private var _instrumentsService:InstrumentsService;
 		private var _instrumentsSearchService:InstrumentsSearchService;
-		private var _genresService:GenresService;		private var _genresSearchService:GenresSearchService;
+		private var _genresService:GenresService;		private var _genresSearchService:GenresSearchService;		private var _countriesSearchService:CountriesSearchService;
 		private var _coreSongService:CoreSongService;
 		private var _coreUserService:CoreUserService;
 
@@ -46,6 +47,7 @@ package remoting {
 			_instrumentsService = new InstrumentsService();
 			_instrumentsSearchService = new InstrumentsSearchService;
 			_genresService = new GenresService();			_genresSearchService = new GenresSearchService();
+			_countriesSearchService = new CountriesSearchService();
 			_coreSongService = new CoreSongService();
 			_coreUserService = new CoreUserService();
 			
@@ -80,6 +82,11 @@ package remoting {
 			_instrumentsSearchService.addEventListener(RemotingEvent.TIMEOUT, _onTimeout, false, 0, true);
 			_instrumentsSearchService.addEventListener(RemotingEvent.REQUEST_DONE, _onInstrumentsSearchRequestDone, false, 0, true);
 			_instrumentsSearchService.addEventListener(RemotingEvent.REQUEST_FAILED, _onFailed, false, 0, true);
+			
+			// add countries search event listener
+			_countriesSearchService.addEventListener(RemotingEvent.TIMEOUT, _onTimeout, false, 0, true);
+			_countriesSearchService.addEventListener(RemotingEvent.REQUEST_DONE, _onCountriesSearchRequestDone, false, 0, true);
+			_countriesSearchService.addEventListener(RemotingEvent.REQUEST_FAILED, _onFailed, false, 0, true);
 			
 			// add core song event listeners
 			_coreSongService.addEventListener(RemotingEvent.TIMEOUT, _onTimeout, false, 0, true);
@@ -150,6 +157,16 @@ package remoting {
 		 */
 		public function get instrumentsSearchService():InstrumentsSearchService {
 			return _instrumentsSearchService;
+		}
+
+		
+		
+		/**
+		 * Get Countries search service.
+		 * @return Countries search service
+		 */
+		public function get countriesSearchService():CountriesSearchService {
+			return _countriesSearchService;
 		}
 
 		
@@ -291,6 +308,16 @@ package remoting {
 		 */
 		private function _onInstrumentsSearchRequestDone(event:RemotingEvent):void {
 			dispatchEvent(new RemotingEvent(RemotingEvent.INSTRUMENTS_SEARCH_REQUEST_DONE));
+		}
+
+		
+		
+		/**
+		 * Countries search request done.
+		 * @param e Event data
+		 */
+		private function _onCountriesSearchRequestDone(event:RemotingEvent):void {
+			dispatchEvent(new RemotingEvent(RemotingEvent.COUNTRIES_SEARCH_REQUEST_DONE));
 		}
 
 		

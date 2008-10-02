@@ -18,7 +18,7 @@ package remoting.static_services {
 	 * Genres search service.
 	 * 
 	 * @author Vaclav Vancura (http://vaclav.vancura.org)
-	 * @since Jul 4, 2008
+	 * @since Nov 2, 2008
 	 */
 	public class GenresSearchService extends ServiceCommon implements IService {
 

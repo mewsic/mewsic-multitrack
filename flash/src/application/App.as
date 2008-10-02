@@ -154,6 +154,7 @@ package application {
 			connection.genresSearchService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
 			connection.instrumentsService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
 			connection.instrumentsSearchService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
+			connection.countriesSearchService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
 			connection.coreSongService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
 			connection.coreSongService.addEventListener(RemotingEvent.REFRESH_DONE, _onSongRefreshResponse, false, 0, true);
 			connection.coreUserService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
@@ -321,6 +322,10 @@ package application {
 					dsc = 'Could not load instruments search data.' + l8r;
 					break;
 					
+				case connection.countriesSearchService:
+					dsc = 'Could not load countries search data.' + l8r;
+					break;
+					
 				case connection.coreSongService:
 					dsc = 'Could not load core song.' + l8r;
 					break;
@@ -373,6 +378,7 @@ package application {
 				connection.genresSearchService.url = connection.serverPath + connection.configService.genresSearchRequestURL;
 				connection.instrumentsService.url = connection.serverPath + connection.configService.instrumentsRequestURL;
 				connection.instrumentsSearchService.url = connection.serverPath + connection.configService.instrumentsSearchRequestURL;
+				connection.countriesSearchService.url = connection.serverPath + connection.configService.countriesSearchRequestURL;
 				connection.coreSongService.url = connection.serverPath + connection.configService.songFetchRequestURL;
 				connection.coreUserService.url = connection.serverPath + connection.configService.userRequestURL;
 
@@ -381,7 +387,7 @@ package application {
 				connection.genresService.request();
 				connection.genresSearchService.request();
 				connection.instrumentsService.request();
-				connection.instrumentsSearchService.request();
+				connection.instrumentsSearchService.request();				connection.countriesSearchService.request();
 				connection.coreSongService.request({songID:connection.coreSongData.songID});
 
 				// get core user data
@@ -459,7 +465,7 @@ package application {
 		 * @param event Event data
 		 */
 		private function _onHelpServicesDone(event:RemotingEvent):void {
-			if(++_helpServicesCounter == 6) {
+			if(++_helpServicesCounter == 7) {
 				editor.postInit();
 				manager.tabMyList.postInit();
 				manager.tabMySongs.postInit();

@@ -78,7 +78,6 @@ package manager_panel.search {
 			_bpmInput.addEventListener(InputEvent.FOCUS_IN, _onInputFocusIn, false, 0, true);
 			
 			// fill dropboxes
-			_countriesDropbox.list = Settings.COUNTRY_LIST;
 			_keysDropbox.list = Settings.KEY_LIST;
 		}
 
@@ -87,6 +86,7 @@ package manager_panel.search {
 		public function postInit():void {
 			_genresDropbox.list = App.connection.genresSearchService.genresNameList;
 			_instrumentsDropbox.list = App.connection.instrumentsSearchService.instrumentsNameList;
+			_countriesDropbox.list = App.connection.countriesSearchService.countriesList;
 		}
 
 		
