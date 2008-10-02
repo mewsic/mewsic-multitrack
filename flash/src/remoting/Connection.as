@@ -1,8 +1,4 @@
 package remoting {
-	import remoting.static_services.InstrumentSearchService;	
-	
-	import flash.events.EventDispatcher;
-	
 	import remoting.ServiceCommon;
 	import remoting.data.SongData;
 	import remoting.data.UserData;
@@ -10,9 +6,13 @@ package remoting {
 	import remoting.static_services.ConfigService;
 	import remoting.static_services.CoreSongService;
 	import remoting.static_services.CoreUserService;
+	import remoting.static_services.GenreSearchService;
 	import remoting.static_services.GenreService;
+	import remoting.static_services.InstrumentSearchService;
 	import remoting.static_services.InstrumentService;
-	import remoting.static_services.StreamService;		
+	import remoting.static_services.StreamService;
+	
+	import flash.events.EventDispatcher;		
 
 	
 	
@@ -30,7 +30,7 @@ package remoting {
 		private var _configService:ConfigService;
 		private var _instrumentsService:InstrumentService;
 		private var _instrumentsSearchService:InstrumentSearchService;
-		private var _genresService:GenreService;
+		private var _genresService:GenreService;		private var _genresSearchService:GenreSearchService;
 		private var _coreSongService:CoreSongService;
 		private var _coreUserService:CoreUserService;
 
@@ -45,7 +45,7 @@ package remoting {
 			_streamService = new StreamService();
 			_instrumentsService = new InstrumentService();
 			_instrumentsSearchService = new InstrumentSearchService;
-			_genresService = new GenreService();
+			_genresService = new GenreService();			_genresSearchService = new GenreSearchService();
 			_coreSongService = new CoreSongService();
 			_coreUserService = new CoreUserService();
 			
@@ -65,6 +65,11 @@ package remoting {
 			_genresService.addEventListener(RemotingEvent.TIMEOUT, _onTimeout, false, 0, true);
 			_genresService.addEventListener(RemotingEvent.REQUEST_DONE, _onGenresRequestDone, false, 0, true);
 			_genresService.addEventListener(RemotingEvent.REQUEST_FAILED, _onFailed, false, 0, true);
+			
+			// add genres search event listeners
+			_genresSearchService.addEventListener(RemotingEvent.TIMEOUT, _onTimeout, false, 0, true);
+			_genresSearchService.addEventListener(RemotingEvent.REQUEST_DONE, _onGenresSearchRequestDone, false, 0, true);
+			_genresSearchService.addEventListener(RemotingEvent.REQUEST_FAILED, _onFailed, false, 0, true);
 			
 			// add instruments event listener
 			_instrumentsService.addEventListener(RemotingEvent.TIMEOUT, _onTimeout, false, 0, true);
@@ -115,6 +120,16 @@ package remoting {
 		 */
 		public function get genresService():GenreService {
 			return _genresService;
+		}
+
+		
+		
+		/**
+		 * Get Genres search service.
+		 * @return Genres search service.
+		 */
+		public function get genresSearchService():GenreSearchService {
+			return _genresSearchService;
 		}
 
 		
@@ -246,6 +261,16 @@ package remoting {
 		 */
 		private function _onGenresRequestDone(event:RemotingEvent):void {
 			dispatchEvent(new RemotingEvent(RemotingEvent.GENRES_REQUEST_DONE));
+		}
+
+		
+		
+		/**
+		 * Genres search request done.
+		 * @param e Event data
+		 */
+		private function _onGenresSearchRequestDone(event:RemotingEvent):void {
+			dispatchEvent(new RemotingEvent(RemotingEvent.GENRES_SEARCH_REQUEST_DONE));
 		}
 
 		

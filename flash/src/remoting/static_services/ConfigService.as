@@ -30,6 +30,7 @@ package remoting.static_services {
 		private var _instrumentsRequestURL:String; // Instruments service (e.g. '/instruments.xml')
 		private var _instrumentsSearchRequestURL:String; // Instruments search service (e.g. '/instruments.xml')
 		private var _genresRequestURL:String; // Genres service (e.g. '/genres.xml')
+		private var _genresSearchRequestURL:String; // Genres search service (e.g. '/genres.xml')
 		private var _userRequestURL:String; // User service (e.g. '/user/{:id}.xml')
 		
 		private var _songFetchRequestURL:String; // Song service: fetch request (e.g. '/songs/{:id}.xml')
@@ -91,7 +92,7 @@ package remoting.static_services {
 				'  *  searchRequestURL = ' + searchRequestURL + '\n' +
 				'  *  instrumentsRequestURL = ' + instrumentsRequestURL + '\n' +
 				'  *  instrumentsSearchRequestURL = ' + instrumentsSearchRequestURL + '\n' +
-				'  *  genresRequestURL = ' + genresRequestURL + '\n' +
+				'  *  genresRequestURL = ' + genresRequestURL + '\n' +				'  *  genresSearchRequestURL = ' + genresSearchRequestURL + '\n' +
 				'  *  userRequestURL = ' + userRequestURL + '\n' +
 				
 				'  *  songFetchRequestURL = ' + songFetchRequestURL + '\n' +
@@ -137,7 +138,7 @@ package remoting.static_services {
 				_searchRequestURL = $responseData.url_request.search;
 				_instrumentsRequestURL = $responseData.url_request.instruments;
 				_instrumentsSearchRequestURL = $responseData.url_request.instruments_search; 
-				_genresRequestURL = $responseData.url_request.genres;
+				_genresRequestURL = $responseData.url_request.genres;				_genresSearchRequestURL = $responseData.url_request.genres_search;
 				_userRequestURL = $responseData.url_request.user; // !
 				
 				_songFetchRequestURL = $responseData.url_request.songs.fetch;
@@ -258,6 +259,16 @@ package remoting.static_services {
 		 */
 		public function get genresRequestURL():String {
 			return _genresRequestURL;
+		}
+
+		
+		
+		/**
+		 * Get genres search request URL.
+		 * @return Genres search request URL
+		 */
+		public function get genresSearchRequestURL():String {
+			return _genresSearchRequestURL;
 		}
 
 		

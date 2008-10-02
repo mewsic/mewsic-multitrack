@@ -25,7 +25,7 @@ package remoting.events {
 		public static const MY_LIST_REQUEST_DONE:String = 'onMyListRequestDone';
 		public static const MY_SONGS_REQUEST_DONE:String = 'onMySongsRequestDone';
 		public static const CONFIG_REQUEST_DONE:String = 'onConfigRequestDone';
-		public static const GENRES_REQUEST_DONE:String = 'onGenresRequestDone';
+		public static const GENRES_REQUEST_DONE:String = 'onGenresRequestDone';		public static const GENRES_SEARCH_REQUEST_DONE:String = 'onGenresSearchRequestDone';
 		public static const USER_REQUEST_DONE:String = 'onUserRequestDone';
 		public static const INSTRUMENTS_REQUEST_DONE:String = 'onInstrumentsRequestDone';
 		public static const INSTRUMENTS_SEARCH_REQUEST_DONE:String = 'onInstrumentsSearchRequestDone';
