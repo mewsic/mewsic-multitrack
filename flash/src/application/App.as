@@ -97,7 +97,7 @@ package application {
 			Embeds;
 
 			// init loader
-			bulkLoader = new BulkLoader('main');
+			bulkLoader = new BulkLoader('main', 14);
 			
 			// init remoting connection
 			connection = new Connection();
@@ -295,15 +295,16 @@ package application {
 			var l8r:String = '\nPlease try again later.';
 			var btn:String = MessageModal.BUTTONS_RELOAD;
 			var ico:String = MessageModal.ICON_ERROR;
+			
+			if(event.currentTarget == connection.streamService) {
+				Logger.warn('Could not connect stream');
+				return;
+			}
 
 			switch(event.currentTarget) {
 				
 				case connection.configService:
 					dsc = 'Could not load user config data.' + l8r;
-					break;
-					
-				case connection.streamService:
-					dsc = 'Could not connect stream.' + l8r;
 					break;
 					
 				case connection.genresService:
