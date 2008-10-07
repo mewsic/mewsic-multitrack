@@ -298,6 +298,7 @@ package application {
 			
 			if(event.currentTarget == connection.streamService) {
 				Logger.warn('Could not connect stream');
+				editor.disableStreamFunctions();
 				return;
 			}
 

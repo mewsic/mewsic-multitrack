@@ -122,6 +122,7 @@ package editor_panel {
 		private var _isVUMeterEnabled:Boolean;
 		private var _recordLimit:uint;
 		private var _isCoreBPMSet:Boolean;
+		private var _isStreamDown:Boolean;
 
 		
 		
@@ -538,6 +539,17 @@ package editor_panel {
 			// autoscroll
 			// after a while so the playhead has time to tween
 			setTimeout(_autoScroll, 500 + 100);
+		}
+		
+		
+		
+		public function disableStreamFunctions():void {
+			Logger.info('Disabling stream functions.');
+			
+			_isStreamDown = true;
+			
+			_topRecordBtn.alpha = .4;
+			_topRecordBtn.areEventsEnabled = false;
 		}
 
 		
