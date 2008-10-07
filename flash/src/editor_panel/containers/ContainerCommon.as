@@ -114,6 +114,7 @@ package editor_panel.containers {
 					// song is duped,
 					// show alert window
 					App.messageModal.show({title:'Add song', description:'Song already loaded.', buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
+					return;
 				}
 			}
 			
@@ -158,6 +159,7 @@ package editor_panel.containers {
 						// track is duped,
 						// show alert window
 						App.messageModal.show({title:'Add track', description:'Track already loaded', buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
+						return;
 					}
 				}
 				
