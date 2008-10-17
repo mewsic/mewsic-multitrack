@@ -16,6 +16,7 @@ package controls {
 		public static const CHANGE:String = 'onChange';
 		public static const FOCUS_IN:String = 'onFocusIn';
 		public static const FOCUS_OUT:String = 'onFocusOut';
+		public static const ENTER_PRESSED:String = 'onEnterPressed';
 		public var text:String;
 
 		

@@ -11,9 +11,11 @@ package controls {
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
+	import flash.events.KeyboardEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
-	import flash.text.TextFormat;	
+	import flash.text.TextFormat;
+	import flash.ui.Keyboard;	
 
 	
 	
@@ -325,6 +327,8 @@ package controls {
 			}
 			_setIn();
 			
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown, false, 0, true);
+			
 			dispatchEvent(new InputEvent(InputEvent.FOCUS_IN));
 		}
 
@@ -342,6 +346,8 @@ package controls {
 			}
 			_setOut();
 			
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
+			
 			dispatchEvent(new InputEvent(InputEvent.FOCUS_OUT));
 		}
 
@@ -353,6 +359,14 @@ package controls {
 			_refreshText();
 			
 			dispatchEvent(new InputEvent(InputEvent.CHANGE, false, false, text));
+		}
+		
+		
+		
+		private function _onKeyDown(event:KeyboardEvent):void {
+			if(event.keyCode == Keyboard.ENTER) {
+				dispatchEvent(new InputEvent(InputEvent.ENTER_PRESSED));
+			}
 		}
 
 		

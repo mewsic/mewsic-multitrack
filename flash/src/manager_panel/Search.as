@@ -38,6 +38,7 @@ package manager_panel {
 	import org.vancura.util.addChildren;
 	
 	import flash.display.MovieClip;
+	import flash.events.Event;
 	import flash.events.MouseEvent;	
 
 	
@@ -130,10 +131,11 @@ package manager_panel {
 			// add event listeners
 			_headerEditBtn.addEventListener(MouseEvent.CLICK, _onHeaderEditBtnClick, false, 0, true);
 			_headerEditInput.addEventListener(MouseEvent.CLICK, _onHeaderEditInputClick, false, 0, true);
+			_headerEditInput.addEventListener(InputEvent.ENTER_PRESSED, _onHeaderEditBtnClick, false, 0, true);
+			_headerEditInput.addEventListener(InputEvent.FOCUS_IN, _onInputFocusIn, false, 0, true);
 			_menuAdvancedSearchBtn.addEventListener(MouseEvent.CLICK, _onAdvancedSearchBtnClick, false, 0, true);
 			_menuResetSearchBtn.addEventListener(MouseEvent.CLICK, _onResetSearchBtnClick, false, 0, true);
 			_advancedSearchSubTab.addEventListener(AdvancedSearchEvent.ADVANCED_SEARCH, _onAdvancedSearch, false, 0, true);
-			_headerEditInput.addEventListener(InputEvent.FOCUS_IN, _onInputFocusIn, false, 0, true);
 		}
 
 		
@@ -190,7 +192,7 @@ package manager_panel {
 
 		
 		
-		private function _onHeaderEditBtnClick(event:MouseEvent):void {
+		private function _onHeaderEditBtnClick(event:Event):void {
 			dispatchEvent(new TabEvent(TabEvent.ACTIVATE));
 			_searchByKeyword();
 		}
