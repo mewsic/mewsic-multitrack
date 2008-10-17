@@ -7,6 +7,7 @@ package manager_panel.search {
 	import config.Settings;
 	
 	import controls.Button;
+	import controls.Thumbnail;
 	
 	import manager_panel.search.SearchRowCommon;
 	
@@ -45,6 +46,7 @@ package manager_panel.search {
 		private var _titleTF:QTextField;
 		private var _starRatingBM:QBitmap;
 		private var _editBtn:Button;
+		private var _instrumentThumb:Thumbnail;
 
 		
 		
@@ -65,29 +67,44 @@ package manager_panel.search {
 			if(trackTitle == '') trackTitle = '(No title)';
 			
 			// add text boxes
-			_authorTF = new QTextField({x:57, y:2, width:126, defaultTextFormat:Formats.searchResultsPanelTrackRowAuthor, text:author, mouseEnabled:false, height:14});
-			_titleTF = new QTextField({x:57, y:12, width:126, defaultTextFormat:Formats.searchResultsPanelTrackRowTitle, filters:Filters.searchResultsPanelTrackRowTitle, text:trackTitle, mouseEnabled:false, height:17});
+			_authorTF = new QTextField({x:42, y:2, width:$CONTENT_WIDTH - 47, defaultTextFormat:Formats.searchResultsPanelTrackRowAuthor, text:author, mouseEnabled:false, height:14});
+			_titleTF = new QTextField({x:42, y:12, width:$CONTENT_WIDTH - 47, defaultTextFormat:Formats.searchResultsPanelTrackRowTitle, filters:Filters.searchResultsPanelTrackRowTitle, text:trackTitle, mouseEnabled:false, height:17});
 			
 			// add siblings badge
-			_siblingsTF = new QTextField({x:8, y:8, defaultTextFormat:Formats.searchResultsPanelRowBadge, filters:Filters.searchResultsPanelTrackRowBadge, text:t, autoSize:TextFieldAutoSize.LEFT, sharpness:50, thickness:-100, mouseEnabled:false});
+			_siblingsTF = new QTextField({y:32, defaultTextFormat:Formats.searchResultsPanelRowBadge, filters:Filters.searchResultsPanelTrackRowBadge, text:t, autoSize:TextFieldAutoSize.LEFT, sharpness:50, thickness:-100, mouseEnabled:false});
 			_siblingsSBM = new ScaleBitmap((new Embeds.subpanelSearchPanel2CountBD() as Bitmap).bitmapData);
 			_siblingsSBM.scale9Grid = new Rectangle(8, 0, 2, 19);
 			_siblingsSBM.width = Math.round(_siblingsTF.textWidth) + 11;
-			_siblingsSBM.x = 5;
-			_siblingsSBM.y = 6;
+			_siblingsSBM.x = $CONTENT_WIDTH - Math.round(_siblingsTF.textWidth) - 119;
+			_siblingsSBM.y = 30;
+			_siblingsTF.x = _siblingsSBM.x + 3;
 			
 			// add star rating
-			_starRatingBM = new QBitmap({x:188, y:9});
+			_starRatingBM = new QBitmap({x:190, y:34});
 			_starRatingBM.bitmapData = Bitmapping.crop((new Embeds.subpanelTrackHeaderStarRatingBD() as Bitmap).bitmapData, 0, Math.round(td.trackRating) * 11, 60, 11);
 			
 			// add edit button
-			_editBtn = new Button({x:251, y:8, width:33, height:14, skin:new Embeds.buttonSearchTrackBD(), icon:new Embeds.glyphEditNanoBD(), textOutFilters:Filters.buttonSearchTrackLabel, textOverFilters:Filters.buttonSearchTrackLabel, textPressFilters:Filters.buttonSearchTrackLabel, textOutFormat:Formats.buttonSmall, textOverFormat:Formats.buttonSmall, textPressFormat:Formats.buttonSmall, textOutOffsY:-3, textOverOffsY:-3, textPressOffsY:-2});
+			_editBtn = new Button({x:254, y:32, width:33, height:14, skin:new Embeds.buttonSearchTrackBD(), icon:new Embeds.glyphEditNanoBD(), textOutFilters:Filters.buttonSearchTrackLabel, textOverFilters:Filters.buttonSearchTrackLabel, textPressFilters:Filters.buttonSearchTrackLabel, textOutFormat:Formats.buttonSmall, textOverFormat:Formats.buttonSmall, textPressFormat:Formats.buttonSmall, textOutOffsY:-3, textOverOffsY:-3, textPressOffsY:-2});
+
+			// add avatar
+			_instrumentThumb = new Thumbnail({x:4, y:3, mouseEnabled:false});
 			
 			// add to display list
-			addChildren($contentSpr, _siblingsSBM, _siblingsTF, _authorTF, _titleTF, _starRatingBM, _editBtn);
+			addChildren($contentSpr, _instrumentThumb, _siblingsSBM, _siblingsTF, _authorTF, _titleTF, _starRatingBM, _editBtn);
 			
 			// add event listeners
 			_editBtn.addEventListener(MouseEvent.CLICK, _onEditClick, false, 0, true);
+			
+			// get instrument description and icon
+			var instrumentIconURL:String;
+			try {
+				instrumentIconURL = App.connection.instrumentsService.byID(td.trackInstrumentID).instrumentIconURL;
+			}
+			catch(err2:Error) {
+			}
+			
+			// load instrument thumbnail
+			_instrumentThumb.load(App.connection.serverPath + instrumentIconURL);
 		}
 
 		
@@ -99,8 +116,11 @@ package manager_panel.search {
 			// remove event listeners
 			_editBtn.removeEventListener(MouseEvent.CLICK, _onEditClick);
 			
+			// remove avatar
+			_instrumentThumb.destroy();
+			
 			// remove from display list
-			removeChildren($contentSpr, _siblingsSBM, _siblingsTF, _authorTF, _titleTF, _starRatingBM, _editBtn);
+			removeChildren($contentSpr, _instrumentThumb, _siblingsSBM, _siblingsTF, _authorTF, _titleTF, _starRatingBM, _editBtn);
 			
 			// destroy components
 			_editBtn.destroy();

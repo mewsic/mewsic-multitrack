@@ -97,7 +97,7 @@ package application {
 			Embeds;
 
 			// init loader
-			bulkLoader = new BulkLoader('main', 14);
+			bulkLoader = new BulkLoader('main', 30);
 			
 			// init remoting connection
 			connection = new Connection();
