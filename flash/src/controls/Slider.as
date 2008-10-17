@@ -4,7 +4,6 @@ package controls {
 	import org.bytearray.display.ScaleBitmap;
 	import org.vancura.graphics.Bitmapping;
 	import org.vancura.graphics.Drawing;
-	import org.vancura.graphics.MorphSprite;
 	import org.vancura.graphics.QSprite;
 	import org.vancura.util.addChildren;
 	import org.vancura.util.removeChildren;

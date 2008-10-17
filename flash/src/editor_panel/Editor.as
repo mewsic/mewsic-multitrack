@@ -12,6 +12,7 @@ package editor_panel {
 	import controls.Button;
 	import controls.Input;
 	import controls.InputEvent;
+	import controls.MorphSprite;
 	import controls.Slider;
 	import controls.SliderEvent;
 	import controls.Toolbar;
@@ -36,7 +37,6 @@ package editor_panel {
 	
 	import org.osflash.thunderbolt.Logger;
 	import org.vancura.graphics.Drawing;
-	import org.vancura.graphics.MorphSprite;
 	import org.vancura.graphics.QBitmap;
 	import org.vancura.util.addChildren;
 	

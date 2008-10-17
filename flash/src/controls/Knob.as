@@ -1,5 +1,4 @@
 package controls {
-	import org.vancura.graphics.MorphSprite;
 	import org.vancura.graphics.QSprite;
 	import org.vancura.util.addChildren;
 	import org.vancura.util.removeChildren;

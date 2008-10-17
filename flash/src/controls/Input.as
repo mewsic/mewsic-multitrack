@@ -3,7 +3,6 @@ package controls {
 	
 	import com.gskinner.utils.StringUtils;
 	
-	import org.vancura.graphics.MorphSprite;
 	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
 	import org.vancura.util.assign;

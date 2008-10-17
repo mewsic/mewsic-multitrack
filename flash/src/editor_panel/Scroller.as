@@ -3,9 +3,9 @@ package editor_panel {
 	import config.Filters;
 	
 	import controls.Button;
+	import controls.MorphSprite;
 	import controls.Slider;
 	
-	import org.vancura.graphics.MorphSprite;
 	import org.vancura.graphics.QBitmap;
 	import org.vancura.util.addChildren;
 	

@@ -7,6 +7,8 @@ package editor_panel.containers {
 	import config.Embeds;
 	import config.Settings;
 	
+	import controls.MorphSprite;
+	
 	import editor_panel.tracks.RecordTrack;
 	import editor_panel.tracks.StandardTrack;
 	import editor_panel.tracks.TrackCommon;
@@ -30,7 +32,6 @@ package editor_panel.containers {
 	import com.gskinner.utils.Rnd;
 	
 	import org.osflash.thunderbolt.Logger;
-	import org.vancura.graphics.MorphSprite;
 	import org.vancura.graphics.QBitmap;
 	import org.vancura.graphics.QSprite;
 	import org.vancura.util.addChildren;
