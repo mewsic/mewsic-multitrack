@@ -19,6 +19,7 @@ package manager_panel.search {
 	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
 	
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.text.TextFieldAutoSize;	
 
@@ -74,8 +75,11 @@ package manager_panel.search {
 			
 			// add event listeners
 			_goBtn.addEventListener(MouseEvent.CLICK, _onGoClick, false, 0, true);
-			_authorInput.addEventListener(InputEvent.FOCUS_IN, _onInputFocusIn, false, 0, true);			_titleInput.addEventListener(InputEvent.FOCUS_IN, _onInputFocusIn, false, 0, true);
+			_authorInput.addEventListener(InputEvent.FOCUS_IN, _onInputFocusIn, false, 0, true);			_authorInput.addEventListener(InputEvent.ENTER_PRESSED, _onGoClick, false, 0, true);
+			_titleInput.addEventListener(InputEvent.FOCUS_IN, _onInputFocusIn, false, 0, true);
+			_titleInput.addEventListener(InputEvent.ENTER_PRESSED, _onGoClick, false, 0, true);
 			_bpmInput.addEventListener(InputEvent.FOCUS_IN, _onInputFocusIn, false, 0, true);
+			_bpmInput.addEventListener(InputEvent.ENTER_PRESSED, _onGoClick, false, 0, true);
 			
 			// fill dropboxes
 			_keysDropbox.list = Settings.KEY_LIST;
@@ -117,7 +121,7 @@ package manager_panel.search {
 		 * Go click event handler.
 		 * @param event Event data
 		 */
-		private function _onGoClick(event:MouseEvent):void {
+		private function _onGoClick(event:Event):void {
 			// dispatch
 			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 			dispatchEvent(new AdvancedSearchEvent(AdvancedSearchEvent.ADVANCED_SEARCH, false, false, StringUtils.removeExtraWhitespace(_authorInput.text), StringUtils.removeExtraWhitespace(_titleInput.text), StringUtils.removeExtraWhitespace(_genresDropbox.text), StringUtils.removeExtraWhitespace(_countriesDropbox.text), StringUtils.removeExtraWhitespace(_bpmInput.text), StringUtils.removeExtraWhitespace(_keysDropbox.text), StringUtils.removeExtraWhitespace(_instrumentsDropbox.text)));

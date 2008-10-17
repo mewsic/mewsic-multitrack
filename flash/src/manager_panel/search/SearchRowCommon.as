@@ -25,7 +25,7 @@ package manager_panel.search {
 		
 		
 		protected static const $CONTENT_WIDTH:uint = 292;
-		protected static const $CONTENT_HEIGHT:uint = 29; 
+		protected static const $CONTENT_HEIGHT:uint = 49; 
 		protected var $type:String;
 		protected var $contentSpr:QSprite;
 		private var _backBD:QBitmap;
