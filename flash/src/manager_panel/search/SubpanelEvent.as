@@ -17,6 +17,7 @@ package manager_panel.search {
 		
 		public static const ROW_SELECT:String = 'RowSelect';
 		public static const RESET:String = 'onReset';
+		public static const REFRESH:String = 'onRefresh';
 		public var data:Object;
 
 		

@@ -85,6 +85,8 @@ package manager_panel.search {
 			_headerSwitchBtn.width = 300;
 			_headerSwitchBtn.text = sprintf('%s (%s)', (_currentType == Settings.TYPE_SONG) ? 'SWITCH TO TRACKS' : 'SWITCH TO SONGS', App.getPlural((_currentType == Settings.TYPE_SONG) ? _trackItems.length : _songItems.length, '%u VERSION', '%u VERSIONS'));
 			_headerSwitchBtn.width = _headerSwitchBtn.textWidth + 16;
+			
+			dispatchEvent(new SubpanelEvent(SubpanelEvent.REFRESH));
 		}
 
 		

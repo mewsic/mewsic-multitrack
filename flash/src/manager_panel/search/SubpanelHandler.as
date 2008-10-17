@@ -1,32 +1,32 @@
 package manager_panel.search {
 	import application.App;
-	
+
 	import config.Embeds;
 	import config.Filters;
 	import config.Formats;
 	import config.Settings;
-	
+
 	import controls.Slider;
 	import controls.SliderEvent;
-	
+
 	import manager_panel.search.SubpanelA;
-	
+
 	import remoting.data.SongData;
 	import remoting.data.TrackData;
 	import remoting.dynamic_services.SongSiblingsService;
 	import remoting.dynamic_services.TrackSiblingsService;
 	import remoting.events.SongSiblingsEvent;
 	import remoting.events.TrackSiblingsEvent;
-	
+
 	import de.popforge.utils.sprintf;
-	
+
 	import org.osflash.thunderbolt.Logger;
 	import org.vancura.graphics.Drawing;
 	import org.vancura.graphics.QBitmap;
 	import org.vancura.graphics.QSprite;
 	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
-	
+
 	import flash.text.TextFieldAutoSize;	
 
 	
@@ -106,6 +106,7 @@ package manager_panel.search {
 			_subpanelB.addEventListener(SubpanelEvent.ROW_SELECT, _onSubpanelBRowSelect, false, 0, true);
 			_subpanelD.addEventListener(SubpanelEvent.ROW_SELECT, _onSubpanelDRowSelect, false, 0, true);
 			_subpanelA.addEventListener(SubpanelEvent.RESET, _onSubpanelReset, false, 0, true);
+			_subpanelA.addEventListener(SubpanelEvent.REFRESH, _onSubpanelARefresh, false, 0, true);
 			_sliderA.addEventListener(SliderEvent.REFRESH, _onSliderARefresh, false, 0, true);			_sliderB.addEventListener(SliderEvent.REFRESH, _onSliderBRefresh, false, 0, true);			_sliderC.addEventListener(SliderEvent.REFRESH, _onSliderCRefresh, false, 0, true);			_sliderD.addEventListener(SliderEvent.REFRESH, _onSliderDRefresh, false, 0, true);
 			
 			// refresh sliders
@@ -214,8 +215,12 @@ package manager_panel.search {
 				// refresh sliders
 				_refreshSliders();
 				
-				try { _songSiblingsService.request({songID:sd.songID}); }
-				catch(err1:Error) { Logger.error(sprintf('Could not get song siblings:\n%s', err1.message)); }
+				try { 
+					_songSiblingsService.request({songID:sd.songID}); 
+				}
+				catch(err1:Error) { 
+					Logger.error(sprintf('Could not get song siblings:\n%s', err1.message)); 
+				}
 			}
 			
 			else {
@@ -237,8 +242,12 @@ package manager_panel.search {
 				// refresh sliders
 				_refreshSliders();
 				
-				try { _trackSiblingsService.request({trackID:td.trackID}); }
-				catch(err2:Error) { Logger.error(sprintf('Could not get track siblings:\n%s', err2.message)); }
+				try { 
+					_trackSiblingsService.request({trackID:td.trackID}); 
+				}
+				catch(err2:Error) { 
+					Logger.error(sprintf('Could not get track siblings:\n%s', err2.message)); 
+				}
 			}
 		}
 
@@ -371,6 +380,12 @@ package manager_panel.search {
 		private function _onSliderDRefresh(event:SliderEvent):void {
 			var p:int = Math.round((_subpanelD.height - 128 - 21) * event.thumbPos);
 			_subpanelD.y = 231 + p * -1;
+		}
+
+		
+		
+		private function _onSubpanelARefresh(event:SubpanelEvent):void {
+			_refreshSliders();
 		}
 	}
 }
