@@ -78,17 +78,22 @@ package manager_panel.search {
 			dispatchEvent(new SubpanelEvent(SubpanelEvent.RESET));
 			
 			_currentType = t;
+			
 			fill();
+			
+			var tl:int = (_trackItems == null) ? 0 : _trackItems.length;
+			var sl:int = (_songItems == null) ? 0 : _songItems.length;
 			
 			_headerTitleTF.text = (_currentType == Settings.TYPE_SONG) ? 'Song results' : 'Track results';
 			_headerSwitchBtn.x = _headerTitleTF.textWidth + 13 + 10;
 			_headerSwitchBtn.width = 300;
-			_headerSwitchBtn.text = sprintf('%s (%s)', (_currentType == Settings.TYPE_SONG) ? 'SWITCH TO TRACKS' : 'SWITCH TO SONGS', App.getPlural((_currentType == Settings.TYPE_SONG) ? _trackItems.length : _songItems.length, '%u VERSION', '%u VERSIONS'));
+			_headerSwitchBtn.text = sprintf('%s (%s)', (_currentType == Settings.TYPE_SONG) ? 'SWITCH TO TRACKS' : 'SWITCH TO SONGS', App.getPlural((_currentType == Settings.TYPE_SONG) ? tl : sl, '%u VERSION', '%u VERSIONS'));
+			
 			_headerSwitchBtn.width = _headerSwitchBtn.textWidth + 16;
 			
 			dispatchEvent(new SubpanelEvent(SubpanelEvent.REFRESH));
 		}
-
+		
 		
 		
 		/**
@@ -115,26 +120,30 @@ package manager_panel.search {
 						// current mode is songs, parse data
 						Logger.info('Adding songs to listing');
 						
-						for each(var si:SongData in _songItems) {
-							Logger.info(sprintf('  *  Adding (songID=%u, songTitle=%s)', si.songID, si.songTitle));
-							var srow:SearchSongRow = new SearchSongRow(si, {y:sy});
-							$contentSpr.addChild(srow);
-							srow.addEventListener(MouseEvent.CLICK, _onRowClick, false, 0, true);
-							sy += srow.height;
-							_rowList.push(srow);
+						if(_songItems != null) {
+							for each(var si:SongData in _songItems) {
+								Logger.info(sprintf('  *  Adding (songID=%u, songTitle=%s)', si.songID, si.songTitle));
+								var srow:SearchSongRow = new SearchSongRow(si, {y:sy});
+								$contentSpr.addChild(srow);
+								srow.addEventListener(MouseEvent.CLICK, _onRowClick, false, 0, true);
+								sy += srow.height;
+								_rowList.push(srow);
+							}
 						}
 					}
 					else {
 						// current mode is tracks, parse data
 						Logger.info('Adding tracks to listing');
 						
-						for each(var ti:TrackData in _trackItems) {
-							Logger.info(sprintf('  *  Adding (trackID=%u, trackTitle=%s)', ti.trackID, ti.trackTitle));
-							var trow:SearchTrackRow = new SearchTrackRow(ti, {y:sy});
-							$contentSpr.addChild(trow);
-							trow.addEventListener(MouseEvent.CLICK, _onRowClick, false, 0, true);
-							sy += trow.height;
-							_rowList.push(trow);
+						if(_trackItems != null) {
+							for each(var ti:TrackData in _trackItems) {
+								Logger.info(sprintf('  *  Adding (trackID=%u, trackTitle=%s)', ti.trackID, ti.trackTitle));
+								var trow:SearchTrackRow = new SearchTrackRow(ti, {y:sy});
+								$contentSpr.addChild(trow);
+								trow.addEventListener(MouseEvent.CLICK, _onRowClick, false, 0, true);
+								sy += trow.height;
+								_rowList.push(trow);
+							}
 						}
 					}
 				}

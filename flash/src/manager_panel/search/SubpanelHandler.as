@@ -1,6 +1,8 @@
 package manager_panel.search {
 	import application.App;
 
+	import caurina.transitions.Tweener;
+
 	import config.Embeds;
 	import config.Filters;
 	import config.Formats;
@@ -61,6 +63,7 @@ package manager_panel.search {
 		private var _currentTitle:String;
 		private var _songSiblingsService:SongSiblingsService;
 		private var _trackSiblingsService:TrackSiblingsService;
+		private var _currentType:String;
 
 		
 		
@@ -153,6 +156,11 @@ package manager_panel.search {
 			_subpanelC.setStatus(SubpanelCommon.STATUS_INFO, '');
 			_subpanelD.setStatus(SubpanelCommon.STATUS_INFO, '');
 			
+			_sliderA.thumbPos = 0;
+			_sliderB.thumbPos = 0;
+			_sliderC.thumbPos = 0;
+			_sliderD.thumbPos = 0;
+			
 			_refreshSliders();
 		}
 
@@ -165,10 +173,17 @@ package manager_panel.search {
 		 */
 		public function parseResults(si:Array, ti:Array):void {
 			_subpanelA.setData(si, ti);
-			_subpanelA.currentType = Settings.TYPE_SONG;
+			_subpanelA.currentType = (_currentType == Settings.TYPE_TRACK) ? Settings.TYPE_TRACK : Settings.TYPE_SONG;
 			_subpanelB.setStatus(SubpanelCommon.STATUS_INFO, 'CLICK ON A SONG OR TRACK\nTO BEGIN BROWSING');
 			
 			_refreshSliders();
+		}
+
+		
+		
+		public function set currentType(value:String):void {
+			_currentType = value;
+			_subpanelA.currentType = value;
 		}
 
 		
@@ -211,6 +226,11 @@ package manager_panel.search {
 				// process panbel D
 				_subpanelD.clean();
 				_subpanelD.setStatus(SubpanelCommon.STATUS_INFO, 'LOADING');
+			
+				// reset sliders
+				_sliderB.thumbPos = 0;
+				_sliderC.thumbPos = 0;
+				_sliderD.thumbPos = 0;
 				
 				// refresh sliders
 				_refreshSliders();
@@ -238,6 +258,11 @@ package manager_panel.search {
 				// process panel D
 				_subpanelD.clean();
 				_subpanelD.setStatus(SubpanelCommon.STATUS_INFO, 'LOADING');
+				
+				// reset sliders
+				_sliderB.thumbPos = 0;
+				_sliderC.thumbPos = 0;
+				_sliderD.thumbPos = 0;
 				
 				// refresh sliders
 				_refreshSliders();
@@ -268,6 +293,9 @@ package manager_panel.search {
 				_subpanelC.clean();
 				_subpanelC.setData(sd.songTracks, sprintf('%s for “%s”', App.getPlural(sd.songTracks.length, '%u track', '%u tracks'), _currentTitle));
 				_subpanelC.fill();
+			
+				// reset sliders
+				_sliderC.thumbPos = 0;
 				
 				// refresh sliders
 				_refreshSliders();
@@ -294,6 +322,9 @@ package manager_panel.search {
 				_subpanelC.clean();
 				_subpanelC.setData(sd.songTracks, sprintf('%s for “%s”', App.getPlural(sd.songTracks.length, '%s track', '%s tracks'), _currentTitle));
 				_subpanelC.fill();
+			
+				// reset sliders
+				_sliderC.thumbPos = 0;
 				
 				// refresh sliders
 				_refreshSliders();
@@ -318,6 +349,10 @@ package manager_panel.search {
 			_subpanelD.setData(event.indirectList, sprintf('%s of “%s”', App.getPlural(event.indirectList.length, '%u remote version', '%u remote versions'), _currentTitle));
 			_subpanelD.fill();
 			
+			// reset sliders
+			_sliderB.thumbPos = 0;
+			_sliderD.thumbPos = 0;
+			
 			// refresh sliders
 			_refreshSliders();
 		}
@@ -340,6 +375,11 @@ package manager_panel.search {
 			_subpanelD.setData(event.indirectList, sprintf('%s of “%s”', App.getPlural(event.indirectList.length, '%u remote version', '%u remote versions'), _currentTitle));
 			_subpanelD.fill();
 			
+			// reset sliders
+			_sliderB.thumbPos = 0;
+			_sliderC.thumbPos = 0;
+			_sliderD.thumbPos = 0;
+			
 			// refresh sliders
 			_refreshSliders();
 		}
@@ -357,29 +397,29 @@ package manager_panel.search {
 		
 		
 		private function _onSliderARefresh(event:SliderEvent):void {
-			var p:int = Math.round((_subpanelA.height - 314 - 21) * event.thumbPos);
-			_subpanelA.y = 45 + p * -1;
+			var q:int = 45 + (Math.round((_subpanelA.height - 314 - 21) * event.thumbPos)) * -1;
+			Tweener.addTween(_subpanelA, {time:.3, y:q, rounded:true});
 		}
 
 		
 		
 		private function _onSliderBRefresh(event:SliderEvent):void {
-			var p:int = Math.round((_subpanelB.height - 314 - 21) * event.thumbPos);
-			_subpanelB.y = 45 + p * -1;
+			var q:int = 45 + (Math.round((_subpanelB.height - 314 - 21) * event.thumbPos)) * -1;
+			Tweener.addTween(_subpanelB, {time:.3, y:q, rounded:true});
 		}
 
 		
 		
 		private function _onSliderCRefresh(event:SliderEvent):void {
-			var p:int = Math.round((_subpanelC.height - 128 - 21) * event.thumbPos);
-			_subpanelC.y = 45 + p * -1;
+			var q:int = 45 + (Math.round((_subpanelC.height - 128 - 21) * event.thumbPos)) * -1;
+			Tweener.addTween(_subpanelC, {time:.3, y:q, rounded:true});
 		}
 
 		
 		
 		private function _onSliderDRefresh(event:SliderEvent):void {
-			var p:int = Math.round((_subpanelD.height - 128 - 21) * event.thumbPos);
-			_subpanelD.y = 231 + p * -1;
+			var q:int = 231 + (Math.round((_subpanelD.height - 128 - 21) * event.thumbPos)) * -1;
+			Tweener.addTween(_subpanelD, {time:.3, y:q, rounded:true});
 		}
 
 		

@@ -71,7 +71,7 @@ package remoting.dynamic_services {
 			if(params.bpm != '' && params.bpm != undefined) query += '&bpm=' + escape(params.bpm);
 			if(params.key != '' && params.key != undefined) query += '&key=' + escape(params.key);
 			
-			if(query == '?') query = '?q=';
+			if(query == '?') query = '?q=Myousica';
 			 
 			super.request({suffix:query});
 		}

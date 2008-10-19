@@ -76,6 +76,7 @@ package manager_panel {
 		private var _currentView:String;
 		private var _menuResetSearchBtn:Button;
 		private var _service:SearchService;
+		private var _advancedSearchMode:String;
 
 		
 		
@@ -215,8 +216,9 @@ package manager_panel {
 			}
 			else {
 				Logger.info(sprintf('Searching for keyword "%s"', query));
-				
+
 				_searchResultsSubTab.cleanResults();
+				_advancedSearchMode = null;
 				_headerWaitPieMC.visible = true;
 				_setView(_VIEW_SEARCH_RESULTS);
 				
@@ -251,6 +253,7 @@ package manager_panel {
 			Logger.info(sprintf('Advanced search:\n  author=%s\n  title=%s\n  genre=%s\n  country=%s\n  bpm=%s\n  key=%s\n  instrument=%s', event.author, event.title, sg, event.country, event.bpm, event.key, si));
 			
 			_searchResultsSubTab.cleanResults();
+			_advancedSearchMode = (event.instrument != '') ? Settings.TYPE_TRACK : Settings.TYPE_SONG;
 			_headerWaitPieMC.visible = true;
 			_setView(_VIEW_SEARCH_RESULTS);
 			
@@ -276,6 +279,8 @@ package manager_panel {
 			
 			try {
 				_searchResultsSubTab.parseResults(event.songList, event.trackList);
+				if(event.songList.length == 0 && event.trackList.length > 0) _searchResultsSubTab.currentType = Settings.TYPE_TRACK;
+				else if(_advancedSearchMode != null) _searchResultsSubTab.currentType = _advancedSearchMode;
 			}
 			catch(err:Error) {
 				Logger.warn(sprintf('Error switching views (%s)', err.message));
@@ -329,7 +334,6 @@ package manager_panel {
 
 					_menuAdvancedSearchBtn.visible = false;
 					_menuResetSearchBtn.visible = true;
-					_searchResultsSubTab.cleanResults();
 					$contentHeight = _SUBTAB_Y + _ADVANCED_SEARCH_HEIGHT + _SEARCH_RESULTS_HEIGHT + 16;
 					dispatchEvent(new TabEvent(TabEvent.CHANGE_HEIGHT));
 					
