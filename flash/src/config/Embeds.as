@@ -82,7 +82,8 @@ package config {
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphVolume1BeigeBD')] public static var glyphVolume1BeigeBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphVolume1WhiteBD')] public static var glyphVolume1WhiteBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphMyousicaBD')] public static var glyphMyousicaBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphCheckboxBD')] public static var glyphCheckboxBD:Class;
+		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphCheckboxOnBD')] public static var glyphCheckboxOnBD:Class;
+		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphCheckboxOffBD')] public static var glyphCheckboxOffBD:Class;
 		
 		// toolbars
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ToolbarBeigeBD')] public static var toolbarBeigeBD:Class;

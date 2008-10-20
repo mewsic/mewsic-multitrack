@@ -94,7 +94,7 @@ package modals {
 			
 			// add inputs
 			_keyDropbox = new Dropbox({introText:'Key', width:113, x:312, y:9});
-			_bpmInput = new Input({introText:'BPM', width:182, x:428, y:9});
+			_bpmInput = new Input({width:182, x:428, y:9});
 			_titleInput = new Input({introText:'Track name', width:299, x:10, y:9});
 			_descriptionInput = new Input({introText:'Track description', width:600, x:10, y:41});
 			_instrumentDescriptionInput = new Input({introText:'Instrument description', width:298, x:312, y:73});
@@ -165,7 +165,6 @@ package modals {
 				_titleTF.text = 'Save track';
 				_instrumentDropbox.reset();
 				_keyDropbox.reset();
-				_bpmInput.reset();
 				_titleInput.reset();
 				_instrumentDescriptionInput.reset();
 				_descriptionInput.reset();
@@ -434,7 +433,7 @@ package modals {
 		 */
 		private function _onIdeaClick(event:MouseEvent):void {
 			_isIdea = !_isIdea;
-			_ideaBtn.icon = (_isIdea) ? new Embeds.glyphCheckboxBD() : null;
+			_ideaBtn.icon = (_isIdea) ? new Embeds.glyphCheckboxOnBD() : new Embeds.glyphCheckboxOffBD();
 			
 			// dispatch
 			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));

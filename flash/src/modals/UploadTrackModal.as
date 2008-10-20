@@ -541,7 +541,7 @@ package modals {
 		 */
 		private function _onIdeaClick(event:MouseEvent):void {
 			_isIdea = !_isIdea;
-			_ideaBtn.icon = (_isIdea) ? new Embeds.glyphCheckboxBD() : null;
+			_ideaBtn.icon = (_isIdea) ? new Embeds.glyphCheckboxOnBD() : null;
 			
 			// dispatch
 			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
