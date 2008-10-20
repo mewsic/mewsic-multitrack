@@ -44,6 +44,7 @@ package remoting.static_services {
 		private var _trackFetchRequestURL:String; // Track service: fetch request (e.g. '/tracks/{:id}.xml')
 		private var _trackSiblingsRequestURL:String; // Track service: siblings request (e.g. '/tracks/{:id}.xml?siblings=true')
 		private var _trackCreateRequestURL:String; // Track service: create request (e.g. '/tracks/{:id}.xml')
+		private var _trackDownloadRequestURL:String; // Track service: download request (e.g. '/tracks/{:track_id}/download')
 		
 		private var _mediaExportRequestURL:String; // Media service: export request (e.g. '/mix')
 		private var _mediaEncodeRequestURL:String; // Media service: encode request (e.g. '/encode_flv')
@@ -106,6 +107,7 @@ package remoting.static_services {
 				'  *  trackFetchRequestURL = ' + trackFetchRequestURL + '\n' +
 				'  *  trackSiblingsRequestURL = ' + trackSiblingsRequestURL + '\n' +
 				'  *  trackCreateRequestURL = ' + trackCreateRequestURL + '\n' +
+				'  *  trackDownloadRequestURL = ' + trackDownloadRequestURL + '\n' +
 				
 				'  *  mediaExportRequestURL = ' + mediaExportRequestURL + '\n' +
 				'  *  mediaEncodeRequestURL = ' + mediaEncodeRequestURL + '\n' +
@@ -152,6 +154,7 @@ package remoting.static_services {
 				_trackFetchRequestURL = $responseData.url_request.tracks.fetch;
 				_trackSiblingsRequestURL = $responseData.url_request.tracks.siblings;
 				_trackCreateRequestURL = $responseData.url_request.tracks.create;
+				_trackDownloadRequestURL = $responseData.url_request.tracks.download;
 				
 				_mediaExportRequestURL = $responseData.url_request.media.mix;
 				_mediaEncodeRequestURL = $responseData.url_request.media.encode;
@@ -389,6 +392,16 @@ package remoting.static_services {
 		 */
 		public function get trackCreateRequestURL():String {
 			return _trackCreateRequestURL;
+		}
+		
+		
+		
+		/**
+		 * Get track download request URL.
+		 * @return Track download request URL
+		 */
+		public function get trackDownloadRequestURL():String {
+			return _trackDownloadRequestURL;
 		}
 		
 		

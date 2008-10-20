@@ -259,7 +259,7 @@ package editor_panel.tracks {
 		 */
 		private function _onSaveClick(event:MouseEvent):void {
 			Logger.debug(sprintf('Save track (trackID=%u, trackTitle=%s)', $trackData.trackID, $trackData.trackTitle));
-			App.downloadTrackModal.downloadURL = App.connection.serverPath + $trackData.trackSampleURL;
+			App.downloadTrackModal.downloadURL = App.connection.serverPath + App.connection.configService.trackDownloadRequestURL.replace(/{:track_id}/g, $trackData.trackID);
 			App.downloadTrackModal.show();
 		}
 
