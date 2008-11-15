@@ -531,6 +531,19 @@ package editor_panel.containers {
 				}
 			}
 		}
+		
+		
+		
+		public function getTrack(idx:uint):StandardTrack {
+			try {
+				var tr:StandardTrack = _trackList[idx] as StandardTrack;
+			}
+			catch(err:Error) {
+				return null;
+			}
+			
+			return tr;
+		}
 
 		
 		

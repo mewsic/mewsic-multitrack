@@ -228,6 +228,30 @@ package editor_panel.tracks {
 
 		
 		
+		public function toggleMute():void {
+			_onMuteClick();
+		}
+		
+		
+		
+		public function toggleSolo():void {
+			_onSoloClick();
+		}
+		
+		
+		
+		public function alterVolume(step:Number):void {
+			_volumeSlider.thumbPos += step;
+		}
+
+		
+		
+		public function alterBalance(step:Number):void {
+			_knob.angle += step * 200;
+		}
+
+		
+		
 		public function set volume(value:Number):void {
 			try {
 				$sampler.volume = value;
@@ -239,7 +263,7 @@ package editor_panel.tracks {
 				_volumeSlider.thumbPos = 1 - value;
 			}
 		}
-
+		
 		
 		
 		/**
@@ -269,7 +293,7 @@ package editor_panel.tracks {
 		 * Mute button click event handler.
 		 * @param event Event data
 		 */
-		private function _onMuteClick(event:MouseEvent):void {
+		private function _onMuteClick(event:MouseEvent = null):void {
 			if($isMuted) {
 				Logger.debug(sprintf('Unmute track (trackID=%u, trackTitle=%s)', $trackData.trackID, $trackData.trackTitle));
 				$isMuted = false;
@@ -289,7 +313,7 @@ package editor_panel.tracks {
 		 * Solo button click event handler.
 		 * @param event Event data
 		 */
-		private function _onSoloClick(event:MouseEvent):void {
+		private function _onSoloClick(event:MouseEvent = null):void {
 			if($isSolo) {
 				Logger.debug(sprintf('Unsolo track (trackID=%u, trackTitle=%s)', $trackData.trackID, $trackData.trackTitle));
 				$isSolo = false;

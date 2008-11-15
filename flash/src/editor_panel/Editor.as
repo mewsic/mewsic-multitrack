@@ -1,4 +1,6 @@
 package editor_panel {
+	import editor_panel.tracks.StandardTrack;	
+	
 	import application.App;
 	import application.AppEvent;
 	import application.PanelCommon;
@@ -479,6 +481,17 @@ package editor_panel {
 
 		
 		
+		public function alterPlaybackState():void {
+			if(allTrackCount == 0) return;
+			if(_isRecording) stop();
+			else if(_recordTrack != null) return;
+			else if(_isPlaying && _isPaused) resume();
+			else if(_isPlaying && !_isPaused) pause();
+			else play();
+		}
+
+		
+		
 		/**
 		 * Rewind.
 		 */
@@ -549,6 +562,103 @@ package editor_panel {
 			
 			_topRecordBtn.alpha = .4;
 			_topRecordBtn.areEventsEnabled = false;
+		}
+
+		
+		
+		public function alterMasterVolume(step:Number):void {
+			_globalVolumeSlider.thumbPos += step;
+		}
+
+		
+		
+		public function alterPosition(step:Number):void {
+			var p:uint = currentPosition + step * 1000;
+			if(p < 0) p = 0;
+			if(p > _milliseconds) p = 0;
+			
+			_standardContainer.seek(p);
+			_beatClicker.seek(p);
+			
+			// refresh visual
+			_refreshVisual();
+		}
+
+		
+		
+		public function createAndRecord():void {
+			if(_isRecording) return;
+			if(_isPlaying) stop();
+			if(_recordTrack == null) _onRecordTrackBtnClick();
+			else _recordTrack.startRecording(); 
+		}
+
+		
+		
+		public function toggleMetronome():void {
+			_onBPMBtnClick();
+		}
+
+		
+		
+		public function upload():void {
+			_onUploadTrackBtnClick();
+		}
+
+		
+		
+		public function export():void {
+			if(allTrackCount > 0 && !_isPlaying && !_isRecording) _onExportSongBtnClick();
+		}
+
+		
+		
+		public function save():void {
+			if(allTrackCount > 0 && !_isPlaying && !_isRecording) _onSaveSongBtnClick();
+		}
+
+		
+		
+		public function toggleTrackMute(track:uint):void {
+			try {
+				var tr:StandardTrack = _standardContainer.getTrack(track);
+				if(tr != null) tr.toggleMute();
+			}
+			catch(err:Error) {
+			}
+		}
+
+		
+		
+		public function toggleTrackSolo(track:uint):void {
+			try {
+				var tr:StandardTrack = _standardContainer.getTrack(track);
+				if(tr != null) tr.toggleSolo();
+			}
+			catch(err:Error) {
+			}
+		}
+
+		
+		
+		public function alterTrackVolume(track:uint, step:Number):void {
+			try {
+				var tr:StandardTrack = _standardContainer.getTrack(track);
+				if(tr != null) tr.alterVolume(step);
+			}
+			catch(err:Error) {
+			}
+		}
+
+		
+		
+		public function alterTrackBalance(track:uint, step:Number):void {
+			try {
+				var tr:StandardTrack = _standardContainer.getTrack(track);
+				if(tr != null) tr.alterBalance(step);
+			}
+			catch(err:Error) {
+			}
 		}
 
 		
@@ -813,7 +923,7 @@ package editor_panel {
 		 * Display record track modal.
 		 * @param event Event data
 		 */
-		private function _onRecordTrackBtnClick(event:MouseEvent):void {
+		private function _onRecordTrackBtnClick(event:MouseEvent = null):void {
 			// only logged in user can use recording
 			if(!App.connection.coreUserLoginStatus) {
 				// user is not logged in, don't allow him to record
@@ -860,7 +970,7 @@ package editor_panel {
 		 * Display upload trac modal.
 		 * @param event Event data
 		 */
-		private function _onUploadTrackBtnClick(event:MouseEvent):void {
+		private function _onUploadTrackBtnClick(event:MouseEvent = null):void {
 			if(!App.connection.coreUserLoginStatus) {
 				// user is not logged in, don't allow him to display My List
 				App.messageModal.show({title:'Upload track', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
@@ -879,7 +989,7 @@ package editor_panel {
 		 * Display save song modal.
 		 * @param event Event data
 		 */
-		private function _onSaveSongBtnClick(event:MouseEvent):void {
+		private function _onSaveSongBtnClick(event:MouseEvent = null):void {
 			if(!App.connection.coreUserLoginStatus) {
 				// user is not logged in, don't allow him to display My List
 				App.messageModal.show({title:'Save song', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
@@ -898,7 +1008,7 @@ package editor_panel {
 		 * Display export song modal.
 		 * @param event Event data
 		 */
-		private function _onExportSongBtnClick(event:MouseEvent):void {
+		private function _onExportSongBtnClick(event:MouseEvent = null):void {
 			if(!App.connection.coreUserLoginStatus) {
 				// user is not logged in, don't allow him to display My List
 				App.messageModal.show({title:'Export song', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
@@ -1018,7 +1128,7 @@ package editor_panel {
 
 		
 		
-		private function _onBPMBtnClick(event:MouseEvent):void {
+		private function _onBPMBtnClick(event:MouseEvent = null):void {
 			_beatClicker.isEnabled = !_beatClicker.isEnabled;
 			_bpmOffBtn.visible = !_beatClicker.isEnabled;
 			_bpmOnBtn.visible = _beatClicker.isEnabled;
