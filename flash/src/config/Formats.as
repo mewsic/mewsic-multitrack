@@ -30,6 +30,7 @@ package config {
 		public static var recordContainerDescription:TextFormat = new TextFormat();
 		public static var recordContainerSpecsTitle:TextFormat = new TextFormat();
 		public static var recordContainerSpecsContent:TextFormat = new TextFormat();
+		public static var recordTrackStatus:TextFormat = new TextFormat();
 		public static var scrollerRuntimeTitle:TextFormat = new TextFormat();
 		public static var scrollerRuntimeContent:TextFormat = new TextFormat();
 		public static var rulerPlayhead:TextFormat = new TextFormat();
@@ -130,7 +131,11 @@ package config {
 		recordContainerSpecsContent.font = _MYRIAD_WEB_BOLD; 
 		recordContainerSpecsContent.size = 10; 
 		recordContainerSpecsContent.color = 0x2f454f; 
-		recordContainerSpecsContent.leading = 1; 
+		recordContainerSpecsContent.leading = 1;
+		
+		recordTrackStatus.font = _MYRIAD_WEB_BOLD;
+		recordTrackStatus.size = 14;
+		recordTrackStatus.leading = -4; 
 		
 		scrollerRuntimeTitle.font = _MYRIAD_WEB_REGULAR; 
 		scrollerRuntimeTitle.size = 10; 

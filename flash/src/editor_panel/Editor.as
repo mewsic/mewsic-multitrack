@@ -2,13 +2,13 @@ package editor_panel {
 	import application.App;
 	import application.AppEvent;
 	import application.PanelCommon;
-	
+
 	import caurina.transitions.Tweener;
-	
+
 	import config.Embeds;
 	import config.Filters;
 	import config.Settings;
-	
+
 	import controls.Button;
 	import controls.Input;
 	import controls.InputEvent;
@@ -17,7 +17,7 @@ package editor_panel {
 	import controls.SliderEvent;
 	import controls.Toolbar;
 	import controls.VUMeter;
-	
+
 	import editor_panel.BeatClicker;
 	import editor_panel.containers.ContainerCommon;
 	import editor_panel.containers.ContainerEvent;
@@ -27,19 +27,19 @@ package editor_panel {
 	import editor_panel.tracks.RecordTrack;
 	import editor_panel.tracks.TrackCommon;
 	import editor_panel.tracks.TrackEvent;
-	
+
 	import modals.MessageModal;
-	
+
 	import remoting.data.SongData;
 	import remoting.data.TrackData;
-	
+
 	import de.popforge.utils.sprintf;
-	
+
 	import org.osflash.thunderbolt.Logger;
 	import org.vancura.graphics.Drawing;
 	import org.vancura.graphics.QBitmap;
 	import org.vancura.util.addChildren;
-	
+
 	import flash.display.Bitmap;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -384,8 +384,7 @@ package editor_panel {
 			
 			if(_isPaused) {
 				resume();
-			}
-			else {
+			} else {
 				Logger.info('Play playback.');
 				_isPlaying = true;
 				_standardContainer.play();
@@ -540,7 +539,7 @@ package editor_panel {
 			// after a while so the playhead has time to tween
 			setTimeout(_autoScroll, 500 + 100);
 		}
-		
+
 		
 		
 		public function disableStreamFunctions():void {
@@ -581,8 +580,7 @@ package editor_panel {
 				// recording first track
 				if(_isPlaying) return _recordContainer.position;
 				return 0;
-			}
-			else {
+			} else {
 				// standard track
 				return _standardContainer.position;
 			}
@@ -616,9 +614,8 @@ package editor_panel {
 				_bpmOffBtn.areEventsEnabled = true;
 				_bpmOffBtn.alpha = 1;
 			}
-			else if(allTrackCount == 0){
+			else if(allTrackCount == 0) {
 				// reset bpm
-				
 				Logger.info('Resetting global tempo');
 				
 				// set song bpm settings
@@ -677,7 +674,7 @@ package editor_panel {
 			// dispatch
 			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
-		
+
 		
 		
 		private function _autoScroll():void {
@@ -771,9 +768,13 @@ package editor_panel {
 		
 		
 		private function _recountSongLength():void {
-			_milliseconds = 0;
-			for each(var td:TrackData in App.connection.coreSongData.songTracks) {
-				_milliseconds = Math.max(_milliseconds, td.trackMilliseconds);
+			if(_isRecording && _standardContainer.trackCount == 0) {
+				_milliseconds = _recordTrack.position;
+			} else {
+				_milliseconds = 0;
+				for each(var td:TrackData in App.connection.coreSongData.songTracks) {
+					_milliseconds = Math.max(_milliseconds, td.trackMilliseconds);
+				}
 			}
 			_width = _milliseconds / 100;
 		}
@@ -924,8 +925,7 @@ package editor_panel {
 					_completedTracksCounter = 0;
 					stop();
 				}
-			}
-			else {
+			} else {
 				if(_completedTracksCounter == allTrackCount) {
 					Logger.info('Song playback completed.');
 					_completedTracksCounter = 0;
@@ -963,8 +963,14 @@ package editor_panel {
 			if(_isRecording) {
 				// recording mode
 				x = _recordTrack.position / 100;
-			}
-			else {
+				
+				// recound song length from core song data
+				_recountSongLength();
+				
+				// set visual properties
+				_ruler.info.label = App.getTimeCode(_milliseconds);
+				_scroller.isEnabled = (_milliseconds > 44700);
+			} else {
 				// playback mode
 				x = currentPosition / 100;
 			}
@@ -1033,8 +1039,7 @@ package editor_panel {
 			if(allTrackCount == 1) {
 				Logger.info('Starting recording (first track recorded, so no record length limit).');
 				_recordLimit = 0;
-			}
-			else {
+			} else {
 				Logger.info(sprintf('Starting recording (record length limit = %s).', App.getTimeCode(_milliseconds)));
 				_recordLimit = _milliseconds;
 			}
@@ -1058,7 +1063,7 @@ package editor_panel {
 		private function _onBeatClickerBeat(event:BeatClickerEvent):void {
 			_bpmToolbar.icon = (event.polarity) ? _metronomeIcon2 : _metronomeIcon1; 
 		}
-		
+
 		
 		
 		private function _onRewindDown(event:MouseEvent):void {
@@ -1071,7 +1076,7 @@ package editor_panel {
 				}, _STILL_SEEK_TIMEOUT);
 			}
 		}
-		
+
 		
 		
 		private function _onForwardDown(event:MouseEvent):void {
@@ -1084,7 +1089,7 @@ package editor_panel {
 				}, _STILL_SEEK_TIMEOUT);
 			}
 		}
-		
+
 		
 		
 		private function _onRewindUp(event:MouseEvent):void {
@@ -1094,7 +1099,7 @@ package editor_panel {
 				clearInterval(_stillSeekInterval);
 			}
 		}
-		
+
 		
 		
 		private function _onForwardUp(event:MouseEvent):void {

@@ -5,6 +5,7 @@ package editor_panel.tracks {
 	
 	import config.Embeds;
 	import config.Filters;
+	import config.Formats;
 	
 	import controls.Button;
 	import controls.Slider;
@@ -20,6 +21,7 @@ package editor_panel.tracks {
 	import org.osflash.thunderbolt.Logger;
 	import org.vancura.graphics.QBitmap;
 	import org.vancura.graphics.QSprite;
+	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
 	import org.vancura.util.removeChildren;
 	
@@ -56,6 +58,7 @@ package editor_panel.tracks {
 		private var _isPrecounting:Boolean;
 		private var _recordOverlayBM:QBitmap;
 		private var _recordOverlaySpr:QSprite;
+		private var _statusTF:QTextField;
 		private var _startTime:uint;
 		private var _syncedRecordTimeout:int;
 
@@ -75,13 +78,14 @@ package editor_panel.tracks {
 			_stopBtn = new Button({visible:false, x:472, y:12, width:36, height:21, skin:new Embeds.buttonRedBD, icon:new Embeds.glyphStop2BD(), textOutFilters:Filters.buttonRedLabel, textOverFilters:Filters.buttonRedLabel, textPressFilters:Filters.buttonRedLabel, textOutOffsY:-1, textOverOffsY:-1, textPressOffsY:0});
 			_recordOverlaySpr = new QSprite({alpha:0, visible:false, blendMode:BlendMode.HARDLIGHT});
 			_recordOverlayBM = new QBitmap({embed:new Embeds.recordContainerRecordBD()});
+			_statusTF = new QTextField({x:50, y:9, width:90, height:32, defaultTextFormat:Formats.recordTrackStatus});
 
 			// refresh texts
 			refresh();
 
 			// add to display list
 			addChildren(_recordOverlaySpr, _recordOverlayBM);
-			addChildren(this, _vuMeter, _volumeSlider, _recordBtn, _recordOverlaySpr, _stopBtn);
+			addChildren(this, _vuMeter, _volumeSlider, _recordBtn, _recordOverlaySpr, _stopBtn, _statusTF);
 
 			// add sampler
 			$addHandlers();
@@ -110,7 +114,7 @@ package editor_panel.tracks {
 			
 			// remove from display list
 			removeChildren(_recordOverlaySpr, _recordOverlayBM);
-			removeChildren(this, _vuMeter, _volumeSlider, _recordBtn, _recordOverlaySpr, _stopBtn);
+			removeChildren(this, _vuMeter, _volumeSlider, _recordBtn, _recordOverlaySpr, _stopBtn, _statusTF);
 			
 			// destroy components
 			_volumeSlider.destroy();
@@ -193,6 +197,8 @@ package editor_panel.tracks {
 			_stopBtn.visible = true;
 			_recordBtn.visible = false;
 			_isPrecounting = true;
+			_statusTF.textColor = 0xFFFFFF;
+			_statusTF.text = 'GET\nREADY';
 			
 			_addPrecountTimer(); 
 			
@@ -227,6 +233,8 @@ package editor_panel.tracks {
 			
 			_stopBtn.visible = false;
 			_recordBtn.visible = true;
+			_statusTF.textColor = 0x485C66;
+			_statusTF.text = 'ENCODING\nTRACK';
 			
 			Tweener.removeTweens(_recordOverlaySpr);
 			_recordOverlaySpr.alpha = 0;
@@ -281,6 +289,8 @@ package editor_panel.tracks {
 			clearTimeout(_syncedRecordTimeout);
 			
 			_isRecording = true;
+			_statusTF.textColor = 0xFFFFFF;
+			_statusTF.text = 'RECORDING\nTRACK';
 			
 			Tweener.removeTweens(_recordOverlaySpr);
 			_recordOverlaySpr.alpha = .25;
