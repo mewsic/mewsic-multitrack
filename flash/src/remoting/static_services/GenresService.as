@@ -123,7 +123,7 @@ package remoting.static_services {
 				for each(var mxml:XML in $responseData.genre) {
 					var gd:GenreData = new GenreData();
 					gd.genreID = mxml.id;
-					gd.genreName = mxml.name;
+					gd.genreName = String(mxml.name);
 					_genresList.push(gd);
 				}
 				
