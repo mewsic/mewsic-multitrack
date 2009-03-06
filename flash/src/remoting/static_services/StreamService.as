@@ -7,6 +7,7 @@ package remoting.static_services {
 	import flash.net.NetConnection;
 	import flash.net.NetStream;
 	import flash.net.Responder;
+	import flash.net.ObjectEncoding;
 	import flash.system.Security;
 	import flash.system.SecurityPanel;
 	import flash.utils.clearTimeout;
@@ -202,7 +203,7 @@ package remoting.static_services {
 				_stream.bufferTime = 2;
 				
 				// start ping service timeout
-				setTimeout(_bangPingService, _BANG_PING_INTERVAL);
+				//setTimeout(_bangPingService, _BANG_PING_INTERVAL);
 			}
 			else {
 				dispatchEvent(new RemotingEvent(RemotingEvent.CONNECTION_FAILED, false, false, sprintf('Service %s: Could not connect Flash Media Server.', $serviceID)));

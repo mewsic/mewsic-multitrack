@@ -3,3 +3,4 @@ flash/docs-generate
 flash/.docs-config
 flash/bin/*.swf
 html/flash/*.swf
+.*.sw?

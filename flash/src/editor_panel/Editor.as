@@ -925,11 +925,11 @@ package editor_panel {
 		 */
 		private function _onRecordTrackBtnClick(event:MouseEvent = null):void {
 			// only logged in user can use recording
-			if(!App.connection.coreUserLoginStatus) {
+			//if(!App.connection.coreUserLoginStatus) {
 				// user is not logged in, don't allow him to record
-				App.messageModal.show({title:'Record track', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
-				return;
-			}
+			//	App.messageModal.show({title:'Record track', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
+			//	return;
+			//}
 			
 			// test if a record track is already present
 			if(_recordTrack != null) {
