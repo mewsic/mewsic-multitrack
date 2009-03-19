@@ -11,15 +11,12 @@ package manager_panel {
 	
 	import controls.Button;
 	
-	import manager_panel.lists.ListSongRow;
 	import manager_panel.tabs.TabCommon;
 	import manager_panel.tabs.TabEvent;
 	
 	import modals.MessageModal;
 	
 	import remoting.data.SongData;
-	import remoting.dynamic_services.MySongsService;
-	import remoting.events.MySongsEvent;
 	
 	import de.popforge.utils.sprintf;
 	
@@ -62,7 +59,6 @@ package manager_panel {
 		private var _instrumentsTF:QTextField;
 		private var _titleTF:QTextField;
 		private var _authorTF:QTextField;
-		private var _service:MySongsService;
 
 		
 		
@@ -127,75 +123,14 @@ package manager_panel {
 		
 		
 		public function postInit():void {
-			try {
-				_service = new MySongsService();
-				_service.url = App.connection.serverPath + App.connection.configService.mySongsRequestURL;
-				_service.addEventListener(MySongsEvent.REQUEST_DONE, _onRequestDone, false, 0, true);
-				_service.request();
-			}
-			catch(err:Error) {
-				Logger.error(sprintf('Could not get My Songs:\n%s', err.message));
-			}
+			Logger.debug("Skipped mysongs fetch");
 		}
 
 		
 		
 		private function _onHeaderClick(event:MouseEvent):void {
-			if(App.connection.configService.isConnecting) {
-				// config is not yet loaded, don't allow to display My List
-				App.messageModal.show({title:'My List', description:'Server hasn\'t yet returned some required information.\nPlease wait few seconds and try again.', buttons:MessageModal.BUTTONS_OK});
-				return;
-			}
-			if(!App.connection.coreUserLoginStatus) {
-				// user is not logged in, don't allow him to display My Songs
-				App.messageModal.show({title:'My Songs', description:'You have to log in to use the My Songs.', buttons:MessageModal.BUTTONS_OK});
-				return;
-			}
-			if(!_isListFilled) {
-				// list not filled yet
-				App.messageModal.show({title:'My Songs', description:'Server has not yet returned any data for My Songs table.\nPlease wait few seconds and try again.', buttons:MessageModal.BUTTONS_OK});
-				return;
-			}
-			/*if(!$isListNotEmpty) {
-				// list empty
-				App.messageModal.show({title:'My Songs', description:'You\'ve got nothing in your songs.', buttons:MessageModal.BUTTONS_OK});
-				return;
-			}*/
-			if(!visible) dispatchEvent(new TabEvent(TabEvent.ACTIVATE));
+			App.messageModal.show({title:'My List', description:'This feature has been removed.'});
 		}
-
 		
-		
-		private function _onRequestDone(event:MySongsEvent):void {
-			if(_isListFilled) throw new Error('My Songs already filled.');
-			else {
-				try {
-					var sl:int = event.songList.length;
-					var my:Number = _SUBTAB_Y;
-					
-					Logger.info(sprintf('Filling My Songs (%u songs)', sl));
-					if(sl > 0) badgeLabel = String(sl);
-					else badgeLabel = '';
-					
-					// add songs
-					for each(var i:SongData in event.songList) {
-						Logger.info(sprintf('Adding song to My Songs (songID=%u, songTitle=%s)', i.songID, i.songTitle));
-						
-						var st:ListSongRow = new ListSongRow(i, {x:6, y:my});
-						$contentSpr.addChild(st);
-						my += st.height;
-						
-						_songList.push(st);
-					}
-				}
-				catch(err:Error) {
-					Logger.warn(sprintf('Problem loading My Songs (%s)', err.message));
-				}
-				
-				/* prevent re-filling
-				_isListFilled = true;
-				$isListNotEmpty = (_songList.length > 0);*/
-			}
-		}
 	}
 }

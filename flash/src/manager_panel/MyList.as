@@ -130,17 +130,7 @@ package manager_panel {
 		
 		
 		private function _onHeaderClick(event:MouseEvent):void {
-			if(App.connection.configService.isConnecting) {
-				// config is not yet loaded, don't allow to display My List
-				App.messageModal.show({title:'My List', description:'Server hasn\'t yet returned some required information.\nPlease wait few seconds and try again.', buttons:MessageModal.BUTTONS_OK});
-				return;
-			}
-			if(!App.connection.coreUserLoginStatus) {
-				// user is not logged in, don't allow him to display My List
-				App.messageModal.show({title:'My List', description:'You have to log in to use the My List.', buttons:MessageModal.BUTTONS_OK});
-				return;
-			}
-			if(!visible) dispatchEvent(new TabEvent(TabEvent.ACTIVATE));
+			App.messageModal.show({title: 'My List', description:'This feature has been removed'});
 		}
 
 				
