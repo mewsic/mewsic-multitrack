@@ -22,7 +22,6 @@ package remoting.static_services {
 		
 		private var _streamGatewayURL:String; // e.g. 'rtmp://fms.myousica.com/live/'
 		
-		private var _myListRequestURL:String; // My List service (e.g. '/users/{:id}/mlabs')
 		private var _mySongsRequestURL:String; // My Songs service (e.g. '/users/{:id}/songs.xml')
 		private var _searchRequestURL:String; // Search service (e.g. '/search/new.xml')
 		private var _instrumentsRequestURL:String; // Instruments service (e.g. '/instruments.xml')
@@ -83,7 +82,6 @@ package remoting.static_services {
 				'  *  defaultAvatarURL = ' + defaultAvatarURL + '\n' +
 				'  *  sync = ' + sync + '\n\n' +
 				
-				'  *  myListRequestURL = ' + myListRequestURL + '\n' +
 				'  *  mySongsRequestURL = ' + mySongsRequestURL + '\n' +
 				'  *  searchRequestURL = ' + searchRequestURL + '\n' +
 				'  *  instrumentsRequestURL = ' + instrumentsRequestURL + '\n' +
@@ -128,7 +126,6 @@ package remoting.static_services {
 				$coreUserLoginStatus = ($coreUserData.userID != 0);
 				$connectionTimeout = $responseData.connection_timeout;
 
-				_myListRequestURL = $responseData.url_request.mylist;
 				_mySongsRequestURL = $responseData.url_request.mysongs;
 				_searchRequestURL = $responseData.url_request.search;
 				_instrumentsRequestURL = $responseData.url_request.instruments;
@@ -193,16 +190,6 @@ package remoting.static_services {
 		 */
 		public function get streamGatewayURL():String {
 			return _streamGatewayURL;
-		}
-
-		
-		
-		/**
-		 * Get My List request URL.
-		 * @return My List request URL
-		 */
-		public function get myListRequestURL():String {
-			return _myListRequestURL;
 		}
 
 		

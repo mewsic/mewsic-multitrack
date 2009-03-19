@@ -34,7 +34,6 @@ package manager_panel.tabs {
 		protected var $headerSpr:QSprite;
 		protected var $headerMaskSpr:QSprite;
 		protected var $contentHeight:Number = 36;
-		protected var $isListNotEmpty:Boolean;
 		protected var $contentSpr:QSprite;
 		private var _badgeBackSBM:ScaleBitmap;
 		private var _badgeLabelTF:QTextField;

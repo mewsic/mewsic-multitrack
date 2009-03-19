@@ -156,11 +156,11 @@ package manager_panel {
 				App.messageModal.show({title:'My Songs', description:'Server has not yet returned any data for My Songs table.\nPlease wait few seconds and try again.', buttons:MessageModal.BUTTONS_OK});
 				return;
 			}
-			if(!$isListNotEmpty) {
+			/*if(!$isListNotEmpty) {
 				// list empty
 				App.messageModal.show({title:'My Songs', description:'You\'ve got nothing in your songs.', buttons:MessageModal.BUTTONS_OK});
 				return;
-			}
+			}*/
 			if(!visible) dispatchEvent(new TabEvent(TabEvent.ACTIVATE));
 		}
 
@@ -192,9 +192,9 @@ package manager_panel {
 					Logger.warn(sprintf('Problem loading My Songs (%s)', err.message));
 				}
 				
-				// prevent re-filling
+				/* prevent re-filling
 				_isListFilled = true;
-				$isListNotEmpty = (_songList.length > 0);
+				$isListNotEmpty = (_songList.length > 0);*/
 			}
 		}
 	}
