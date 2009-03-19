@@ -212,26 +212,6 @@ package remoting {
 		
 		
 		/**
-		 * Instruments search request done.
-		 * @param e Event data
-		 */
-		private function _onInstrumentsSearchRequestDone(event:RemotingEvent):void {
-			dispatchEvent(new RemotingEvent(RemotingEvent.INSTRUMENTS_SEARCH_REQUEST_DONE));
-		}
-
-		
-		
-		/**
-		 * Countries search request done.
-		 * @param e Event data
-		 */
-		private function _onCountriesSearchRequestDone(event:RemotingEvent):void {
-			dispatchEvent(new RemotingEvent(RemotingEvent.COUNTRIES_SEARCH_REQUEST_DONE));
-		}
-
-		
-		
-		/**
 		 * Core song request done.
 		 */
 		private function _onCoreSongRequestDone(event:RemotingEvent):void {

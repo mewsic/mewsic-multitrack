@@ -22,7 +22,6 @@ package remoting.static_services {
 		
 		private var _streamGatewayURL:String; // e.g. 'rtmp://fms.myousica.com/live/'
 		
-		private var _searchRequestURL:String; // Search service (e.g. '/search/new.xml')
 		private var _instrumentsRequestURL:String; // Instruments service (e.g. '/instruments.xml')
 		private var _userRequestURL:String; // User service (e.g. '/user/{:id}.xml')
 		
@@ -81,7 +80,6 @@ package remoting.static_services {
 				'  *  defaultAvatarURL = ' + defaultAvatarURL + '\n' +
 				'  *  sync = ' + sync + '\n\n' +
 				
-				'  *  searchRequestURL = ' + searchRequestURL + '\n' +
 				'  *  instrumentsRequestURL = ' + instrumentsRequestURL + '\n' +
 				'  *  userRequestURL = ' + userRequestURL + '\n' +
 				
@@ -124,7 +122,6 @@ package remoting.static_services {
 				$coreUserLoginStatus = ($coreUserData.userID != 0);
 				$connectionTimeout = $responseData.connection_timeout;
 
-				_searchRequestURL = $responseData.url_request.search;
 				_instrumentsRequestURL = $responseData.url_request.instruments;
 				_userRequestURL = $responseData.url_request.user; // !
 				
@@ -189,16 +186,6 @@ package remoting.static_services {
 			return _streamGatewayURL;
 		}
 
-		
-		
-		/**
-		 * Get search request URL.
-		 * @return Search request URL
-		 */
-		public function get searchRequestURL():String {
-			return _searchRequestURL;
-		}
-		
 		
 		
 		/**

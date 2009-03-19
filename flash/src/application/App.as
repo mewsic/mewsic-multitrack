@@ -445,8 +445,6 @@ package application {
 				manager.tabMyList.postInit();
 				manager.tabMySongs.postInit();
 				manager.tabSearch.postInit();
-				manager.tabSearch.advancedSearchSubTab.postInit();
-				manager.tabSearch.searchResultsSubTab.postInit();
 				uploadTrackModal.postInit();
 				saveTrackModal.postInit();
 				
