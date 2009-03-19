@@ -75,7 +75,7 @@ package application {
 		public static var closeModal:CloseModal;
 		public static var dropboxContent:DropboxContent;
 		public static var fps:FPS;
-		public static var recordSyncDelay:int;
+		//public static var recordSyncDelay:int;
 		private var _currentStageHeight:int = Settings.START_STAGE_HEIGHT;
 		private var _isMouseInside:Boolean;
 		private var _lastMouseX:int;

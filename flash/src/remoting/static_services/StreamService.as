@@ -186,11 +186,12 @@ package remoting.static_services {
 		
 		/**
 		 * Bang ping service.
-		 */
+		 *
 		private function _bangPingService():void {
 			_gateway.call('ping', new Responder(_onPingResponse));
 			setTimeout(_bangPingService, _BANG_PING_INTERVAL);
 		}
+		 */
 
 		
 		
@@ -254,6 +255,7 @@ package remoting.static_services {
 
 		
 		
+		/**
 		private function _onPingResponse(status:Boolean):void {
 			_gateway.call('getStats', new Responder(_onPongResponse));
 			status;
@@ -266,5 +268,6 @@ package remoting.static_services {
 			if(Settings.isServiceDumpEnabled) Logger.debug(sprintf('Pong (ping_rtt = %i, ping_rtt * %.2f = %i)', data.ping_rtt, App.connection.configService.sync, ms));
 			App.recordSyncDelay = ms;
 		}
+		*/
 	}
 }

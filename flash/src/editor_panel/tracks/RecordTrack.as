@@ -12,18 +12,7 @@ package editor_panel.tracks {
 	import controls.SliderEvent;
 	import controls.VUMeter;
 	
-	import modals.MessageModal;
-	
-	import remoting.data.TrackData;
-	
 	import de.popforge.utils.sprintf;
-	
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.graphics.QBitmap;
-	import org.vancura.graphics.QSprite;
-	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-	import org.vancura.util.removeChildren;
 	
 	import flash.display.BlendMode;
 	import flash.events.Event;
@@ -32,7 +21,16 @@ package editor_panel.tracks {
 	import flash.media.Sound;
 	import flash.utils.Timer;
 	import flash.utils.clearTimeout;
-	import flash.utils.setTimeout;	
+	import flash.utils.setTimeout;
+	
+	import modals.MessageModal;
+	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.QBitmap;
+	import org.vancura.graphics.QSprite;
+	import org.vancura.graphics.QTextField;
+	import org.vancura.util.addChildren;
+	import org.vancura.util.removeChildren;	
 
 	
 	
@@ -190,9 +188,9 @@ package editor_panel.tracks {
 		 */		
 		public function startRecording(event:Event = null):void {
 			var precountDelay:uint = 60000 / $trackData.trackBPM / 2;
-			var syncDelay:int = precountDelay * 7 + App.recordSyncDelay; 
+			var syncDelay:int = precountDelay * 7;
 			
-			Logger.debug(sprintf('Start precounting (%u BPM, record=%u, sync=%i).', $trackData.trackBPM, precountDelay, App.recordSyncDelay));
+			Logger.debug(sprintf('Start precounting (%u BPM, record=%u)', $trackData.trackBPM, precountDelay));
 			
 			_stopBtn.visible = true;
 			_recordBtn.visible = false;
@@ -268,7 +266,6 @@ package editor_panel.tracks {
 		private function _onPrecountTimer(event:TimerEvent):void {
 			if((_precountTimer.currentCount <= 8 && _precountTimer.currentCount % 2 == 0) || _precountTimer.currentCount > 8) _recordOverlayTick();
 		}
-		
 		
 		
 		private function _onStartSyncedRecord():void {
