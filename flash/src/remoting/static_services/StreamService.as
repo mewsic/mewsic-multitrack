@@ -44,7 +44,6 @@ package remoting.static_services {
 		private var _isMicrophoneReady:Boolean;
 		private var _microphone:Microphone;
 		private var _filename:String;
-		private var $isUnavailable:Boolean;
 
 		
 		
@@ -55,7 +54,6 @@ package remoting.static_services {
 			super();
 			$serviceID = 'stream';
 			$requestID = $serviceID + '.request';
-			$isUnavailable = false;
 		}
 
 		
@@ -68,7 +66,6 @@ package remoting.static_services {
 			
 			if($isConnecting) throw new Error(sprintf('Service %s: Already connecting.', $serviceID));
 			if($isConnected) throw new Error(sprintf('Service %s: Already connected.', $serviceID));
-			if($isUnavailable) throw new Error(sprintf('Service %s: Unavailable', $serviceID));
 			
 			if(url == null) throw new Error(sprintf('Service %s: Service URL is not defined.', $serviceID));
 
@@ -132,9 +129,10 @@ package remoting.static_services {
 		
 		
 		public function prepare():void {
-			if($isUnavailable) {
+			if(!_stream) {
 				throw new Error('Recording is not available at this time.');
 			}
+
 			if(!_isMicrophoneReady) {
 				Security.showSettings(SecurityPanel.MICROPHONE);
 				
@@ -152,7 +150,7 @@ package remoting.static_services {
 		
 		
 		public function record():void {
-			if($isUnavailable) return;
+			if(!_stream) return;
 	
 			if(!$isConnected) throw new Error('Recording not yet available, please wait a bit.');
 			if(!_isMicrophoneReady) throw new Error('Microphone not ready.');
@@ -165,7 +163,7 @@ package remoting.static_services {
 		
 		
 		public function stop():void {
-			if($isUnavailable) return;
+			if(!_stream) return;
 	
 			_stream.publish('false');
 			_stream.close();
@@ -219,7 +217,6 @@ package remoting.static_services {
 			} else {
 				$isConnected = false;
 				$isConnecting = false;
-				$isUnavailable = true;
 
 				dispatchEvent(new RemotingEvent(RemotingEvent.CONNECTION_FAILED));
 				
