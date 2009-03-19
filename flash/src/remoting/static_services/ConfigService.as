@@ -26,7 +26,6 @@ package remoting.static_services {
 		private var _userRequestURL:String; // User service (e.g. '/user/{:id}.xml')
 		
 		private var _songFetchRequestURL:String; // Song service: fetch request (e.g. '/songs/{:id}.xml')
-		private var _songSiblingsRequestURL:String; // Song service: siblings request (e.g. '/songs/{:id}.xml?siblings=true')
 		private var _songEditRequestURL:String; // Song service: edit request (e.g. '/songs/{:id}.xml?edit=true')
 		private var _songExportRequestURL:String; // Song service: export request (e.g. '/songs/{:id}/mix.xml')
 		private var _songUpdateRequestURL:String; // Song service: update request (e.g. '/songs/{:id}.xml')
@@ -34,7 +33,6 @@ package remoting.static_services {
 		private var _songUnloadRequestURL:String; // Song service: unload request (e.g. '/songs/{:id}/unload_track.xml')
 		
 		private var _trackFetchRequestURL:String; // Track service: fetch request (e.g. '/tracks/{:id}.xml')
-		private var _trackSiblingsRequestURL:String; // Track service: siblings request (e.g. '/tracks/{:id}.xml?siblings=true')
 		private var _trackCreateRequestURL:String; // Track service: create request (e.g. '/tracks/{:id}.xml')
 		private var _trackDownloadRequestURL:String; // Track service: download request (e.g. '/tracks/{:track_id}/download')
 		
@@ -126,7 +124,6 @@ package remoting.static_services {
 				_userRequestURL = $responseData.url_request.user; // !
 				
 				_songFetchRequestURL = $responseData.url_request.songs.fetch;
-				_songSiblingsRequestURL = $responseData.url_request.songs.siblings;
 				_songEditRequestURL = $responseData.url_request.songs.edit;
 				_songExportRequestURL = $responseData.url_request.songs.mix;
 				_songUpdateRequestURL = $responseData.url_request.songs.update;
@@ -134,7 +131,6 @@ package remoting.static_services {
 				_songUnloadRequestURL = $responseData.url_request.songs.unload;
 				
 				_trackFetchRequestURL = $responseData.url_request.tracks.fetch;
-				_trackSiblingsRequestURL = $responseData.url_request.tracks.siblings;
 				_trackCreateRequestURL = $responseData.url_request.tracks.create;
 				_trackDownloadRequestURL = $responseData.url_request.tracks.download;
 				
@@ -219,16 +215,6 @@ package remoting.static_services {
 		
 		
 		/**
-		 * Get song siblings request URL.
-		 * @return Song siblings request URL
-		 */
-		public function get songSiblingsRequestURL():String {
-			return _songSiblingsRequestURL;
-		}
-		
-		
-		
-		/**
 		 * Get song edit request URL.
 		 * @return Song edit request URL
 		 */
@@ -284,16 +270,6 @@ package remoting.static_services {
 		 */
 		public function get trackFetchRequestURL():String {
 			return _trackFetchRequestURL;
-		}
-		
-		
-		
-		/**
-		 * Get track siblings request URL.
-		 * @return Track siblings request URL
-		 */
-		public function get trackSiblingsRequestURL():String {
-			return _trackSiblingsRequestURL;
 		}
 		
 		
