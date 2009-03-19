@@ -1,4 +1,12 @@
 package remoting.static_services {
+	import application.App;
+	
+	import com.gskinner.utils.Rnd;
+	
+	import config.Settings;
+	
+	import de.popforge.utils.sprintf;
+	
 	import flash.events.AsyncErrorEvent;
 	import flash.events.IOErrorEvent;
 	import flash.events.NetStatusEvent;
@@ -7,7 +15,6 @@ package remoting.static_services {
 	import flash.net.NetConnection;
 	import flash.net.NetStream;
 	import flash.net.Responder;
-	import flash.net.ObjectEncoding;
 	import flash.system.Security;
 	import flash.system.SecurityPanel;
 	import flash.utils.clearTimeout;
@@ -15,17 +22,8 @@ package remoting.static_services {
 	
 	import org.osflash.thunderbolt.Logger;
 	
-	import com.gskinner.utils.Rnd;
-	
-	import de.popforge.utils.sprintf;
-	
-	import application.App;
-	
-	import config.Settings;
-	
 	import remoting.IService;
 	import remoting.ServiceCommon;
-	import remoting.data.UserData;
 	import remoting.events.RemotingEvent;	
 
 	
@@ -46,6 +44,7 @@ package remoting.static_services {
 		private var _isMicrophoneReady:Boolean;
 		private var _microphone:Microphone;
 		private var _filename:String;
+		private var $isUnavailable:Boolean;
 
 		
 		
@@ -56,6 +55,7 @@ package remoting.static_services {
 			super();
 			$serviceID = 'stream';
 			$requestID = $serviceID + '.request';
+			$isUnavailable = false;
 		}
 
 		
@@ -68,6 +68,8 @@ package remoting.static_services {
 			
 			if($isConnecting) throw new Error(sprintf('Service %s: Already connecting.', $serviceID));
 			if($isConnected) throw new Error(sprintf('Service %s: Already connected.', $serviceID));
+			if($isUnavailable) throw new Error(sprintf('Service %s: Unavailable', $serviceID));
+			
 			if(url == null) throw new Error(sprintf('Service %s: Service URL is not defined.', $serviceID));
 
 			Logger.debug(sprintf('Service %s: Connecting (%s). Connection timeout is %u seconds.', $serviceID, url, $connectionTimeout));
@@ -130,6 +132,9 @@ package remoting.static_services {
 		
 		
 		public function prepare():void {
+			if($isUnavailable) {
+				throw new Error('Recording is not available at this time.');
+			}
 			if(!_isMicrophoneReady) {
 				Security.showSettings(SecurityPanel.MICROPHONE);
 				
@@ -147,7 +152,9 @@ package remoting.static_services {
 		
 		
 		public function record():void {
-			if(!$isConnected) throw new Error('Stream not connected.');
+			if($isUnavailable) return;
+	
+			if(!$isConnected) throw new Error('Recording not yet available, please wait a bit.');
 			if(!_isMicrophoneReady) throw new Error('Microphone not ready.');
 			
 			_filename = sprintf('%s_%u_%u', App.connection.coreUserData.userNickname, uint(new Date()), Rnd.integer(1000, 9999));
@@ -158,6 +165,8 @@ package remoting.static_services {
 		
 		
 		public function stop():void {
+			if($isUnavailable) return;
+	
 			_stream.publish('false');
 			_stream.close();
 			Logger.info('Recording stopped.');
@@ -204,17 +213,21 @@ package remoting.static_services {
 				
 				// start ping service timeout
 				//setTimeout(_bangPingService, _BANG_PING_INTERVAL);
-			}
-			else {
-				dispatchEvent(new RemotingEvent(RemotingEvent.CONNECTION_FAILED, false, false, sprintf('Service %s: Could not connect Flash Media Server.', $serviceID)));
-				return;
-			}
+				
+				dispatchEvent(new RemotingEvent(RemotingEvent.CONNECTION_DONE));				
 
-			dispatchEvent(new RemotingEvent(RemotingEvent.CONNECTION_DONE));
+			} else {
+				$isConnected = false;
+				$isConnecting = false;
+				$isUnavailable = true;
+
+				dispatchEvent(new RemotingEvent(RemotingEvent.CONNECTION_FAILED));
+				
+			}
+			
 		}
 
-		
-		
+
 		/**
 		 * SecurityError event handler.
 		 * @param event Event data

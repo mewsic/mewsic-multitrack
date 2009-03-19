@@ -1,4 +1,13 @@
 package remoting {
+	import application.App;
+	
+	import br.com.stimuli.loading.BulkErrorEvent;
+	import br.com.stimuli.loading.BulkLoader;
+	
+	import config.Settings;
+	
+	import de.popforge.utils.sprintf;
+	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.net.URLRequest;
@@ -7,15 +16,6 @@ package remoting {
 	import flash.utils.setTimeout;
 	
 	import org.osflash.thunderbolt.Logger;
-	
-	import de.popforge.utils.sprintf;
-	
-	import application.App;
-	
-	import br.com.stimuli.loading.BulkErrorEvent;
-	import br.com.stimuli.loading.BulkLoader;
-	
-	import config.Settings;
 	
 	import remoting.data.SongData;
 	import remoting.data.TrackData;

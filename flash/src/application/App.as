@@ -12,9 +12,17 @@ package application {
 	import controls.Input;
 	import controls.Toolbar;
 	
+	import de.popforge.utils.sprintf;
+	
 	import dropbox.DropboxContent;
 	
 	import editor_panel.Editor;
+	
+	import flash.display.*;
+	import flash.events.*;
+	import flash.external.*;
+	import flash.utils.clearTimeout;
+	import flash.utils.setTimeout;
 	
 	import manager_panel.Manager;
 	
@@ -27,24 +35,14 @@ package application {
 	import modals.SaveTrackModal;
 	import modals.UploadTrackModal;
 	
-	import progress_panel.Progress;
-	
-	import remoting.Connection;
-	import remoting.data.SongData;
-	import remoting.data.UserData;
-	import remoting.events.RemotingEvent;
-	
-	import de.popforge.utils.sprintf;
-	
 	import org.osflash.thunderbolt.Logger;
 	import org.vancura.graphics.FPS;
 	import org.vancura.util.addChildren;
 	
-	import flash.display.*;
-	import flash.events.*;
-	import flash.external.*;
-	import flash.utils.clearTimeout;
-	import flash.utils.setTimeout;	
+	import progress_panel.Progress;
+	
+	import remoting.Connection;
+	import remoting.events.RemotingEvent;	
 
 	
 	
@@ -148,7 +146,6 @@ package application {
 
 			// add global connection events
 			connection.addEventListener(RemotingEvent.CONFIG_REQUEST_DONE, _onRemotingConfigRequestDone, false, 0, true);
-			connection.addEventListener(RemotingEvent.CONNECTION_FAILED, _onRemotingFailed, false, 0, true);
 			connection.addEventListener(RemotingEvent.REQUEST_FAILED, _onRemotingFailed, false, 0, true);
 			connection.addEventListener(RemotingEvent.TIMEOUT, _onRemotingTimeout, false, 0, true);
 			
@@ -333,8 +330,6 @@ package application {
 			// show message modal
 			App.messageModal.show({title:'Timeout', description:dsc, buttons:btn, icon:ico});
 		}
-
-		
 		
 		/**
 		 * Remoting connection or request failed.
