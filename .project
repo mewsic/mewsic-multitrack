@@ -3,8 +3,6 @@
 	<name>Adelao_Myousica_Multitrack_Editor</name>
 	<comment></comment>
 	<projects>
-		<project>Pixelbreaker</project>
-		<project>Vancura</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
