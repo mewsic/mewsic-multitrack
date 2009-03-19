@@ -243,7 +243,7 @@ package manager_panel {
 			
 			try {
 				var si:String = (event.instrument == '') ? '' : App.connection.instrumentsService.byName(event.instrument).instrumentID.toString();
-				var sg:String = (event.genre == '') ? '' : App.connection.genresService.byName(event.genre).genreID.toString();
+				var sg:String = event.genre;
 			}
 			catch(err1:Error) {
 				App.messageModal.show({title:'Advanced search', description:sprintf('Parameters error.\n%s', err1.message), buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});

@@ -72,13 +72,7 @@ package manager_panel.lists {
 			_data = sd;
 			
 			// get genre name
-			var genreName:String;
-			try { 
-				genreName = App.connection.genresService.byID(_data.songGenreID).genreName; 
-			}
-			catch(err:Error) { 
-				genreName = 'Unknown genre'; 
-			}
+			var genreName:String = 'Unknown';
 			
 			// add background
 			_backSBM = new ScaleBitmap((new Embeds.subpanelMyListSongBackBD()).bitmapData);

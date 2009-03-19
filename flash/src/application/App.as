@@ -153,13 +153,11 @@ package application {
 			connection.addEventListener(RemotingEvent.TIMEOUT, _onRemotingTimeout, false, 0, true);
 			
 			// add static services events
-			connection.genresService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
-			connection.genresSearchService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
 			connection.instrumentsService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
-			connection.instrumentsSearchService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
-			connection.countriesSearchService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
+
 			connection.coreSongService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
 			connection.coreSongService.addEventListener(RemotingEvent.REFRESH_DONE, _onSongRefreshResponse, false, 0, true);
+
 			connection.coreUserService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
 			
 			// add this events
@@ -311,25 +309,9 @@ package application {
 				case connection.configService:
 					dsc = 'Could not load user config data.' + l8r;
 					break;
-					
-				case connection.genresService:
-					dsc = 'Could not load genres data.' + l8r;
-					break;
-					
-				case connection.genresSearchService:
-					dsc = 'Could not load genres search data.' + l8r;
-					break;
-					
+										
 				case connection.instrumentsService:
 					dsc = 'Could not load instruments data.' + l8r;
-					break;
-					
-				case connection.instrumentsSearchService:
-					dsc = 'Could not load instruments search data.' + l8r;
-					break;
-					
-				case connection.countriesSearchService:
-					dsc = 'Could not load countries search data.' + l8r;
 					break;
 					
 				case connection.coreSongService:
@@ -379,20 +361,13 @@ package application {
 			try {
 				// set services url
 				connection.streamService.url = connection.configService.streamGatewayURL;
-				connection.genresService.url = connection.serverPath + connection.configService.genresRequestURL;
-				connection.genresSearchService.url = connection.serverPath + connection.configService.genresSearchRequestURL;
 				connection.instrumentsService.url = connection.serverPath + connection.configService.instrumentsRequestURL;
-				connection.instrumentsSearchService.url = connection.serverPath + connection.configService.instrumentsSearchRequestURL;
-				connection.countriesSearchService.url = connection.serverPath + connection.configService.countriesSearchRequestURL;
 				connection.coreSongService.url = connection.serverPath + connection.configService.songFetchRequestURL;
 				connection.coreUserService.url = connection.serverPath + connection.configService.userRequestURL;
 
 				// connect static services
 				connection.streamService.connect();
-				connection.genresService.request();
-				connection.genresSearchService.request();
 				connection.instrumentsService.request();
-				connection.instrumentsSearchService.request();				connection.countriesSearchService.request();
 				connection.coreSongService.request({songID:connection.coreSongData.songID});
 
 				// get core user data

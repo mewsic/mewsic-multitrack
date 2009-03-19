@@ -65,9 +65,7 @@ package manager_panel.lists {
 			super(o);
 			
 			// get genre name
-			var genreName:String;
-			try { genreName = App.connection.genresService.byID(_data.trackGenreID).genreName; }
-			catch(err:Error) { genreName = 'Unknown genre'; }
+			var genreName:String = 'Unknown';
 			
 			// add background
 			_backSBM = new QBitmap({embed: new Embeds.subpanelMyListTrackBackBD});

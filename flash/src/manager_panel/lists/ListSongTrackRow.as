@@ -58,14 +58,8 @@ package manager_panel.lists {
 			_data = sd;
 			
 			// get genre name
-			var genreName:String;
-			try { 
-				genreName = App.connection.genresService.byID(_data.trackGenreID).genreName; 
-			}
-			catch(err:Error) { 
-				genreName = 'Unknown genre'; 
-			}
-			
+			var genreName:String = 'Unknown';
+	
 			// add textfields
 			_userTF = new QTextField({x:2, width:123, defaultTextFormat:Formats.tabSongTrackL, text:_data.trackUserNickname, multiline:false, autoSize:TextFieldAutoSize.CENTER});
 			_authorTF = new QTextField({x:130, width:124, defaultTextFormat:Formats.tabSongTrackL, text:_data.trackAuthor, multiline:false, autoSize:TextFieldAutoSize.CENTER});

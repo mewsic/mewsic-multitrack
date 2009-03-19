@@ -23,7 +23,6 @@ package remoting.events {
 		public static const CONNECTION_DONE:String = 'onConnectionDone';
 		public static const CONNECTION_FAILED:String = 'onConnectionFailed';
 		public static const CONFIG_REQUEST_DONE:String = 'onConfigRequestDone';
-		public static const GENRES_REQUEST_DONE:String = 'onGenresRequestDone';		public static const GENRES_SEARCH_REQUEST_DONE:String = 'onGenresSearchRequestDone';
 		public static const INSTRUMENTS_REQUEST_DONE:String = 'onInstrumentsRequestDone';
 		public static const INSTRUMENTS_SEARCH_REQUEST_DONE:String = 'onInstrumentsSearchRequestDone';		public static const COUNTRIES_SEARCH_REQUEST_DONE:String = 'onCountriesSearchRequestDone';
 		public static const CORE_SONG_REQUEST_DONE:String = 'onCoreSongRequestDone';

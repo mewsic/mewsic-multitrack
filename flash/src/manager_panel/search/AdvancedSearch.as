@@ -88,9 +88,9 @@ package manager_panel.search {
 		
 		
 		public function postInit():void {
-			_genresDropbox.list = App.connection.genresSearchService.genresNameList;
-			_instrumentsDropbox.list = App.connection.instrumentsSearchService.instrumentsNameList;
-			_countriesDropbox.list = App.connection.countriesSearchService.countriesList;
+			_genresDropbox.list = [];
+			_instrumentsDropbox.list = [];
+			_countriesDropbox.list = [];
 		}
 
 		
