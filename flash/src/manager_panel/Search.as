@@ -22,11 +22,6 @@ package manager_panel {
 	
 	import modals.MessageModal;
 	
-	import remoting.data.GenreData;
-	import remoting.data.InstrumentData;
-	import remoting.dynamic_services.SearchService;
-	import remoting.events.SearchEvent;
-	
 	import de.popforge.utils.sprintf;
 	
 	import com.gskinner.utils.StringUtils;
@@ -75,7 +70,6 @@ package manager_panel {
 		private var _menuAdvancedSearchBtn:Button;
 		private var _currentView:String;
 		private var _menuResetSearchBtn:Button;
-		private var _service:SearchService;
 		private var _advancedSearchMode:String;
 
 		
@@ -156,9 +150,7 @@ package manager_panel {
 		
 		
 		public function postInit():void {
-			_service = new SearchService();
-			_service.url = App.connection.serverPath + App.connection.configService.searchRequestURL;
-			_service.addEventListener(SearchEvent.REQUEST_DONE, _onRequestDone, false, 0, true);
+			Logger.debug("Skipped search service initialization");
 		}
 
 		
@@ -201,91 +193,28 @@ package manager_panel {
 		
 		
 		private function _searchByKeyword():void {
-			if(App.connection.configService.isConnecting) {
-				// config is not yet loaded, don't allow to display Search
-				App.messageModal.show({title:'Search', description:'Server hasn\'t yet returned some required information.\nPlease wait few seconds and try again.', buttons:MessageModal.BUTTONS_OK});
-				return;
-			}
-			
-			var query:String = StringUtils.removeExtraWhitespace(_headerEditInput.text);
-			
-			if(query == '') {
-				// don't search empty query
-				Logger.warn('Empty query string');
-				return;
-			}
-			else {
-				Logger.info(sprintf('Searching for keyword "%s"', query));
+			App.messageModal.show({title:'Search', description:'This feature has been removed'});
 
+			/*
 				_searchResultsSubTab.cleanResults();
 				_advancedSearchMode = null;
 				_headerWaitPieMC.visible = true;
-				_setView(_VIEW_SEARCH_RESULTS);
-				
-				try {
-					_service.request({keyword:query});
-				}
-				catch(err:Error) {
-					Logger.error(sprintf('Error thrown while searching:\n%s', err.message));
-					_headerWaitPieMC.visible = false;
-				}
-			}
+				_setView(_VIEW_SEARCH_RESULTS);				
+			*/
 		}
 
 		
 		
 		private function _onAdvancedSearch(event:AdvancedSearchEvent):void {
-			if(App.connection.configService.isConnecting) {
-				// config is not yet loaded, don't allow to display Search
-				App.messageModal.show({title:'Search', description:'Server hasn\'t yet returned some required information.\nPlease wait few seconds and try again.', buttons:MessageModal.BUTTONS_OK});
-				return;
-			}
-			
-			try {
-				var si:String = (event.instrument == '') ? '' : App.connection.instrumentsService.byName(event.instrument).instrumentID.toString();
-				var sg:String = event.genre;
-			}
-			catch(err1:Error) {
-				App.messageModal.show({title:'Advanced search', description:sprintf('Parameters error.\n%s', err1.message), buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
-				return;
-			}
-			
-			Logger.info(sprintf('Advanced search:\n  author=%s\n  title=%s\n  genre=%s\n  country=%s\n  bpm=%s\n  key=%s\n  instrument=%s', event.author, event.title, sg, event.country, event.bpm, event.key, si));
-			
+			App.messageModal.show({title:'Search', description:'This feature has been removed'});
+
+			/*			
 			_searchResultsSubTab.cleanResults();
 			_advancedSearchMode = (event.instrument != '') ? Settings.TYPE_TRACK : Settings.TYPE_SONG;
 			_headerWaitPieMC.visible = true;
 			_setView(_VIEW_SEARCH_RESULTS);
+			*/
 			
-			try {
-				_service.request({author:event.author, title:event.title, genre:sg, country:event.country, bpm:event.bpm, key:event.key, instrument:si});
-			}
-			catch(err2:Error) {
-				Logger.error(sprintf('Error thrown while searching:\n%s', err2.message));
-				_headerWaitPieMC.visible = false;
-			}
-		}
-
-		
-		
-		/**
-		 * Remoting replied.
-		 * @param event Event data
-		 */
-		private function _onRequestDone(event:SearchEvent):void {
-			_headerWaitPieMC.visible = false;
-			
-			Logger.info(sprintf('Displaying search results (%u songs, %u tracks)', event.songList.length, event.trackList.length));
-			
-			try {
-				_searchResultsSubTab.parseResults(event.songList, event.trackList);
-				if(event.songList.length == 0 && event.trackList.length > 0) _searchResultsSubTab.currentType = Settings.TYPE_TRACK;
-				else if(_advancedSearchMode != null) _searchResultsSubTab.currentType = _advancedSearchMode;
-			}
-			catch(err:Error) {
-				Logger.warn(sprintf('Error switching views (%s)', err.message));
-				return;
-			}
 		}
 
 		
