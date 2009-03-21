@@ -19,7 +19,6 @@ package config {
 		public static var buttonBeigeLabel:Array = [new DropShadowFilter(1, 90, 0x585D4D, 1, 2, 2, 1, 1)];
 		public static var buttonGrayLabel:Array = [new DropShadowFilter(1, 90, 0x505050, 1, 2, 2, 1, 1)];
 		public static var buttonActiveLabel:Array = [new DropShadowFilter(1, 90, 0x7b2f29, 1, 2, 2, 1, 1)];
-		public static var buttonSearchSongLabel:Array = [new DropShadowFilter(1, 90, 0x5C704C, 1.5, 2, 2, 1.5, 1)];		public static var buttonSearchTrackLabel:Array = [new DropShadowFilter(1, 90, 0x726450, 1.5, 2, 2, 1.5, 1)];
 		public static var standardContainerHeaderTitle:Array = [new DropShadowFilter(1, 45, 0xe6f6d9, 1, 0, 0, 1.5, 1)];
 		public static var recordContainerHeaderTitle:Array = [new DropShadowFilter(1, 45, 0xdbf7ff, 1, 0, 0, 1.5, 1)];
 		public static var standardContainerContentTitle:Array = [new DropShadowFilter(1, 45, 0xf8fff2, 1, 0, 0, 1.5, 1)];
@@ -38,13 +37,6 @@ package config {
 		public static var tabSongHeader:Array = [new DropShadowFilter(1, 45, 0xe9ffd6, 1, 0, 0)];
 		public static var tabTrackHeader:Array = [new DropShadowFilter(1, 45, 0xF9F1D8, 1, 0, 0)];
 		public static var tabHeadline:Array = [new DropShadowFilter(1, 45, 0xFFFFFF, .5, 0, 0, 1.5, 1)];
-		public static var searchResultsPanelHeader:Array = [new DropShadowFilter(1, 225, 0, .3, 0, 0)];
-		public static var searchResultsPanelMenuOut:Array = [new DropShadowFilter(1, -135, 0x000000, .35, 0, 0, 1.5, 1)];
-		public static var searchResultsPanelMenuOver:Array = [new DropShadowFilter(1, -135, 0x000000, .35, 0, 0, 1.5, 1)];
-		public static var searchResultsPanelSongRowBadge:Array = [new DropShadowFilter(1, 45, 0x6a765f, .5, 0, 0, 1.5, 1)];
-		public static var searchResultsPanelTrackRowBadge:Array = [new DropShadowFilter(1, 45, 0x786e61, .5, 0, 0, 1.5, 1)];
-		public static var searchResultsPanelSongRowTitle:Array = [new DropShadowFilter(1, 45, 0xe8ffd6, 1, 0, 0, 1.5, 1)];
-		public static var searchResultsPanelTrackRowTitle:Array = [new DropShadowFilter(1, 45, 0xffefd9, 1, 0, 0, 1.5, 1)];
 		public static var workerHeader:Array = [new DropShadowFilter(1, 90, 0x126180, 1, 2, 2, 1, 1)];
 		public static var progress:Array = [new DropShadowFilter(1, 90, 0x126180, 1, 2, 2, 1, 1)];
 		public static var dummy:Array = [];

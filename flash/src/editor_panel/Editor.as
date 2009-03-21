@@ -170,8 +170,8 @@ package editor_panel {
 			// add controller toolbar
 			_controllerToolbar = new Toolbar({x:14, y:15});
 			_controllerRewindBtn = new Button({width:29, height:24, skin:new Embeds.buttonBeigeMiniBD(), icon:new Embeds.glyphRewindBD(), textOutFilters:Filters.buttonBeigeLabel, textOverFilters:Filters.buttonBeigeLabel, textPressFilters:Filters.buttonBeigeLabel});
-			// _controllerPlayBtn = new Button({width:88, height:24, text:'Play', icon:new Embeds.glyphPlayBD(), skin:new Embeds.buttonGreenMiniBD(), textOutFilters:Filters.buttonGreenLabel, textOverFilters:Filters.buttonGreenLabel, textPressFilters:Filters.buttonGreenLabel});
-			_controllerPlayBtn = new Button({width: 88, height: 40, icon:new Embeds.buttonPlay() });
+			//_controllerPlayBtn = new Button({width:88, height:24, text:'Play', icon:new Embeds.glyphPlayBD(), skin:new Embeds.buttonGreenMiniBD(), textOutFilters:Filters.buttonGreenLabel, textOverFilters:Filters.buttonGreenLabel, textPressFilters:Filters.buttonGreenLabel});
+			_controllerPlayBtn = new Button({width:80, height:41, icon:new Embeds.bPlay()});
 			_controllerPauseBtn = new Button({width:29, height:24, skin:new Embeds.buttonBlueMiniBD(), icon:new Embeds.glyphPauseBD(), textOutFilters:Filters.buttonBlueLabel, textOverFilters:Filters.buttonBlueLabel, textPressFilters:Filters.buttonBlueLabel});
 			_controllerStopBtn = new Button({width:29, height:24, skin:new Embeds.buttonBlueMiniBD(), icon:new Embeds.glyphStopBD(), textOutFilters:Filters.buttonBlueLabel, textOverFilters:Filters.buttonBlueLabel, textPressFilters:Filters.buttonBlueLabel});
 			_controllerForwardBtn = new Button({width:29, height:24, skin:new Embeds.buttonBeigeMiniBD(), icon:new Embeds.glyphForwardBD(), textOutFilters:Filters.buttonBeigeLabel, textOverFilters:Filters.buttonBeigeLabel, textPressFilters:Filters.buttonBeigeLabel});

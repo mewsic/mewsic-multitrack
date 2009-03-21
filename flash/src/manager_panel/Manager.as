@@ -27,7 +27,6 @@ package manager_panel {
 		
 		
 		private var _isRendered:Boolean;
-		private var _tabSearch:Search;
 		private var _tabMySongs:MySongs;
 		private var _tabMyList:MyList;
 		private var _tabManager:TabManager;
@@ -67,12 +66,10 @@ package manager_panel {
 						_tabManager = new TabManager();
 						
 						// add tabs
-						_tabSearch = new Search();
 						_tabMySongs = new MySongs();
 						_tabMyList = new MyList();
 						
 						// add to tab manager
-						_tabManager.addTab(_tabSearch);
 						_tabManager.addTab(_tabMySongs);
 						_tabManager.addTab(_tabMyList);
 			
@@ -80,10 +77,8 @@ package manager_panel {
 						addChildren($aboveSpr, _tabManager);
 						
 						// add event listeners
-						_tabSearch.addEventListener(TabEvent.CHANGE_HEIGHT, $onChangeHeight, false, 0, true);
 						_tabMySongs.addEventListener(TabEvent.CHANGE_HEIGHT, $onChangeHeight, false, 0, true);
 						_tabMyList.addEventListener(TabEvent.CHANGE_HEIGHT, $onChangeHeight, false, 0, true);
-						_tabSearch.addEventListener(TabEvent.CHANGE_BACK_TYPE, $onChangeBackType, false, 0, true);
 						_tabMySongs.addEventListener(TabEvent.CHANGE_BACK_TYPE, $onChangeBackType, false, 0, true);
 						_tabMyList.addEventListener(TabEvent.CHANGE_BACK_TYPE, $onChangeBackType, false, 0, true);
 					}
@@ -115,16 +110,6 @@ package manager_panel {
 		 */
 		public function get tabMySongs():MySongs {
 			return _tabMySongs;
-		}
-
-		
-		
-		/**
-		 * Get Search tab.
-		 * @return Search tab
-		 */
-		public function get tabSearch():Search {
-			return _tabSearch;
 		}
 	}
 }
