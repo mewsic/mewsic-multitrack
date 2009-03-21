@@ -6,7 +6,6 @@ package manager_panel {
 	
 	import config.Settings;
 	
-	import manager_panel.MyList;
 	import manager_panel.tabs.TabEvent;
 	import manager_panel.tabs.TabManager;
 	
@@ -28,7 +27,6 @@ package manager_panel {
 		
 		private var _isRendered:Boolean;
 		private var _tabMySongs:MySongs;
-		private var _tabMyList:MyList;
 		private var _tabManager:TabManager;
 
 		
@@ -67,20 +65,16 @@ package manager_panel {
 						
 						// add tabs
 						_tabMySongs = new MySongs();
-						_tabMyList = new MyList();
 						
 						// add to tab manager
 						_tabManager.addTab(_tabMySongs);
-						_tabManager.addTab(_tabMyList);
 			
 						// add to display list
 						addChildren($aboveSpr, _tabManager);
 						
 						// add event listeners
 						_tabMySongs.addEventListener(TabEvent.CHANGE_HEIGHT, $onChangeHeight, false, 0, true);
-						_tabMyList.addEventListener(TabEvent.CHANGE_HEIGHT, $onChangeHeight, false, 0, true);
 						_tabMySongs.addEventListener(TabEvent.CHANGE_BACK_TYPE, $onChangeBackType, false, 0, true);
-						_tabMyList.addEventListener(TabEvent.CHANGE_BACK_TYPE, $onChangeBackType, false, 0, true);
 					}
 					catch(err:Error) {
 						dispatchEvent(new AppEvent(AppEvent.FATAL_ERROR, true, false, sprintf('Could not add manager panel.\nPlease reload the page.\n%s', err.message)));
@@ -90,16 +84,6 @@ package manager_panel {
 				// animate alpha
 				Tweener.addTween(this, {alpha:1, time:Settings.STAGE_HEIGHT_CHANGE_TIME, transition:'easeOutSine'});
 			}
-		}
-
-		
-		
-		/**
-		 * Get My List tab.
-		 * @return My List tab
-		 */
-		public function get tabMyList():MyList {
-			return _tabMyList;
 		}
 
 		

@@ -445,7 +445,6 @@ package application {
 		private function _onHelpServicesDone(event:RemotingEvent):void {
 			if(++_helpServicesCounter == 7) {
 				editor.postInit();
-				manager.tabMyList.postInit();
 				manager.tabMySongs.postInit();
 				uploadTrackModal.postInit();
 				saveTrackModal.postInit();

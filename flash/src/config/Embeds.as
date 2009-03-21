@@ -40,10 +40,7 @@ package config {
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonGreenMiniBD')] public static var buttonGreenMiniBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonGrayMiniBD')] public static var buttonGrayMiniBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonGrayNanoBD')] public static var buttonGrayNanoBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonMenuBD')] public static var buttonMenuBD:Class;		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonMyListStandardBD')] public static var buttonMyListStandardBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonMyListSongBD')] public static var buttonMyListSongBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonMyListTrackBD')] public static var buttonMyListTrackBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonGlobalVolumeThumbBD')] public static var buttonGlobalVolumeThumbBD:Class;
+		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonMenuBD')] public static var buttonMenuBD:Class;		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonGlobalVolumeThumbBD')] public static var buttonGlobalVolumeThumbBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonViewportScrollerThumbBD')] public static var buttonViewportScrollerThumbBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonVerticalScrollerThumbBD')] public static var buttonVerticalScrollerThumbBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonBankToolbarLBBD')] public static var buttonContainerToolbarLBBD:Class;
@@ -125,14 +122,10 @@ package config {
 		
 		// tabs
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabMySongsFrontBD')] public static var tabMySongsFrontBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabMyListFrontBD')] public static var tabMyListFrontBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabMySongsFixBD')] public static var tabMySongsFixBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabMyListFixBD')] public static var tabMyListFixBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabBadgeBD')] public static var tabBadgeBD:Class;
 		
 		// subpanels
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelMyListSongBackBD')] public static var subpanelMyListSongBackBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelMyListTrackBackBD')] public static var subpanelMyListTrackBackBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelSongHeaderStarRatingBD')] public static var subpanelSongHeaderStarRatingBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelTrackHeaderStarRatingBD')] public static var subpanelTrackHeaderStarRatingBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelSongTrackStarRatingBD')] public static var subpanelSongTrackStarRatingBD:Class;

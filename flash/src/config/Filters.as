@@ -29,7 +29,6 @@ package config {
 		public static var dropboxLabel:Array = [new DropShadowFilter(1, 45, 0xFFFFFF, 1, 0, 0, 1.5, 1)];
 		public static var modalTitle:Array = [new DropShadowFilter(1, 45, 0xFFFFFF, 2, 2, 2, 1.5, 1)];
 		public static var tabBadge:Array = [new DropShadowFilter(1, 45, 0xffda48, 1, 0, 0, 1.5, 1)];
-		public static var tabMyListHeader:Array = [new DropShadowFilter(1, 90, 0x00374e, 1, 2, 2, 1, 1)];
 		public static var tabMySongsHeader:Array = [new DropShadowFilter(1, 90, 0x126180, 1, 2, 2, 1, 1)];
 		public static var tabButtonText:Array = [new DropShadowFilter(1, 90, 0x475a6c, 1.5, 2, 2, 1.5, 1)];
 		public static var tabButtonTrack:Array = [new DropShadowFilter(1, 90, 0xac7a44, 1.5, 2, 2, 1.5, 1)];
