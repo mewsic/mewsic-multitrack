@@ -44,15 +44,6 @@ package config {
 		public static var modalTitle:TextFormat = new TextFormat();
 		public static var modalDescription:TextFormat = new TextFormat();
 		public static var modalDescriptionLeft:TextFormat = new TextFormat();
-		public static var tabBadge:TextFormat = new TextFormat();
-		public static var tabHeader:TextFormat = new TextFormat();
-		public static var tabSongHeaderL:TextFormat = new TextFormat();
-		public static var tabSongHeaderC:TextFormat = new TextFormat();
-		public static var tabSongTrackL:TextFormat = new TextFormat();
-		public static var tabSongTrackC:TextFormat = new TextFormat();
-		public static var tabTrackHeaderL:TextFormat = new TextFormat();
-		public static var tabTrackHeaderC:TextFormat = new TextFormat();
-		public static var tabHeadline:TextFormat = new TextFormat();
 		public static var fps:TextFormat = new TextFormat();
 		public static var viewportPreloadInfoLabel:TextFormat = new TextFormat();
 		public static var progress:TextFormat = new TextFormat();
@@ -183,53 +174,6 @@ package config {
 		modalDescriptionLeft.font = _MYRIAD_WEB_BOLD; 
 		modalDescriptionLeft.size = 12; 
 		modalDescriptionLeft.color = 0x333333; 
-		
-		tabBadge.font = _MYRIAD_WEB_BOLD; 
-		tabBadge.size = 11; 
-		tabBadge.color = 0x000000;
-		
-		tabSongHeaderL.font = _MYRIAD_WEB_BOLD;
-		tabSongHeaderL.size = 12;
-		tabSongHeaderL.color = 0x1e310f; 
-		tabSongHeaderL.leading = 20;
-		
-		tabSongHeaderC.font = _MYRIAD_WEB_BOLD;
-		tabSongHeaderC.size = 12;
-		tabSongHeaderC.color = 0x1e310f; 
-		tabSongHeaderC.align = TextFormatAlign.CENTER;
-		tabSongHeaderC.leading = 20;
-		
-		tabTrackHeaderL.font = _MYRIAD_WEB_BOLD;
-		tabTrackHeaderL.size = 12;
-		tabTrackHeaderL.color = 0x342613; 
-		tabTrackHeaderL.leading = 20;
-		
-		tabTrackHeaderC.font = _MYRIAD_WEB_BOLD;
-		tabTrackHeaderC.size = 12;
-		tabTrackHeaderC.color = 0x342613; 
-		tabTrackHeaderC.align = TextFormatAlign.CENTER;
-		tabTrackHeaderC.leading = 20;
-		
-		tabSongTrackL.font = _MYRIAD_WEB_REGULAR;
-		tabSongTrackL.size = 10;
-		tabSongTrackL.color = 0x00354c; 
-		tabSongTrackL.leading = 20;
-		
-		tabSongTrackC.font = _MYRIAD_WEB_REGULAR;
-		tabSongTrackC.size = 10;
-		tabSongTrackC.color = 0x00354c; 
-		tabSongTrackC.align = TextFormatAlign.CENTER;
-		tabSongTrackC.leading = 20;
-		
-		tabHeader.font = _MYRIAD_WEB_BOLD;
-		tabHeader.size = 11;
-		tabHeader.color = 0xFFFFFF;
-		tabHeader.align = TextFormatAlign.CENTER;
-		
-		tabHeadline.font = _HELVETICA_NEUE_BOLD;
-		tabHeadline.size = 16;
-		tabHeadline.color = 0x333333;
-		tabHeadline.kerning = true;
 		
 		fps.font = _MYRIAD_WEB_BOLD;
 		fps.size = 9;

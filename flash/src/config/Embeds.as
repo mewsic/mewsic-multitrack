@@ -119,17 +119,7 @@ package config {
 		// ruler
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='RulerBackBD')] public static var rulerBackBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='RulerPlayheadBackBD')] public static var rulerPlayheadBackBD:Class;		[Embed(source='../../lib/assets/main_assets.swf', symbol='RulerPlayheadDragBD')] public static var rulerPlayheadDragBD:Class;
-		
-		// tabs
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabMySongsFrontBD')] public static var tabMySongsFrontBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabMySongsFixBD')] public static var tabMySongsFixBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabBadgeBD')] public static var tabBadgeBD:Class;
-		
-		// subpanels
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelSongHeaderStarRatingBD')] public static var subpanelSongHeaderStarRatingBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelTrackHeaderStarRatingBD')] public static var subpanelTrackHeaderStarRatingBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelSongTrackStarRatingBD')] public static var subpanelSongTrackStarRatingBD:Class;
-		
+
 		// modals
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='MessageBoxBackBD')] public static var modalBackBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='MessageBoxDivBD')] public static var modalDivBD:Class;
