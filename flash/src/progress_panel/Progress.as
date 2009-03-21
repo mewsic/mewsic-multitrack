@@ -86,7 +86,7 @@ package progress_panel {
 						Tweener.addTween(_infoTF, {alpha:1, time:Settings.FADEIN_TIME, delay:Settings.FADEIN_TIME, transition:'easeOutSine'});
 					}
 					catch(err:Error) {
-						dispatchEvent(new AppEvent(AppEvent.FATAL_ERROR, true, false, sprintf('Could not add manager panel.\nPlease reload the page.\n%s', err.message)));
+						dispatchEvent(new AppEvent(AppEvent.FATAL_ERROR, true, false, sprintf('Could not add progress panel.\nPlease reload the page.\n%s', err.message)));
 					}
 				}});
 
