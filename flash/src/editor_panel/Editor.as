@@ -1,16 +1,14 @@
 package editor_panel {
-	import editor_panel.tracks.StandardTrack;	
-	
 	import application.App;
 	import application.AppEvent;
 	import application.PanelCommon;
-
+	
 	import caurina.transitions.Tweener;
-
+	
 	import config.Embeds;
 	import config.Filters;
 	import config.Settings;
-
+	
 	import controls.Button;
 	import controls.Input;
 	import controls.InputEvent;
@@ -19,29 +17,19 @@ package editor_panel {
 	import controls.SliderEvent;
 	import controls.Toolbar;
 	import controls.VUMeter;
-
-	import editor_panel.BeatClicker;
+	
+	import de.popforge.utils.sprintf;
+	
 	import editor_panel.containers.ContainerCommon;
 	import editor_panel.containers.ContainerEvent;
 	import editor_panel.ruler.Playhead;
 	import editor_panel.ruler.Ruler;
 	import editor_panel.sampler.SamplerEvent;
 	import editor_panel.tracks.RecordTrack;
+	import editor_panel.tracks.StandardTrack;
 	import editor_panel.tracks.TrackCommon;
 	import editor_panel.tracks.TrackEvent;
-
-	import modals.MessageModal;
-
-	import remoting.data.SongData;
-	import remoting.data.TrackData;
-
-	import de.popforge.utils.sprintf;
-
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.graphics.Drawing;
-	import org.vancura.graphics.QBitmap;
-	import org.vancura.util.addChildren;
-
+	
 	import flash.display.Bitmap;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -52,7 +40,16 @@ package editor_panel {
 	import flash.utils.clearInterval;
 	import flash.utils.clearTimeout;
 	import flash.utils.setInterval;
-	import flash.utils.setTimeout;	
+	import flash.utils.setTimeout;
+	
+	import modals.MessageModal;
+	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.Drawing;
+	import org.vancura.graphics.QBitmap;
+	import org.vancura.util.addChildren;
+	
+	import remoting.data.TrackData;	
 
 	
 	
@@ -173,7 +170,8 @@ package editor_panel {
 			// add controller toolbar
 			_controllerToolbar = new Toolbar({x:14, y:15});
 			_controllerRewindBtn = new Button({width:29, height:24, skin:new Embeds.buttonBeigeMiniBD(), icon:new Embeds.glyphRewindBD(), textOutFilters:Filters.buttonBeigeLabel, textOverFilters:Filters.buttonBeigeLabel, textPressFilters:Filters.buttonBeigeLabel});
-			_controllerPlayBtn = new Button({width:88, height:24, text:'Play', icon:new Embeds.glyphPlayBD(), skin:new Embeds.buttonGreenMiniBD(), textOutFilters:Filters.buttonGreenLabel, textOverFilters:Filters.buttonGreenLabel, textPressFilters:Filters.buttonGreenLabel});
+			//_controllerPlayBtn = new Button({width:88, height:24, text:'Play', icon:new Embeds.glyphPlayBD(), skin:new Embeds.buttonGreenMiniBD(), textOutFilters:Filters.buttonGreenLabel, textOverFilters:Filters.buttonGreenLabel, textPressFilters:Filters.buttonGreenLabel});
+			_controllerPlayBtn = new Button({width:80, height:41, icon:new Embeds.bPlay()});
 			_controllerPauseBtn = new Button({width:29, height:24, skin:new Embeds.buttonBlueMiniBD(), icon:new Embeds.glyphPauseBD(), textOutFilters:Filters.buttonBlueLabel, textOverFilters:Filters.buttonBlueLabel, textPressFilters:Filters.buttonBlueLabel});
 			_controllerStopBtn = new Button({width:29, height:24, skin:new Embeds.buttonBlueMiniBD(), icon:new Embeds.glyphStopBD(), textOutFilters:Filters.buttonBlueLabel, textOverFilters:Filters.buttonBlueLabel, textPressFilters:Filters.buttonBlueLabel});
 			_controllerForwardBtn = new Button({width:29, height:24, skin:new Embeds.buttonBeigeMiniBD(), icon:new Embeds.glyphForwardBD(), textOutFilters:Filters.buttonBeigeLabel, textOverFilters:Filters.buttonBeigeLabel, textPressFilters:Filters.buttonBeigeLabel});

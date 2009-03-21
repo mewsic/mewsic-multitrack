@@ -82,7 +82,6 @@ package remoting.static_services {
 				'  *  userRequestURL = ' + userRequestURL + '\n' +
 				
 				'  *  songFetchRequestURL = ' + songFetchRequestURL + '\n' +
-				'  *  songSiblingsRequestURL = ' + songSiblingsRequestURL + '\n' +
 				'  *  songEditRequestURL = ' + songEditRequestURL + '\n' +
 				'  *  songExportRequestURL = ' + songExportRequestURL + '\n' +
 				'  *  songUpdateRequestURL = ' + songUpdateRequestURL + '\n' +
@@ -90,7 +89,6 @@ package remoting.static_services {
 				'  *  songUnloadRequestURL = ' + songUnloadRequestURL + '\n' +
 				
 				'  *  trackFetchRequestURL = ' + trackFetchRequestURL + '\n' +
-				'  *  trackSiblingsRequestURL = ' + trackSiblingsRequestURL + '\n' +
 				'  *  trackCreateRequestURL = ' + trackCreateRequestURL + '\n' +
 				'  *  trackDownloadRequestURL = ' + trackDownloadRequestURL + '\n' +
 				

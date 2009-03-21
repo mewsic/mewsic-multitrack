@@ -54,15 +54,6 @@ package config {
 		public static var tabTrackHeaderC:TextFormat = new TextFormat();
 		public static var tabHeadline:TextFormat = new TextFormat();
 		public static var fps:TextFormat = new TextFormat();
-		public static var searchResultsPanelHeader:TextFormat = new TextFormat();
-		public static var searchResultsPanelMenuOut:TextFormat = new TextFormat();
-		public static var searchResultsPanelMenuOver:TextFormat = new TextFormat();
-		public static var searchResultsPanelRowBadge:TextFormat = new TextFormat();
-		public static var searchResultsPanelSongRowAuthor:TextFormat = new TextFormat();
-		public static var searchResultsPanelSongRowTitle:TextFormat = new TextFormat();
-		public static var searchResultsPanelTrackRowAuthor:TextFormat = new TextFormat();
-		public static var searchResultsPanelTrackRowTitle:TextFormat = new TextFormat();
-		public static var searchResultsPanelBanner:TextFormat = new TextFormat();
 		public static var viewportPreloadInfoLabel:TextFormat = new TextFormat();
 		public static var progress:TextFormat = new TextFormat();
 		public static var rulerTickLabel:TextFormat = new TextFormat();
@@ -244,51 +235,6 @@ package config {
 		fps.size = 9;
 		fps.color = 0xFFFFFF;
 		fps.align = TextFormatAlign.CENTER;
-		
-		searchResultsPanelHeader.font = _MYRIAD_WEB_BOLD;
-		searchResultsPanelHeader.size = 12;
-		searchResultsPanelHeader.color = 0xFFFFFF;
-		searchResultsPanelHeader.leading = 400;
-		
-		searchResultsPanelMenuOut.font = _MYRIAD_WEB_BOLD; 
-		searchResultsPanelMenuOut.size = 9; 
-		searchResultsPanelMenuOut.color = 0xFFFFFF; 
-		searchResultsPanelMenuOut.align = TextFormatAlign.CENTER; 
-		
-		searchResultsPanelMenuOver.font = _MYRIAD_WEB_BOLD; 
-		searchResultsPanelMenuOver.size = 9; 
-		searchResultsPanelMenuOver.color = 0xFFFFFF; 
-		searchResultsPanelMenuOver.align = TextFormatAlign.CENTER; 
-		
-		searchResultsPanelRowBadge.font = _MYRIAD_WEB_BOLD;
-		searchResultsPanelRowBadge.size = 9;
-		searchResultsPanelRowBadge.color = 0xFFFFFF;
-		
-		searchResultsPanelSongRowAuthor.font = _MYRIAD_WEB_REGULAR;
-		searchResultsPanelSongRowAuthor.size = 9; 
-		searchResultsPanelSongRowAuthor.color = 0x627156; 
-		searchResultsPanelSongRowAuthor.leading = 40;
-		
-		searchResultsPanelSongRowTitle.font = _MYRIAD_WEB_BOLD; 
-		searchResultsPanelSongRowTitle.size = 11; 
-		searchResultsPanelSongRowTitle.color = 0x1E310F;
-		searchResultsPanelSongRowTitle.leading = 40; 
-		
-		searchResultsPanelTrackRowAuthor.font = _MYRIAD_WEB_REGULAR;
-		searchResultsPanelTrackRowAuthor.size = 9; 
-		searchResultsPanelTrackRowAuthor.color = 0x70695f; 
-		searchResultsPanelTrackRowAuthor.leading = 40;
-		
-		searchResultsPanelTrackRowTitle.font = _MYRIAD_WEB_BOLD; 
-		searchResultsPanelTrackRowTitle.size = 11; 
-		searchResultsPanelTrackRowTitle.color = 0x332513;
-		searchResultsPanelTrackRowTitle.leading = 40; 
-		
-		searchResultsPanelBanner.font = _HELVETICA_NEUE_BOLD;
-		searchResultsPanelBanner.size = 16;
-		searchResultsPanelBanner.color = 0xB0B0B0;
-		searchResultsPanelBanner.align = TextFormatAlign.CENTER;
-		searchResultsPanelBanner.leading = -2;
 		
 		viewportPreloadInfoLabel.font = _MYRIAD_WEB_BOLD;
 		viewportPreloadInfoLabel.size = 7;
