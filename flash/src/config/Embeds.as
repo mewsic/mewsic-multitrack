@@ -10,6 +10,11 @@ package config {
 	 */
 	public class Embeds {
 
+		// New assets
+		// Just a test
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='bPlay')] public static var bPlay:Class;
+		
+		
 		// panels
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='PanelBackDarkBD')] public static var panelDarkBackBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='PanelBackLightBD')] public static var panelLightBackBD:Class;
@@ -38,8 +43,6 @@ package config {
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonMenuBD')] public static var buttonMenuBD:Class;		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonMyListStandardBD')] public static var buttonMyListStandardBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonMyListSongBD')] public static var buttonMyListSongBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonMyListTrackBD')] public static var buttonMyListTrackBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonSearchSongBD')] public static var buttonSearchSongBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonSearchTrackBD')] public static var buttonSearchTrackBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonGlobalVolumeThumbBD')] public static var buttonGlobalVolumeThumbBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonViewportScrollerThumbBD')] public static var buttonViewportScrollerThumbBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonVerticalScrollerThumbBD')] public static var buttonVerticalScrollerThumbBD:Class;
@@ -121,29 +124,18 @@ package config {
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='RulerPlayheadBackBD')] public static var rulerPlayheadBackBD:Class;		[Embed(source='../../lib/assets/main_assets.swf', symbol='RulerPlayheadDragBD')] public static var rulerPlayheadDragBD:Class;
 		
 		// tabs
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabSearchFrontBD')] public static var tabSearchFrontBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabMySongsFrontBD')] public static var tabMySongsFrontBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabMyListFrontBD')] public static var tabMyListFrontBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabSearchFixBD')] public static var tabSearchFixBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabMySongsFixBD')] public static var tabMySongsFixBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabMyListFixBD')] public static var tabMyListFixBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabBadgeBD')] public static var tabBadgeBD:Class;
 		
 		// subpanels
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelAdvancedSearchBackBD')] public static var subpanelAdvancedSearchBackBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelSearchResultsBackBD')] public static var subpanelSearchResultsBackBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelMyListSongBackBD')] public static var subpanelMyListSongBackBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelMyListTrackBackBD')] public static var subpanelMyListTrackBackBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelSongHeaderStarRatingBD')] public static var subpanelSongHeaderStarRatingBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelTrackHeaderStarRatingBD')] public static var subpanelTrackHeaderStarRatingBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelSongTrackStarRatingBD')] public static var subpanelSongTrackStarRatingBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelSearchPanel1BackBD')] public static var subpanelSearchSongBackBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelSearchPanel1CountBD')] public static var subpanelSearchPanel1CountBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelSearchPanel1HoverBD')] public static var subpanelSearchPanel1HoverBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelSearchPanel2BackBD')] public static var subpanelSearchTrackBackBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelSearchPanel2CountBD')] public static var subpanelSearchPanel2CountBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelSearchPanel2HoverBD')] public static var subpanelSearchPanel2HoverBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelSearchPanel3BackBD')] public static var subpanelSearchHeaderBackBD:Class;
 		
 		// modals
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='MessageBoxBackBD')] public static var modalBackBD:Class;

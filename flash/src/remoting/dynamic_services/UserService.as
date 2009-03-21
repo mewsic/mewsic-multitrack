@@ -65,8 +65,8 @@ package remoting.dynamic_services {
 		
 		
 		/**
-		 * Dump track siblings results.
-		 * @return Track siblings dump
+		 * Dump user data
+		 * @return String user data
 		 */
 		override public function toString():String {
 			return _userData.toString();

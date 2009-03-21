@@ -91,7 +91,7 @@ package remoting.dynamic_services {
 				dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_DONE));
 			}
 			catch(err:Error) {
-				dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_FAILED, false, false, sprintf('Service %s: Search failed.\n%s', $serviceID, err.message)));
+				dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_FAILED, false, false, sprintf('Service %s: Fetch failed.\n%s', $serviceID, err.message)));
 			}
 		}
 
@@ -101,7 +101,7 @@ package remoting.dynamic_services {
 		 * Error event handler.
 		 */
 		private function _onError():void {
-			dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_FAILED, false, false, sprintf('Service %s: Search failed.', $serviceID)));
+			dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_FAILED, false, false, sprintf('Service %s: Fetch failed.', $serviceID)));
 		}
 	}
 }
