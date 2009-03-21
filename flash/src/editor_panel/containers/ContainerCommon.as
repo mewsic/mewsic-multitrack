@@ -133,7 +133,7 @@ package editor_panel.containers {
 				_songQueue.push({songID:id, isLoaded:false, service:service});
 
 				// load song
-				service.url = App.connection.serverPath + App.connection.configService.songEditRequestURL;
+				service.url = App.connection.serverPath + App.connection.configService.songFetchRequestURL;
 				service.addEventListener(SongFetchEvent.REQUEST_DONE, _onSongFetchDone, false, 0, true);
 				service.addEventListener(RemotingEvent.REQUEST_FAILED, _onSongFetchFailed, false, 0, true);
 				service.request({songID:id});
