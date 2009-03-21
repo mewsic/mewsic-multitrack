@@ -9,6 +9,11 @@ package config {
 	 * @since Jun 13, 2008
 	 */
 	public class Embeds {
+		
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='bPlay')] public static var buttonPlay:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='bRecord')] public static var buttonRecord:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='bSearch')] public static var buttonSearch:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='bUpload')] public static var buttonUpload:Class;
 
 		// panels
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='PanelBackDarkBD')] public static var panelDarkBackBD:Class;
@@ -171,5 +176,6 @@ package config {
 		[Embed(source = '../../lib/fonts/myriad-web-regular.ttf', fontName = 'MyriadWebRegular', mimeType = 'application/x-font', unicodeRange = 'U+0021-U+007E,U+201C,U+201D')] public static var fontMyriadWebRegular:Class;
 		[Embed(source = '../../lib/fonts/myriad-web-bold.ttf', fontName = 'MyriadWebBold', fontWeight = 'bold', mimeType = 'application/x-font', unicodeRange = 'U+0021-U+007E,U+201C,U+201D')] public static var fontMyriadWebBold:Class;
 		[Embed(source = '../../lib/fonts/helvetica-neue-bold.ttf', fontName = 'HelveticaNeueBold', fontWeight = 'bold', mimeType = 'application/x-font', unicodeRange = 'U+0021-U+007E,U+201C,U+201D')] public static var fontHelveticaNeueBold:Class;
+	
 	}
 }
