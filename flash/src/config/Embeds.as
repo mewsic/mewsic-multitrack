@@ -10,15 +10,8 @@ package config {
 	 */
 	public class Embeds {
 		
-		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='bPlay')] public static var buttonPlay:Class;
-		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='bRecord')] public static var buttonRecord:Class;
-		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='bSearch')] public static var buttonSearch:Class;
-		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='bUpload')] public static var buttonUpload:Class;
-
-		// New assets
-		// Just a test
-		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='bPlay')] public static var bPlay:Class;
-		
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='iconPlay')] public static var iconPlay:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='skinPlay')] public static var skinPlay:Class;
 		
 		// panels
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='PanelBackDarkBD')] public static var panelDarkBackBD:Class;
