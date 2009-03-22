@@ -50,7 +50,7 @@ package progress_panel {
 			super(o);
 			
 			// add components
-			_descriptionTF = new QTextField({text:_description, x:23, y:1, alpha:0, width:910, autoSize:TextFieldAutoSize.LEFT, defaultTextFormat:Formats.progress, filters:Filters.tabMySongsHeader, thickness:-150, sharpness:50});
+			_descriptionTF = new QTextField({text:_description, x:23, y:1, alpha:0, width:910, autoSize:TextFieldAutoSize.LEFT, defaultTextFormat:Formats.progress, filters:Filters.progress, thickness:-150, sharpness:50});
 			_pieMC = new Embeds.waitPieWhiteMC() as MovieClip;
 			_pieMC.x = 9;
 			_pieMC.y = 9;

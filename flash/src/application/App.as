@@ -25,8 +25,6 @@ package application {
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
 	
-	import manager_panel.Manager;
-	
 	import modals.CloseModal;
 	import modals.DownloadSongModal;
 	import modals.DownloadTrackModal;
@@ -62,7 +60,6 @@ package application {
 		public static var bulkLoader:BulkLoader;
 		public static var connection:Connection;
 		public static var editor:Editor;
-		public static var manager:Manager;
 		public static var worker:Progress;
 		public static var settings:Settings;
 		public static var messageModal:MessageModal;
@@ -119,7 +116,6 @@ package application {
 			try {
 				// add panels
 				editor = new Editor();
-				manager = new Manager();
 				worker = new Progress();
 				
 				// add modal windows
@@ -178,13 +174,12 @@ package application {
 			}
 
 			// add modules to display list
-			addChildren(this, editor, manager, worker, exportSongModal, saveSongModal, uploadTrackModal, saveTrackModal, downloadSongModal, downloadTrackModal, closeModal, messageModal, dropboxContent);
+			addChildren(this, editor, worker, exportSongModal, saveSongModal, uploadTrackModal, saveTrackModal, downloadSongModal, downloadTrackModal, closeModal, messageModal, dropboxContent);
 			if(Settings.isLogEnabled) addChildren(this, fps);
 
 			// wait for stage initial display
 			// and connect services after a short while
 			Tweener.addTween(this, {time:Settings.PANEL_EDITOR_LAUNCH_DELAY, onComplete:App.editor.launch});
-			Tweener.addTween(this, {time:Settings.PANEL_MANAGER_LAUNCH_DELAY, onComplete:App.manager.launch});
 			Tweener.addTween(this, {time:Settings.PANEL_WORKER_LAUNCH_DELAY, onComplete:App.worker.launch});
 			Tweener.addTween(this, {time:Settings.CONNECTION_LAUNCH_DELAY, onComplete:connection.configService.request});
 		}
@@ -424,12 +419,9 @@ package application {
 			var sum:Number = 0;
 			sum += editor.height;
 			sum += 30;
-			sum += manager.height;
 			sum += worker.height;
 
-			manager.y = editor.height + 30;
-			worker.y = editor.height + manager.height + 30;
-			editor.height + manager.height + worker.height + 30;
+			worker.y = editor.height + 30;
 			
 			sum += 40; // dropbox fix
 			stageHeight = sum;
@@ -445,8 +437,6 @@ package application {
 		private function _onHelpServicesDone(event:RemotingEvent):void {
 			if(++_helpServicesCounter == 7) {
 				editor.postInit();
-				manager.tabMyList.postInit();
-				manager.tabMySongs.postInit();
 				uploadTrackModal.postInit();
 				saveTrackModal.postInit();
 				

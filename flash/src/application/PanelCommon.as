@@ -6,8 +6,6 @@ package application {
 	import config.Embeds;
 	import config.Settings;
 	
-	import manager_panel.tabs.TabEvent;
-	
 	import de.popforge.utils.sprintf;
 	
 	import org.bytearray.display.ScaleBitmap;
@@ -216,26 +214,6 @@ package application {
 			
 			// dispatch
 			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
-		}
-
-		
-		
-		/**
-		 * Change back event handler.
-		 * @param event Event data
-		 */
-		protected function $onChangeBackType(event:TabEvent):void {
-			setBackType(event.data.backType);
-		}
-
-		
-		
-		/**
-		 * Change height event handler.
-		 * @param event Event data
-		 */
-		protected function $onChangeHeight(event:TabEvent):void {
-			$animateHeightChange(event.target.contentHeight);
 		}
 	}
 }

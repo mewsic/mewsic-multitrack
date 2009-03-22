@@ -130,7 +130,7 @@ package remoting {
 				App.bulkLoader.start();
 			}
 			else {
-				Logger.debug(sprintf('Service %s GET request (%s). Connection timeout is %u seconds.', $serviceID, url, $connectionTimeout));
+				Logger.debug(sprintf('Service %s GET request (%s). Connection timeout is %u seconds.', $serviceID, params.url, $connectionTimeout));
 					
 				with(App.bulkLoader.add(params.url + params.suffix, {
 					id:$requestID, type:BulkLoader.TYPE_XML, preventCache:Settings.PREVENT_CACHING})) {

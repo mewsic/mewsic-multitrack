@@ -9,11 +9,9 @@ package config {
 	 * @since Jun 13, 2008
 	 */
 	public class Embeds {
-
-		// New assets
-		// Just a test
-		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='bPlay')] public static var bPlay:Class;
 		
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='iconPlay')] public static var iconPlay:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='skinPlay')] public static var skinPlay:Class;
 		
 		// panels
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='PanelBackDarkBD')] public static var panelDarkBackBD:Class;
@@ -40,10 +38,7 @@ package config {
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonGreenMiniBD')] public static var buttonGreenMiniBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonGrayMiniBD')] public static var buttonGrayMiniBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonGrayNanoBD')] public static var buttonGrayNanoBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonMenuBD')] public static var buttonMenuBD:Class;		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonMyListStandardBD')] public static var buttonMyListStandardBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonMyListSongBD')] public static var buttonMyListSongBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonMyListTrackBD')] public static var buttonMyListTrackBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonGlobalVolumeThumbBD')] public static var buttonGlobalVolumeThumbBD:Class;
+		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonMenuBD')] public static var buttonMenuBD:Class;		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonGlobalVolumeThumbBD')] public static var buttonGlobalVolumeThumbBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonViewportScrollerThumbBD')] public static var buttonViewportScrollerThumbBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonVerticalScrollerThumbBD')] public static var buttonVerticalScrollerThumbBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='ButtonBankToolbarLBBD')] public static var buttonContainerToolbarLBBD:Class;
@@ -122,21 +117,7 @@ package config {
 		// ruler
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='RulerBackBD')] public static var rulerBackBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='RulerPlayheadBackBD')] public static var rulerPlayheadBackBD:Class;		[Embed(source='../../lib/assets/main_assets.swf', symbol='RulerPlayheadDragBD')] public static var rulerPlayheadDragBD:Class;
-		
-		// tabs
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabMySongsFrontBD')] public static var tabMySongsFrontBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabMyListFrontBD')] public static var tabMyListFrontBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabMySongsFixBD')] public static var tabMySongsFixBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabMyListFixBD')] public static var tabMyListFixBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='TabBadgeBD')] public static var tabBadgeBD:Class;
-		
-		// subpanels
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelMyListSongBackBD')] public static var subpanelMyListSongBackBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelMyListTrackBackBD')] public static var subpanelMyListTrackBackBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelSongHeaderStarRatingBD')] public static var subpanelSongHeaderStarRatingBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelTrackHeaderStarRatingBD')] public static var subpanelTrackHeaderStarRatingBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='SubPanelSongTrackStarRatingBD')] public static var subpanelSongTrackStarRatingBD:Class;
-		
+
 		// modals
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='MessageBoxBackBD')] public static var modalBackBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='MessageBoxDivBD')] public static var modalDivBD:Class;
@@ -163,5 +144,6 @@ package config {
 		[Embed(source = '../../lib/fonts/myriad-web-regular.ttf', fontName = 'MyriadWebRegular', mimeType = 'application/x-font', unicodeRange = 'U+0021-U+007E,U+201C,U+201D')] public static var fontMyriadWebRegular:Class;
 		[Embed(source = '../../lib/fonts/myriad-web-bold.ttf', fontName = 'MyriadWebBold', fontWeight = 'bold', mimeType = 'application/x-font', unicodeRange = 'U+0021-U+007E,U+201C,U+201D')] public static var fontMyriadWebBold:Class;
 		[Embed(source = '../../lib/fonts/helvetica-neue-bold.ttf', fontName = 'HelveticaNeueBold', fontWeight = 'bold', mimeType = 'application/x-font', unicodeRange = 'U+0021-U+007E,U+201C,U+201D')] public static var fontHelveticaNeueBold:Class;
+	
 	}
 }
