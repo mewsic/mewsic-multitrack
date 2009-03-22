@@ -181,22 +181,18 @@ package remoting {
 		protected function $xml2TrackData(x:XML):TrackData {
 			var d:TrackData = new TrackData();
 			
-			d.trackGenreID = x.genre;
-			d.trackInstrumentID = x.instrument;
 			d.trackID = x.id;
-			d.trackBPM = x.bpm;
-			d.trackSongsCount = x.song_count;
+			d.trackUserNickname = x.user;
+			d.trackTitle = x.title;
+			d.trackAuthor = x.author;
+			d.trackTags = x.tags;
+			d.trackInstrumentID = x.instrument;
+			d.trackRating = x.rating;
 			d.trackSampleURL = x.filename;
 			d.trackWaveformURL = x.waveform;
-			d.trackUserNickname = x.user;
-			d.trackAuthor = x.author;
-			d.trackTitle = x.title;
-			d.trackKey = x.tone;
-			d.trackDescription = x.description;
-			d.trackRating = x.rating;
+			d.trackMilliseconds = x.seconds * 1000;
 			d.trackVolume = x.volume;
 			d.trackBalance = x.balance;
-			d.trackMilliseconds = x.seconds * 1000;
 			
 			return d;
 		}		

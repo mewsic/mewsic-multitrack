@@ -709,12 +709,6 @@ package editor_panel {
 				// set input text
 				_bpmInput.text = String(value);
 				
-				// set record track bpm
-				if(_recordTrack) {
-					_recordTrack.trackData.trackBPM = value;
-					_recordTrack.refresh();
-				}
-				
 				// set beat clicker
 				_beatClicker.bpm = App.connection.coreSongData.songBPM;
 				

@@ -58,7 +58,7 @@ package editor_panel.tracks {
 		private var _recordOverlaySpr:QSprite;
 		private var _statusTF:QTextField;
 		private var _startTime:uint;
-		private var _syncedRecordTimeout:int;
+		private var _syncedRecordTimeout:uint;
 
 		
 		
@@ -177,7 +177,7 @@ package editor_panel.tracks {
 			if(_precountTimer.currentCount < 7) _precountSound.play();
 			_recordOverlaySpr.alpha = .25;
 			_recordOverlaySpr.visible = true;
-			Tweener.addTween(_recordOverlaySpr, {alpha:0, time:60 / $trackData.trackBPM, transition:'easeOutSine'});
+			Tweener.addTween(_recordOverlaySpr, {alpha:0, time:0.5, transition:'easeOutSine'});
 		}
 
 		
@@ -187,10 +187,10 @@ package editor_panel.tracks {
 		 * @param event Event data
 		 */		
 		public function startRecording(event:Event = null):void {
-			var precountDelay:uint = 60000 / $trackData.trackBPM / 2;
+			var precountDelay:uint = 60000 / App.BPM / 2;
 			var syncDelay:int = precountDelay * 7;
 			
-			Logger.debug(sprintf('Start precounting (%u BPM, record=%u)', $trackData.trackBPM, precountDelay));
+			Logger.debug(sprintf('Start precounting (%u BPM, record=%u)', App.BPM, precountDelay));
 			
 			_stopBtn.visible = true;
 			_recordBtn.visible = false;
@@ -266,6 +266,7 @@ package editor_panel.tracks {
 		private function _onPrecountTimer(event:TimerEvent):void {
 			if((_precountTimer.currentCount <= 8 && _precountTimer.currentCount % 2 == 0) || _precountTimer.currentCount > 8) _recordOverlayTick();
 		}
+		
 		
 		
 		private function _onStartSyncedRecord():void {

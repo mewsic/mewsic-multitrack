@@ -10,15 +10,13 @@ package editor_panel.tracks {
 	
 	import controls.Thumbnail;
 	
+	import de.popforge.utils.sprintf;
+	
 	import editor_panel.sampler.Sampler;
 	import editor_panel.sampler.SamplerEvent;
 	import editor_panel.waveform.Waveform;
 	
-	import remoting.data.TrackData;
-	import remoting.dynamic_services.UserService;
-	import remoting.events.UserEvent;
-	
-	import de.popforge.utils.sprintf;
+	import flash.display.Sprite;
 	
 	import org.osflash.thunderbolt.Logger;
 	import org.vancura.graphics.QBitmap;
@@ -26,7 +24,9 @@ package editor_panel.tracks {
 	import org.vancura.util.addChildren;
 	import org.vancura.util.removeChildren;
 	
-	import flash.display.Sprite;	
+	import remoting.data.TrackData;
+	import remoting.dynamic_services.UserService;
+	import remoting.events.UserEvent;	
 
 	
 	
@@ -48,9 +48,8 @@ package editor_panel.tracks {
 		protected var $waveform:Waveform;
 		protected var $backBM:QBitmap;
 		protected var $titleTF:QTextField;
-		protected var $descriptionTF:QTextField;
-		protected var $specsContentTF:QTextField;
 		protected var $specsTitleTF:QTextField;
+		protected var $specsTagsTF:QTextField;
 		protected var $avatarThumb:Thumbnail;
 		protected var $trackData:TrackData;
 		protected var $trackType:String;
@@ -79,13 +78,12 @@ package editor_panel.tracks {
 			// add components
 			$backBM = new QBitmap({embed:($trackType == STANDARD_TRACK) ? new Embeds.standardContainerBackBD() : new Embeds.recordContainerBackBD()});
 			$titleTF = new QTextField({alpha:0, x:154, width:116, height:52, defaultTextFormat:($trackType == STANDARD_TRACK) ? Formats.standardContainerTitle : Formats.recordContainerTitle, filters:($trackType == STANDARD_TRACK) ? Filters.standardContainerContentTitle : Filters.recordContainerContentTitle, sharpness:-25, thickness:-50});
-			$descriptionTF = new QTextField({alpha:0, x:154, width:116, height:52, defaultTextFormat:($trackType == STANDARD_TRACK) ? Formats.standardContainerDescription : Formats.recordContainerDescription, sharpness:-100, thickness:0});
 			$specsTitleTF = new QTextField({x:279, width:30, height:52, defaultTextFormat:($trackType == STANDARD_TRACK) ? Formats.standardContainerSpecsTitle : Formats.recordContainerSpecsTitle, sharpness:-100, thickness:0, text:'BPM:\nKey:'});
-			$specsContentTF = new QTextField({alpha:0, x:310, width:40, height:52, defaultTextFormat:($trackType == STANDARD_TRACK) ? Formats.standardContainerSpecsContent : Formats.recordContainerSpecsContent, filters:($trackType == STANDARD_TRACK) ? Filters.standardContainerContentTitle : Filters.recordContainerContentTitle, sharpness:-25, thickness:-50});
+			$specsTagsTF = new QTextField({alpha:0, x:154, width:116, height:52, defaultTextFormat:($trackType == STANDARD_TRACK) ? Formats.standardContainerSpecsContent : Formats.recordContainerSpecsContent, filters:($trackType == STANDARD_TRACK) ? Filters.standardContainerContentTitle : Filters.recordContainerContentTitle, sharpness:-25, thickness:-50});
 			$avatarThumb = new Thumbnail({x:12, y:6});
 
 			// add to display list
-			addChildren(this, $backBM, $avatarThumb, $titleTF, $descriptionTF, $specsTitleTF, $specsContentTF);
+			addChildren(this, $backBM, $avatarThumb, $titleTF, $specsTitleTF, $specsTagsTF);
 			
 			// set user service
 			_userService = new UserService();
@@ -105,7 +103,7 @@ package editor_panel.tracks {
 			// destroy components
 			try {
 				$avatarThumb.destroy();
-				removeChildren(this, $backBM, $avatarThumb, $titleTF, $descriptionTF, $specsTitleTF, $specsContentTF);
+				removeChildren(this, $backBM, $avatarThumb, $titleTF, $specsTitleTF, $specsTagsTF);
 			}
 			catch(err3:Error) {
 				Logger.warn(sprintf('Error removing graphics for %s:\n%s', toString(), err3.message));
@@ -153,23 +151,20 @@ package editor_panel.tracks {
 			if($trackData != null) {
 				// fill texts
 				$titleTF.text = $trackData.trackTitle;
-				$descriptionTF.text = $trackData.trackDescription;
-				$specsContentTF.text = sprintf('%s\n%s', $trackData.trackBPM, $trackData.trackKey);
+				$specsTagsTF.text = $trackData.trackTags;
 				
 				// fade in texts
 				var proto:Object = {time:Settings.FADEIN_TIME, alpha:1, transition:'easeOutSine'};
 				Tweener.addTween($titleTF, proto);
-				Tweener.addTween($descriptionTF, proto);
-				Tweener.addTween($specsContentTF, proto);
+				Tweener.addTween($specsTagsTF, proto);
 			}
 			
 			// refresh texts
-			var bh:Number = $titleTF.textHeight + $descriptionTF.textHeight + 2;
+			var bh:Number = $titleTF.textHeight + 2;
 			var by:Number = Math.round((52 - bh) / 2) - 6;
 			$titleTF.y = by;
-			$descriptionTF.y = by + $titleTF.textHeight + 2;
 			$specsTitleTF.y = Math.round((52 - $specsTitleTF.textHeight) / 2) - 4;
-			$specsContentTF.y = Math.round((52 - $specsTitleTF.textHeight) / 2) - 5;
+			$specsTagsTF.y = $titleTF.y + bh + 2;
 			
 			// refresh volume & balance
 			if($trackType == STANDARD_TRACK) {

@@ -22,8 +22,6 @@ package application {
 	import flash.events.*;
 	import flash.external.*;
 	import flash.system.Security;
-	import flash.utils.clearTimeout;
-	import flash.utils.setTimeout;
 	
 	import modals.CloseModal;
 	import modals.DownloadSongModal;
@@ -57,6 +55,9 @@ package application {
 		
 		
 		private static const _ERROR_STAGE_HEIGHT:Number = 400;
+
+		public static const BPM:uint = 120;
+		
 		public static var bulkLoader:BulkLoader;
 		public static var connection:Connection;
 		public static var editor:Editor;
@@ -72,6 +73,7 @@ package application {
 		public static var closeModal:CloseModal;
 		public static var dropboxContent:DropboxContent;
 		public static var fps:FPS;
+
 		//public static var recordSyncDelay:int;
 		private var _currentStageHeight:int = Settings.START_STAGE_HEIGHT;
 		private var _isMouseInside:Boolean;
@@ -80,6 +82,7 @@ package application {
 		private var _helpServicesCounter:uint = 0;
 		private var _loadSong:Boolean;
 		private var _fastSeekTimeout:uint;
+		
 
 		
 		

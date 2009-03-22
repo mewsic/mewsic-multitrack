@@ -233,7 +233,6 @@ package editor_panel.containers {
 				}
 				
 				// dispatch events
-				dispatchEvent(new ContainerEvent(ContainerEvent.SET_GLOBAL_TEMPO, false, false, {tempo:td.trackBPM}));
 				dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {trackData:td}));
 				dispatchEvent(new AppEvent(AppEvent.REFRESH_TOP_PANE, true));
 			}
@@ -295,23 +294,18 @@ package editor_panel.containers {
 				
 				// create track data
 				var td:TrackData = new TrackData();
-				td.trackAuthor = App.connection.coreUserData.userNickname;
-				td.trackBalance = 0;
-				td.trackBPM = App.connection.coreSongData.songBPM;
-				td.trackDescription = '';
-				td.trackGenreID = 0;
 				td.trackID = Rnd.integer(10000, 99999);
+				td.trackUserNickname = App.connection.coreUserData.userNickname;
+				td.trackTitle = 'Untitled';
+				td.trackAuthor = App.connection.coreUserData.userNickname;
+				td.trackTags = '';
 				td.trackInstrumentID = 0;
-				td.trackKey = '';
 				td.trackRating = 0;
 				td.trackSampleURL = '';
-				td.trackMilliseconds = 0;
-				td.trackSongsCount = 0;
-				td.trackSongsCount = 0;
-				td.trackTitle = 'Untitled';
-				td.trackUserNickname = App.connection.coreUserData.userNickname;
-				td.trackVolume = .9;
 				td.trackWaveformURL = '';
+				td.trackMilliseconds = 0;
+				td.trackVolume = .9;
+				td.trackBalance = 0;
 				
 				// create track
 				createTrack(td.trackID);
@@ -705,7 +699,6 @@ package editor_panel.containers {
 					p.load();
 					
 					// dispatch events
-					dispatchEvent(new ContainerEvent(ContainerEvent.SET_GLOBAL_TEMPO, false, false, {tempo:event.trackData.trackBPM}));
 					dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {trackData:event.trackData}));
 					
 					// call song load service
