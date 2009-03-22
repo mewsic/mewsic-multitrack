@@ -1,6 +1,10 @@
 package controls {
 	import caurina.transitions.Tweener;
 	
+	import flash.display.BitmapData;
+	import flash.events.MouseEvent;
+	import flash.text.TextFormat;
+	
 	import org.bytearray.display.ScaleBitmap;
 	import org.vancura.graphics.Bitmapping;
 	import org.vancura.graphics.Drawing;
@@ -8,11 +12,7 @@ package controls {
 	import org.vancura.graphics.QSprite;
 	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
-	import org.vancura.util.removeChildren;
-	
-	import flash.display.BitmapData;
-	import flash.events.MouseEvent;
-	import flash.text.TextFormat;	
+	import org.vancura.util.removeChildren;	
 
 	
 	
@@ -39,6 +39,7 @@ package controls {
 		public static var defHeight:Number = DefaultControlSettings.DEF_HEIGHT;
 		public static var defMorphTime:Number = DefaultControlSettings.DEF_MORPH_TIME;
 		public static var defIconPadding:Number = DefaultControlSettings.DEF_BUTTON_ICON_PADDING;
+		public static var defIconOffset:Number = DefaultControlSettings.DEF_BUTTON_ICON_OFFSET;
 		public static var defSkin:BitmapData = null;
 		public static var defOverInTime:Number = DefaultControlSettings.DEF_OVER_IN_TIME;
 		public static var defOverOutTime:Number = DefaultControlSettings.DEF_OVER_OUT_TIME;
@@ -68,6 +69,7 @@ package controls {
 		protected var $textOverTextField:QTextField;
 		protected var $textPressTextField:QTextField;
 		protected var $iconPadding:Number;
+		protected var $iconOffset:Number;
 		protected var $isIconEnabled:Boolean;
 		protected var $isTextEnabled:Boolean;
 		protected var $itemWidth:Number;
@@ -127,6 +129,7 @@ package controls {
 			$pressOutTime = (c.pressOutTime != undefined) ? c.pressOutTime : defPressOutTime;
 			$morphTime = (c.morphTime != undefined) ? c.morphTime : defMorphTime;
 			$iconPadding = (c.iconPadding != undefined) ? c.iconPadding : defIconPadding;
+			$iconOffset = (c.iconOffset != undefined)? c.iconOffset : defIconOffset;
 			$textOutAlpha = (c.textOutAlpha != undefined) ? c.textOutAlpha : defTextOutAlpha;
 			$textOutOffsY = (c.textOutOffsY != undefined) ? c.textOutOffsY : defTextOutOffsY;
 			$textOverAlpha = (c.textOverAlpha != undefined) ? c.textOverAlpha : defTextOverAlpha;
@@ -307,7 +310,7 @@ package controls {
 
 			if($isIconEnabled) {
 				var iconX:Number = Math.round((width - $textOutTextField.textWidth - iconWidth) / 2);
-				var iconY:Number = my - 4;
+				var iconY:Number = my - $iconOffset;
 				$iconOutBM.x = iconX;
 				$iconOverBM.x = iconX;
 				$iconPressBM.x = iconX;

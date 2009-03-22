@@ -19,6 +19,7 @@ package controls {
 		public static const DEF_HEIGHT:Number = 100;
 		public static const DEF_INPUT_HEIGHT:Number = 24;
 		public static const DEF_BUTTON_ICON_PADDING:Number = 6;
+		public static const DEF_BUTTON_ICON_OFFSET:Number = 4;
 		public static const DEF_TOOLBAR_ICON_PADDING:Number = 5;
 		public static const DEF_TOOLBAR_PADDING_H:Number = 5;
 		public static const DEF_TOOLBAR_PADDING_V:Number = 4;
