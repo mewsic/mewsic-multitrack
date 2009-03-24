@@ -10,9 +10,13 @@ package config {
 	 */
 	public class Embeds {
 		
-		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='iconPlay')] public static var iconPlay:Class;
-		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='skinPlay')] public static var skinPlay:Class;
+		// NEW assets
+		// Buttons
+		//
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='GlyphPlay')] public static var glyphPlay:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonPlayLarge')] public static var buttonPlay:Class;
 		
+		// OLD assets
 		// panels
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='PanelBackDarkBD')] public static var panelDarkBackBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='PanelBackLightBD')] public static var panelLightBackBD:Class;
@@ -62,12 +66,9 @@ package config {
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphOKBD')] public static var glyphOKBD:Class;		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphReloadBD')] public static var glyphReloadBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphMicBD')] public static var glyphMicBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphMuteSmallBD')] public static var glyphMuteSmallBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphPlayBD')] public static var glyphPlayBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphPauseBD')] public static var glyphPauseBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphStopBD')] public static var glyphStopBD:Class;		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphStop2BD')] public static var glyphStop2BD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphPlayNanoBD')] public static var glyphPlayNanoBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphRecordBD')] public static var glyphRecordBD:Class;
-		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphRewindBD')] public static var glyphRewindBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphSaveSmallBD')] public static var glyphSaveSmallBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphScrollLeftBD')] public static var glyphScrollLeftBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='GlyphScrollRightBD')] public static var glyphScrollRightBD:Class;

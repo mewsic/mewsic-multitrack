@@ -88,11 +88,7 @@ package editor_panel {
 		private var _topUploadBtn:Button;
 		private var _botExportBtn:Button;
 		private var _botSaveBtn:Button;
-		private var _controllerRewindBtn:Button;
 		private var _controllerPlayBtn:Button;
-		private var _controllerPauseBtn:Button;
-		private var _controllerStopBtn:Button;
-		private var _controllerForwardBtn:Button;
 		private var _bpmOffBtn:Button;
 		private var _bpmOnBtn:Button;
 		private var _bpmInput:Input;
@@ -169,17 +165,12 @@ package editor_panel {
 
 			// add controller toolbar
 			_controllerToolbar = new Toolbar({x:14, y:15});
-			_controllerRewindBtn = new Button({width:29, height:24, skin:new Embeds.buttonBeigeMiniBD(), icon:new Embeds.glyphRewindBD(), textOutFilters:Filters.buttonBeigeLabel, textOverFilters:Filters.buttonBeigeLabel, textPressFilters:Filters.buttonBeigeLabel});
-			//_controllerPlayBtn = new Button({width:88, height:24, text:'Play', icon:new Embeds.glyphPlayBD(), skin:new Embeds.buttonGreenMiniBD(), textOutFilters:Filters.buttonGreenLabel, textOverFilters:Filters.buttonGreenLabel, textPressFilters:Filters.buttonGreenLabel});
-			_controllerPlayBtn = new Button({width:80, height:41, iconOffset:12, skin:new Embeds.skinPlay(), icon:new Embeds.iconPlay(), textOutFilters:Filters.buttonGreenLabel, textOverFilters:Filters.buttonGreenLabel, textPressFilters:Filters.buttonGreenLabel});
-			_controllerPauseBtn = new Button({width:29, height:24, skin:new Embeds.buttonBlueMiniBD(), icon:new Embeds.glyphPauseBD(), textOutFilters:Filters.buttonBlueLabel, textOverFilters:Filters.buttonBlueLabel, textPressFilters:Filters.buttonBlueLabel});
-			_controllerStopBtn = new Button({width:29, height:24, skin:new Embeds.buttonBlueMiniBD(), icon:new Embeds.glyphStopBD(), textOutFilters:Filters.buttonBlueLabel, textOverFilters:Filters.buttonBlueLabel, textPressFilters:Filters.buttonBlueLabel});
-			_controllerForwardBtn = new Button({width:29, height:24, skin:new Embeds.buttonBeigeMiniBD(), icon:new Embeds.glyphForwardBD(), textOutFilters:Filters.buttonBeigeLabel, textOverFilters:Filters.buttonBeigeLabel, textPressFilters:Filters.buttonBeigeLabel});
-			_controllerToolbar.addChildRight(_controllerRewindBtn);
+			_controllerPlayBtn = new Button({width:80, height:41, iconOffset:12, skin:new Embeds.buttonPlay(), icon:new Embeds.glyphPlay()});
+			
+			// insert record, search & upload
+			// 
+
 			_controllerToolbar.addChildRight(_controllerPlayBtn);
-			_controllerToolbar.addChildRight(_controllerPauseBtn);
-			_controllerToolbar.addChildRight(_controllerStopBtn);
-			_controllerToolbar.addChildRight(_controllerForwardBtn);
 
 			// add global volume toolbar
 			_globalVolumeToolbar = new Toolbar({x:249, y:15, paddingH:0, paddingV:0, skin:new Embeds.toolbarPlainBD()});
@@ -228,19 +219,14 @@ package editor_panel {
 			_botToolbar.x = $canvasSpr.width - _botToolbar.width - 14;
 			
 			// deactivate some buttons
-			_controllerRewindBtn.areEventsEnabled = false;
 			_controllerPlayBtn.areEventsEnabled = false;
-			_controllerPauseBtn.areEventsEnabled = false;
-			_controllerStopBtn.areEventsEnabled = false;
-			_controllerForwardBtn.areEventsEnabled = false;
+			
 			_botExportBtn.areEventsEnabled = false;
 			_botSaveBtn.areEventsEnabled = false;
 			_bpmOffBtn.areEventsEnabled = false;
-			_controllerRewindBtn.alpha = .4;
+
 			_controllerPlayBtn.alpha = .4;
-			_controllerPauseBtn.alpha = .4;
-			_controllerStopBtn.alpha = .4;
-			_controllerForwardBtn.alpha = .4;
+
 			_botExportBtn.alpha = .4;
 			_botSaveBtn.alpha = .4;
 			_bpmOffBtn.alpha = .4;
@@ -281,14 +267,8 @@ package editor_panel {
 			
 			// add buttons event listeners
 			_controllerPlayBtn.addEventListener(MouseEvent.CLICK, play, false, 0, true);
-			_controllerRewindBtn.addEventListener(MouseEvent.CLICK, rewind, false, 0, true);
-			_controllerRewindBtn.addEventListener(MouseEvent.MOUSE_DOWN, _onRewindDown, false, 0, true);
-			_controllerRewindBtn.addEventListener(MouseEvent.MOUSE_UP, _onRewindUp, false, 0, true);
-			_controllerPauseBtn.addEventListener(MouseEvent.CLICK, pause, false, 0, true);
-			_controllerStopBtn.addEventListener(MouseEvent.CLICK, stop, false, 0, true);
-			_controllerForwardBtn.addEventListener(MouseEvent.CLICK, forward, false, 0, true);
-			_controllerForwardBtn.addEventListener(MouseEvent.MOUSE_DOWN, _onForwardDown, false, 0, true);
-			_controllerForwardBtn.addEventListener(MouseEvent.MOUSE_UP, _onForwardUp, false, 0, true);
+			// Implement play behaviour with an _onplay that sets the new glyph and adds a new listener
+
 			_topRecordBtn.addEventListener(MouseEvent.CLICK, _onRecordTrackBtnClick, false, 0, true);
 			_topUploadBtn.addEventListener(MouseEvent.CLICK, _onUploadTrackBtnClick, false, 0, true);
 			_botExportBtn.addEventListener(MouseEvent.CLICK, _onExportSongBtnClick, false, 0, true);
@@ -491,7 +471,7 @@ package editor_panel {
 		
 		
 		/**
-		 * Rewind.
+		 * Rewind the stage by _SEEK_STEP ms.
 		 */
 		public function rewind(event:Event = null):void {
 			Logger.info('Rewind playback.');
@@ -509,7 +489,7 @@ package editor_panel {
 		
 		
 		/**
-		 * Forward.
+		 * Forward the stage by _SEEK_STEP ms. 
 		 */
 		public function forward(event:Event = null):void {
 			if(_isRecording) {
@@ -747,28 +727,25 @@ package editor_panel {
 			
 			// set buttons states
 			var isf:Boolean = (allTrackCount > 0);
+			
 			var isplay:Boolean = (isf && (!_isPlaying || (_isPlaying && _isPaused)) && !_isRecording && (_recordContainer.trackCount == 0));
 			var ispause:Boolean = (isf && _isPlaying && !_isRecording && !_isPaused);
 			var isstop:Boolean = (isf && _isPlaying);
-			var isrewind:Boolean = (isf && !_isRecording && (_recordContainer.trackCount == 0));
-			var isforward:Boolean = (isf && !_isRecording && (_recordContainer.trackCount == 0));
+			//var isrewind:Boolean = (isf && !_isRecording && (_recordContainer.trackCount == 0));
+			//var isforward:Boolean = (isf && !_isRecording && (_recordContainer.trackCount == 0));
 			var isbot:Boolean = (isf && !_isPlaying && !_isRecording);
 			var isbpm:Boolean = (!_isPlaying && !_isRecording);
 			
 			_controllerPlayBtn.areEventsEnabled = isplay;
-			_controllerPauseBtn.areEventsEnabled = ispause;
-			_controllerStopBtn.areEventsEnabled = isstop;
-			_controllerRewindBtn.areEventsEnabled = isrewind;
-			_controllerForwardBtn.areEventsEnabled = isforward;
+
 			_botExportBtn.areEventsEnabled = isbot;
 			_botSaveBtn.areEventsEnabled = isbot;
 			_bpmInput.areEventsEnabled = isbpm;
 			
+			// remove this and change the glyph into "stop"
+			// 
 			_controllerPlayBtn.alpha = (isplay) ? 1 : .4;
-			_controllerPauseBtn.alpha = (ispause) ? 1 : .4;
-			_controllerStopBtn.alpha = (isstop) ? 1 : .4;
-			_controllerRewindBtn.alpha = (isrewind) ? 1 : .4;
-			_controllerForwardBtn.alpha = (isforward) ? 1 : .4;
+			
 			_botExportBtn.alpha = (isbot) ? 1 : .4;
 			_botSaveBtn.alpha = (isbot) ? 1 : .4;
 			_bpmInput.alpha = (isbpm) ? 1 : .4;
@@ -1146,6 +1123,9 @@ package editor_panel {
 			}
 			
 			_isRecording = true;
+			
+			// Great work, Vaclav.
+			// -vjt, 24/03/2009
 			rewind();
 			play();
 		}
@@ -1165,7 +1145,7 @@ package editor_panel {
 			_bpmToolbar.icon = (event.polarity) ? _metronomeIcon2 : _metronomeIcon1; 
 		}
 
-		
+		/*
 		
 		private function _onRewindDown(event:MouseEvent):void {
 			if(!_isStillSeekBtnPressed) {
@@ -1210,5 +1190,6 @@ package editor_panel {
 				clearInterval(_stillSeekInterval);
 			}
 		}
+		*/
 	}
 }
