@@ -178,13 +178,13 @@ package application {
 			}
 
 			// add modules to display list
-			addChildren(this, editor, worker, exportSongModal, saveSongModal, uploadTrackModal, saveTrackModal, downloadSongModal, downloadTrackModal, closeModal, messageModal/*, dropboxContent*/);
+			addChildren(this, editor, exportSongModal, saveSongModal, uploadTrackModal, saveTrackModal, downloadSongModal, downloadTrackModal, closeModal, messageModal/*, dropboxContent*/);
 			if(Settings.isLogEnabled) addChildren(this, fps);
 
 			// wait for stage initial display
 			// and connect services after a short while
 			Tweener.addTween(this, {time:Settings.PANEL_EDITOR_LAUNCH_DELAY, onComplete:App.editor.launch});
-			Tweener.addTween(this, {time:Settings.PANEL_WORKER_LAUNCH_DELAY, onComplete:App.worker.launch});
+			//Tweener.addTween(this, {time:Settings.PANEL_WORKER_LAUNCH_DELAY, onComplete:App.worker.launch});
 			Tweener.addTween(this, {time:Settings.CONNECTION_LAUNCH_DELAY, onComplete:connection.configService.request});
 		}
 
@@ -423,10 +423,8 @@ package application {
 			var sum:Number = 0;
 			sum += editor.height;
 			sum += 30;
-			sum += worker.height;
-
-			worker.y = editor.height + 30;
-			
+			//sum += worker.height;
+			//worker.y = editor.height + 30;
 			//sum += 40; // dropbox fix
 			stageHeight = sum;
 		}

@@ -324,7 +324,7 @@ package remoting {
 		 * Remove bulkLoader.
 		 */
 		private function _removeLoader():void {
-			with(App.bulkLoader.get($requestID)) {
+			with(App.bulkLoader.get($requestID)) { // XXX FIXME
 				removeEventListener(Event.COMPLETE, _onRequestDone);
 				removeEventListener(BulkLoader.ERROR, _onRequestError);
 			}
