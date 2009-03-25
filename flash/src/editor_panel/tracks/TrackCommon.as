@@ -48,7 +48,6 @@ package editor_panel.tracks {
 		protected var $waveform:Waveform;
 		protected var $backBM:QBitmap;
 		protected var $titleTF:QTextField;
-		protected var $specsTitleTF:QTextField;
 		protected var $specsTagsTF:QTextField;
 		protected var $avatarThumb:Thumbnail;
 		protected var $trackData:TrackData;
@@ -78,12 +77,11 @@ package editor_panel.tracks {
 			// add components
 			$backBM = new QBitmap({embed:($trackType == STANDARD_TRACK) ? new Embeds.standardContainerBackBD() : new Embeds.recordContainerBackBD()});
 			$titleTF = new QTextField({alpha:0, x:154, width:116, height:52, defaultTextFormat:($trackType == STANDARD_TRACK) ? Formats.standardContainerTitle : Formats.recordContainerTitle, filters:($trackType == STANDARD_TRACK) ? Filters.standardContainerContentTitle : Filters.recordContainerContentTitle, sharpness:-25, thickness:-50});
-			$specsTitleTF = new QTextField({x:279, width:30, height:52, defaultTextFormat:($trackType == STANDARD_TRACK) ? Formats.standardContainerSpecsTitle : Formats.recordContainerSpecsTitle, sharpness:-100, thickness:0, text:'BPM:\nKey:'});
 			$specsTagsTF = new QTextField({alpha:0, x:154, width:116, height:52, defaultTextFormat:($trackType == STANDARD_TRACK) ? Formats.standardContainerSpecsContent : Formats.recordContainerSpecsContent, filters:($trackType == STANDARD_TRACK) ? Filters.standardContainerContentTitle : Filters.recordContainerContentTitle, sharpness:-25, thickness:-50});
 			$avatarThumb = new Thumbnail({x:12, y:6});
 
 			// add to display list
-			addChildren(this, $backBM, $avatarThumb, $titleTF, $specsTitleTF, $specsTagsTF);
+			addChildren(this, $backBM, $avatarThumb, $titleTF, $specsTagsTF);
 			
 			// set user service
 			_userService = new UserService();
@@ -103,7 +101,7 @@ package editor_panel.tracks {
 			// destroy components
 			try {
 				$avatarThumb.destroy();
-				removeChildren(this, $backBM, $avatarThumb, $titleTF, $specsTitleTF, $specsTagsTF);
+				removeChildren(this, $backBM, $avatarThumb, $titleTF, $specsTagsTF);
 			}
 			catch(err3:Error) {
 				Logger.warn(sprintf('Error removing graphics for %s:\n%s', toString(), err3.message));
@@ -163,7 +161,6 @@ package editor_panel.tracks {
 			var bh:Number = $titleTF.textHeight + 2;
 			var by:Number = Math.round((52 - bh) / 2) - 6;
 			$titleTF.y = by;
-			$specsTitleTF.y = Math.round((52 - $specsTitleTF.textHeight) / 2) - 4;
 			$specsTagsTF.y = $titleTF.y + bh + 2;
 			
 			// refresh volume & balance
