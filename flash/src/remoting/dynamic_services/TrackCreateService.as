@@ -55,7 +55,6 @@ package remoting.dynamic_services {
 		 * params.songID - Song ID
 		 * params.instrumentID - Instrument ID
 		 * params.milliseconds - Track milliseconds
-		 * params.bpm - Track BPM
 		 * params.userID - User ID
 		 * @param params Parameters
 		 */
@@ -81,9 +80,6 @@ package remoting.dynamic_services {
 			
 			if(params.milliseconds != undefined) query += '&track[seconds]=' + (params.milliseconds / 1000);
 			else throw new Error(sprintf('Service %s: Milliseconds is not defined.', $serviceID));
-			
-			if(params.bpm != undefined) query += '&track[bpm]=' + escape(params.bpm);
-			else throw new Error(sprintf('Service %s: BPM is not defined.', $serviceID));
 			
 			if(params.userID != undefined) query += '&track[user_id]=' + escape(params.userID);
 			else throw new Error(sprintf('Service %s: User ID is not defined.', $serviceID));

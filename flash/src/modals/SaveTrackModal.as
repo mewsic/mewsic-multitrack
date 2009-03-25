@@ -170,7 +170,7 @@ package modals {
 				_descriptionInput.reset();
 				
 				// grab values from core song
-				_bpmInput.text = App.connection.coreSongData.songBPM.toString(); 
+				//_bpmInput.text = App.connection.coreSongData.songBPM.toString(); 
 				
 				// set initial visual properties
 				_saveBtn.alpha = .4;

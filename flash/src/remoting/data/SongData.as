@@ -16,7 +16,6 @@ package remoting.data {
 		public var songID:uint;
 		public var songInstrumentsCount:uint;
 		public var songSiblingsCount:uint;
-		public var songBPM:uint = 0;
 		public var songSampleURL:String;
 		public var songWaveformURL:String;
 		public var songUserNickname:String;
@@ -40,7 +39,6 @@ package remoting.data {
 				'  *  songID=' + songID + '\n' +
 				'  *  songInstrumentsCount=' + songInstrumentsCount + '\n' +
 				'  *  songSiblingsCount=' + songSiblingsCount + '\n' +
-				'  *  songBPM=' + songBPM + '\n' +
 				'  *  songSampleURL=' + songSampleURL + '\n' +
 				'  *  songWaveformURL=' + songWaveformURL + '\n' +
 				'  *  songUserNickname=' + songUserNickname + '\n' +

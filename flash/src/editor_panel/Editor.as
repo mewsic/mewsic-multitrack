@@ -101,11 +101,6 @@ package editor_panel {
 		// Volume toolbar - remove me
 		private var _globalVolumeToolbar:Toolbar;
 
-		private var _bpmToolbar:Toolbar;
-		private var _bpmOffBtn:Button;
-		private var _bpmOnBtn:Button;
-		private var _bpmInput:Input;
-
 		private var _globalVolumeSlider:Slider;
 		private var _globalVUMeter:VUMeter;
 
@@ -135,7 +130,6 @@ package editor_panel {
 		private var _isVUMeterEnabled:Boolean;
 
 		private var _recordLimit:uint;
-		private var _isCoreBPMSet:Boolean;
 		private var _isStreamDown:Boolean;
 
 		
@@ -215,17 +209,6 @@ package editor_panel {
 			_globalVUMeter = new VUMeter({x:8, y:8, skin:new Embeds.vuMeterHorizontalBD(), leds:30});
 			_globalVUToolbar.addChild(_globalVUMeter);
 
-			// add bpm toolbar
-			_bpmToolbar = new Toolbar({x:14, y:12, icon:_metronomeIcon1});
-			_bpmOffBtn = new Button({width:29, height:24, skin:new Embeds.buttonGrayMiniBD(), icon:new Embeds.glyphVolume1WhiteBD(), textOutFilters:Filters.buttonGrayLabel, textOverFilters:Filters.buttonGrayLabel, textPressFilters:Filters.buttonGrayLabel});
-			_bpmOnBtn = new Button({visible:false, width:29, height:24, skin:new Embeds.buttonActiveMiniBD(), icon:new Embeds.glyphVolume1WhiteBD(), textOutFilters:Filters.buttonActiveLabel, textOverFilters:Filters.buttonActiveLabel, textPressFilters:Filters.buttonActiveLabel});
-			_bpmInput = new Input({width:40, maxChars:3});
-			_bpmToolbar.addChildRight(_bpmInput);
-			_bpmToolbar.addChildRight(_bpmOffBtn);
-			_bpmToolbar.addChild(_bpmOnBtn);
-			_bpmOnBtn.x = 74;
-			_bpmOnBtn.y = 4;
-
 			// add containers
 			_standardContainer = new ContainerCommon(TrackCommon.STANDARD_TRACK);
 			_recordContainer = new ContainerCommon(TrackCommon.RECORD_TRACK);
@@ -242,21 +225,17 @@ package editor_panel {
 			// 
 			_disableButton(_controllerPlayBtn);
 			
-			_bpmOffBtn.areEventsEnabled = false;
-			_bpmOffBtn.alpha = .4;
-			
 			// set default volume
 			//_globalVolumeSlider.thumbPos = .9;
 			
 			// add to display list
 			addChildren(_headerSpr, _topDivBM, _controllerToolbar/*, _globalVolumeToolbar*/);
 			addChildren(_containersContentSpr, _standardContainer, _recordContainer);
-			addChildren(_footerSpr, _botDivBM, _globalVUToolbar, _bpmToolbar);
+			addChildren(_footerSpr, _botDivBM, _globalVUToolbar);
 			addChildren($canvasSpr, _ruler, _headerSpr, _containersContentSpr, _playhead, _footerSpr, _scroller, _containersMaskSpr, _playheadMaskSpr);
 			
 			// add container event listeners
 			_standardContainer.addEventListener(ContainerEvent.CONTENT_HEIGHT_CHANGE, _onContainerContentHeightChange, false, 0, true);
-			_standardContainer.addEventListener(ContainerEvent.SET_GLOBAL_TEMPO, _onSetGlobalTempo, false, 0, true);
 			_standardContainer.addEventListener(ContainerEvent.SONG_FETCH_FAILED, _onContainerSongFetchFailed, false, 0, true);
 			_standardContainer.addEventListener(ContainerEvent.TRACK_FETCH_FAILED, _onContainerTrackFetchFailed, false, 0, true);
 			_standardContainer.addEventListener(ContainerEvent.SONG_FETCH_FAILED, _onContainerSongFetchFailed, false, 0, true);
@@ -265,7 +244,6 @@ package editor_panel {
 			_standardContainer.addEventListener(SamplerEvent.PLAYBACK_COMPLETE, _onTrackPlaybackComplete, false, 0, true);
 			_standardContainer.addEventListener(SamplerEvent.SAMPLE_ERROR, _onTrackSampleError, false, 0, true);
 			_recordContainer.addEventListener(ContainerEvent.CONTENT_HEIGHT_CHANGE, _onContainerContentHeightChange, false, 0, true);
-			_recordContainer.addEventListener(ContainerEvent.SET_GLOBAL_TEMPO, _onSetGlobalTempo, false, 0, true);
 			_recordContainer.addEventListener(ContainerEvent.SONG_FETCH_FAILED, _onContainerSongFetchFailed, false, 0, true);
 			_recordContainer.addEventListener(ContainerEvent.TRACK_FETCH_FAILED, _onContainerTrackFetchFailed, false, 0, true);
 			_recordContainer.addEventListener(ContainerEvent.SONG_FETCH_FAILED, _onContainerSongFetchFailed, false, 0, true);
@@ -285,20 +263,11 @@ package editor_panel {
 			_controllerRecordBtn.addEventListener(MouseEvent.CLICK, _onRecordButtonClick, false, 0, true);
 			_controllerUploadBtn.addEventListener(MouseEvent.CLICK, _onUploadButtonClick, false, 0, true);
 
-			_bpmOffBtn.addEventListener(MouseEvent.CLICK, _onBPMBtnClick, false, 0, true);
-			_bpmOnBtn.addEventListener(MouseEvent.CLICK, _onBPMBtnClick, false, 0, true);
-			
 			// add playhead event listeners
 			_playhead.addEventListener(Event.ENTER_FRAME, _onPlayheadRefresh, false, 0, true);
 			
 			// add global volume event listeners
 			// _globalVolumeSlider.addEventListener(SliderEvent.REFRESH, _onGlobalVolumeRefresh, false, 0, true);
-			
-			// add bpm input events
-			_bpmInput.addEventListener(InputEvent.CHANGE, _onBPMInputChanged, false, 0, true);
-			
-			// add beat clicker events
-			_beatClicker.addEventListener(BeatClickerEvent.BEAT, _onBeatClickerBeat, false, 0, true);
 		}
 
 		
@@ -643,12 +612,6 @@ package editor_panel {
 
 		
 		
-		public function toggleMetronome():void {
-			_onBPMBtnClick();
-		}
-
-		
-		
 		/*		
 		public function export():void {
 			if(allTrackCount > 0 && !_isPlaying && !_isRecording) _onExportSongBtnClick();
@@ -698,42 +661,6 @@ package editor_panel {
 
 		
 		
-		public function set bpm(value:uint):void {
-			if(value != 0) {
-				// check margins
-				if(value > 300) value = 300;
-				
-				Logger.info(sprintf('Set global tempo to %u BPM', value));
-				
-				// set song bpm settings
-				App.connection.coreSongData.songBPM = value;
-				
-				// set input text
-				_bpmInput.text = String(value);
-				
-				// set beat clicker
-				_beatClicker.bpm = App.connection.coreSongData.songBPM;
-				
-				// enable click button
-				_bpmOffBtn.areEventsEnabled = true;
-				_bpmOffBtn.alpha = 1;
-			}
-			else if(allTrackCount == 0) {
-				// reset bpm
-				Logger.info('Resetting global tempo');
-				
-				// set song bpm settings
-				App.connection.coreSongData.songBPM = 0;
-				
-				// set input text
-				_bpmInput.text = '';
-				
-				// disable click button
-				_bpmOffBtn.areEventsEnabled = false;
-				_bpmOffBtn.alpha = .4;
-			}
-		}
-
 		private function _setButtonActive(button:Button, active:Boolean):void {
 			button.areEventsEnabled = active;
 			button.alpha = active ? 1 : .4;
@@ -828,29 +755,6 @@ package editor_panel {
 		
 		
 		/**
-		 * Container tries to change global BPM event handler.
-		 * If it's already set, show a message modal.
-		 * @param event Event data
-		 */
-		private function _onSetGlobalTempo(event:ContainerEvent):void {
-			if(!_isCoreBPMSet) {
-				// set global bpm
-				_isCoreBPMSet = true;
-				bpm = event.data.tempo;
-			}
-			if(App.connection.coreSongData.songBPM != event.data.tempo) {
-				// bpm is already set,
-				// inform user about out of sync
-				App.messageModal.show({title:'Tempo', description:sprintf('You just added track with different tempo.\nThe song global tempo is %u BPM, but the track tempo is %u BPM.\nPlease keep in mind that playback can become out of sync!', App.connection.coreSongData.songBPM, event.data.tempo), buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
-			}
-			
-			// refresh visual
-			_refreshVisual();
-		}
-
-		
-		
-		/**
 		 * Scroller moved event handler.
 		 * @param event Event data
 		 */
@@ -922,9 +826,6 @@ package editor_panel {
 		private function _onContainerTrackKilled(event:ContainerEvent):void {
 			// stop playback
 			stop();
-			
-			// if there's no track, reset some values
-			if(allTrackCount == 0) bpm = 0;
 			
 			// refresh buttons states
 			_refreshVisual();
@@ -1060,23 +961,6 @@ package editor_panel {
 
 		
 		
-		private function _onBPMBtnClick(event:MouseEvent = null):void {
-			_beatClicker.isEnabled = !_beatClicker.isEnabled;
-			_bpmOffBtn.visible = !_beatClicker.isEnabled;
-			_bpmOnBtn.visible = _beatClicker.isEnabled;
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
-		}
-
-		
-		
-		private function _onBPMInputChanged(event:InputEvent):void {
-			bpm = uint(_bpmInput.text);
-		}
-
-		
-		
 		private function _onRecordStart(event:TrackEvent):void {
 			if(allTrackCount == 1) {
 				Logger.info('Starting recording (first track recorded, so no record length limit).');
@@ -1108,10 +992,6 @@ package editor_panel {
 
 		
 		
-		private function _onBeatClickerBeat(event:BeatClickerEvent):void {
-			_bpmToolbar.icon = (event.polarity) ? _metronomeIcon2 : _metronomeIcon1; 
-		}
-
 		/*
 		
 		private function _onRewindDown(event:MouseEvent):void {

@@ -7,7 +7,6 @@ package editor_panel.containers {
 	 * Container event.
 	 * Currently these events are available:
 	 * CONTENT_HEIGHT_CHANGE - content height changed
-	 * SET_GLOBAL_TEMPO - global BPM was changed
 	 * TRACK_ADDED - track was added
 	 * TRACK_FETCH_FAILED - track load failed
 	 * TRACK_KILL - track killed
@@ -21,7 +20,6 @@ package editor_panel.containers {
 		
 		
 		public static const CONTENT_HEIGHT_CHANGE:String = 'onContentHeightChange';
-		public static const SET_GLOBAL_TEMPO:String = 'onSetGlobalTempo';
 		public static const TRACK_ADDED:String = 'onTrackAdded';
 		public static const SONG_FETCH_FAILED:String = 'onSongFetchFailed';
 		public static const TRACK_FETCH_FAILED:String = 'onTrackFetchFailed';

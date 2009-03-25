@@ -155,7 +155,6 @@ package remoting {
 			d.songID = x.id;
 			d.songInstrumentsCount = x.instruments;
 			d.songSiblingsCount = x.siblings_count;
-			d.songBPM = x.bpm;
 			d.songSampleURL = x.filename;
 			d.songWaveformURL = x.waveform;
 			d.songUserNickname = x.user;
