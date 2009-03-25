@@ -17,6 +17,11 @@ package config {
 		private static const _MYRIAD_WEB_REGULAR:String = 'MyriadWebRegular';
 		private static const _MYRIAD_WEB_BOLD:String = 'MyriadWebBold';
 		private static const _HELVETICA_NEUE_BOLD:String = 'HelveticaNeueBold';
+		
+		// NEW formats
+		public static var controllerText:TextFormat = new TextFormat();
+		
+		
 		public static var buttonStandard:TextFormat = new TextFormat();
 		public static var buttonSmall:TextFormat = new TextFormat();
 		public static var panelDescription:TextFormat = new TextFormat();
@@ -48,6 +53,13 @@ package config {
 		public static var viewportPreloadInfoLabel:TextFormat = new TextFormat();
 		public static var progress:TextFormat = new TextFormat();
 		public static var rulerTickLabel:TextFormat = new TextFormat();
+		
+		
+		// NEW formats
+		controllerText.font = _MYRIAD_WEB_BOLD;
+		controllerText.size = 12;
+		controllerText.color = 0x305A78;
+		controllerText.align = TextFormatAlign.LEFT;
 		
 		
 		

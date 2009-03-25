@@ -6,12 +6,11 @@ package editor_panel {
 	import caurina.transitions.Tweener;
 	
 	import config.Embeds;
-	import config.Filters;
 	import config.Settings;
+	import config.Formats;
+	import config.Filters;
 	
 	import controls.Button;
-	import controls.Input;
-	import controls.InputEvent;
 	import controls.MorphSprite;
 	import controls.Slider;
 	import controls.SliderEvent;
@@ -43,6 +42,7 @@ package editor_panel {
 	import org.osflash.thunderbolt.Logger;
 	import org.vancura.graphics.Drawing;
 	import org.vancura.graphics.QBitmap;
+	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
 	
 	import remoting.data.TrackData;
@@ -91,9 +91,13 @@ package editor_panel {
 		// Controller toolbar
 		private var _controllerToolbar:Toolbar;
 		private var _controllerPlayBtn:Button;
+		private var _controllerPlayTF:QTextField;
 		private var _controllerRecordBtn:Button;
+		private var _controllerRecordTF:QTextField;
 		private var _controllerSearchBtn:Button;
+		private var _controllerSearchTF:QTextField;
 		private var _controllerUploadBtn:Button;
+		private var _controllerUploadTF:QTextField;
 
 		// Vu meter
 		private var _globalVUToolbar:Toolbar;
@@ -181,23 +185,43 @@ package editor_panel {
 
 			_controllerPlayBtn = new Button({width:78, height:49, iconOffset:10,
 				skin:new Embeds.buttonPlayLarge(), icon:new Embeds.glyphPlayLarge()});
+				
+			_controllerPlayTF = new QTextField({x:0, y:10, height:40, width:85,
+				defaultTextFormat:Formats.controllerText, filters:Filters.controllerText,
+				sharpness:-25, thickness:-50, text:'Play all instruments'}); 
+			
 
 			_controllerRecordBtn = new Button({width:78, height:49, iconOffset:8,
 				skin:new Embeds.buttonRecordLarge(), icon:new Embeds.glyphRecordLarge()});
+				
+			_controllerRecordTF = new QTextField({x:0, y:5, height:50, width:85,
+				defaultTextFormat:Formats.controllerText, filters:Filters.controllerText,
+				sharpness:-25, thickness:-50, text:'Record your voice or instrument'}); 
+			
 		
 			_controllerSearchBtn = new Button({width:78, height:49, iconOffset:8,
 				skin:new Embeds.buttonSearchLarge(), icon:new Embeds.glyphSearchLarge()});
+
+			_controllerSearchTF = new QTextField({x:0, y:5, height:50, width:85,
+				defaultTextFormat:Formats.controllerText, filters:Filters.controllerText,
+				sharpness:-25, thickness:-50, text:'Search mixable instruments'}); 
+
 				
 			_controllerUploadBtn = new Button({width:78, height:49, iconOffset:8,
 				skin:new Embeds.buttonUploadLarge(), icon:new Embeds.glyphUploadLarge()});
-			
-			// insert record, search & upload
-			// 
+
+			_controllerUploadTF = new QTextField({x:0, y:10, height:40, width:85,
+				defaultTextFormat:Formats.controllerText, filters:Filters.controllerText,
+				sharpness:-25, thickness:-50, text:'Upload your instrument'}); 
 
 			_controllerToolbar.addChildRight(_controllerPlayBtn);
+			_controllerToolbar.addChildRight(_controllerPlayTF);
 			_controllerToolbar.addChildRight(_controllerRecordBtn);
+			_controllerToolbar.addChildRight(_controllerRecordTF);
 			_controllerToolbar.addChildRight(_controllerSearchBtn);
+			_controllerToolbar.addChildRight(_controllerSearchTF);
 			_controllerToolbar.addChildRight(_controllerUploadBtn);
+			_controllerToolbar.addChildRight(_controllerUploadTF);
 
 			// add global volume toolbar
 			//_globalVolumeToolbar = new Toolbar({x:249, y:15, paddingH:0, paddingV:0, skin:new Embeds.toolbarPlainBD()});

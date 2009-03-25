@@ -11,6 +11,8 @@ package config {
 	 */
 	public class Filters {
 
+		// NEW filters
+		public static var controllerText:Array = [new DropShadowFilter(1, 45, 0xdbf7ff, 1, 0, 0, 1.5, 1)];
 		
 		
 		public static var buttonBlueLabel:Array = [new DropShadowFilter(1, 90, 0x126180, 1, 2, 2, 1, 1)];
