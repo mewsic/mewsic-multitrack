@@ -80,7 +80,6 @@ package editor_panel {
 		private var _state:uint;
 		
 		private var _scroller:Scroller;
-		private var _ruler:Ruler;
 		private var _playhead:Playhead;
 		private var _containersMaskSpr:MorphSprite;
 		private var _playheadMaskSpr:MorphSprite;
@@ -145,7 +144,7 @@ package editor_panel {
 			
 			super();
 			
-			setBackType(BACK_TYPE_BLUE_1);
+			setBackType(BACK_TYPE_WHITE);
 		}
 
 		
@@ -159,7 +158,6 @@ package editor_panel {
 			_playheadMaskSpr = new MorphSprite({y:53, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'});
 
 			// add modules
-			_ruler = new Ruler({y:61});
 			_playhead = new Playhead({x:521, y:53, mask:_playheadMaskSpr});
 			_scroller = new Scroller({y:204, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'});
 			_beatClicker = new BeatClicker();
@@ -248,7 +246,7 @@ package editor_panel {
 			addChildren(_headerSpr, _topDivBM, _controllerToolbar/*, _globalVolumeToolbar*/);
 			addChildren(_containersContentSpr, _standardContainer, _recordContainer);
 			addChildren(_footerSpr, _globalVUToolbar);
-			addChildren($canvasSpr, _ruler, _headerSpr, _containersContentSpr, _playhead, _footerSpr, _scroller, _containersMaskSpr, _playheadMaskSpr);
+			addChildren($canvasSpr, _headerSpr, _containersContentSpr, _playhead, _footerSpr, _scroller, _containersMaskSpr, _playheadMaskSpr);
 			
 			// add container event listeners
 			_standardContainer.addEventListener(ContainerEvent.CONTENT_HEIGHT_CHANGE, _onContainerContentHeightChange, false, 0, true);
@@ -695,7 +693,6 @@ package editor_panel {
 			_recountSongLength();
 			
 			// set visual properties
-			_ruler.info.label = App.getTimeCode(_milliseconds);
 			_scroller.isEnabled = (allTrackCount > 0 && _milliseconds > 44700);
 			
 			Logger.debug(sprintf('Current maximal waveform width is %d px', _width));
@@ -779,7 +776,6 @@ package editor_panel {
 				_currentScrollPos = event.thumbPos * (_width - 447) * -1; 
 				_standardContainer.scrollTo(_currentScrollPos);
 				_recordContainer.scrollTo(_currentScrollPos);
-				_ruler.scroller.scrollTo(_currentScrollPos);
 			}
 		}
 
@@ -927,7 +923,6 @@ package editor_panel {
 				_recountSongLength();
 				
 				// set visual properties
-				_ruler.info.label = App.getTimeCode(_milliseconds);
 				_scroller.isEnabled = (_milliseconds > 44700); // WTF? -vjt
 			} else {
 				// playback mode

@@ -56,6 +56,10 @@ package config {
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='GlyphUploadSmall')]
 			public static var glyphUploadSmall:Class;
 		
+		// Canvas background
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundCanvasWhite')]
+			public static var backgroundCanvasWhite:Class;
+		
 		// top panel
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundTopGrey')]
 			public static var backgroundTopGrey:Class;

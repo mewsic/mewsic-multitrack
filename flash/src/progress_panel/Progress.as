@@ -44,7 +44,7 @@ package progress_panel {
 		public function Progress() {
 			$panelID = 'panelProgress'; 
 			super();
-			setBackType(BACK_TYPE_BLUE_1);
+			//setBackType(BACK_TYPE_BLUE_1);
 
 			// panel is invisible first, so it doesn't mess up preloader bar
 			// it's made visible later in _refresh()

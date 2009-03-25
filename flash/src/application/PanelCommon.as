@@ -1,6 +1,4 @@
 package application {
-	import application.AppEvent;
-	
 	import caurina.transitions.Tweener;
 	
 	import config.Embeds;
@@ -8,15 +6,15 @@ package application {
 	
 	import de.popforge.utils.sprintf;
 	
+	import flash.display.Bitmap;
+	import flash.display.Sprite;
+	import flash.geom.Rectangle;
+	
 	import org.bytearray.display.ScaleBitmap;
 	import org.osflash.thunderbolt.Logger;
 	import org.vancura.graphics.Drawing;
 	import org.vancura.graphics.QSprite;
-	import org.vancura.util.addChildren;
-	
-	import flash.display.Bitmap;
-	import flash.display.Sprite;
-	import flash.geom.Rectangle;	
+	import org.vancura.util.addChildren;	
 
 	
 	
@@ -30,21 +28,16 @@ package application {
 
 		
 		
-		public static const BACK_TYPE_LIGHT:String = 'backTypeLight';
-		public static const BACK_TYPE_DARK:String = 'backTypeDark';
-		public static const BACK_TYPE_BLUE_1:String = 'backTypeBlue1';
-		public static const BACK_TYPE_BLUE_2:String = 'backTypeBlue2';
-		public static const BACK_TYPE_BLACK:String = 'backTypeBlack';
+		public static const BACK_TYPE_WHITE:String = 'backTypeWhite';
 		private static const _START_HEIGHT:Number = 20;
+		
 		protected var $canvasSpr:QSprite;
 		protected var $aboveSpr:QSprite;
 		protected var $behindSpr:QSprite;
 		protected var $panelID:String;
-		private var _backDarkSBM:ScaleBitmap;
-		private var _backLightSBM:ScaleBitmap;
-		private var _backBlue1SBM:ScaleBitmap;
-		private var _backBlue2SBM:ScaleBitmap;
-		private var _backBlackSBM:ScaleBitmap;
+
+		private var _backWhiteSBM:ScaleBitmap;
+
 		private var _canvasMaskSpr:QSprite;
 		private var _currentBackSBM:ScaleBitmap;
 		private var _currentBackType:String;
@@ -57,20 +50,14 @@ package application {
 		 */
 		public function PanelCommon() {
 			super();
-			
-			// add background ScaleBitmaps
-			_backDarkSBM = new ScaleBitmap((new Embeds.panelDarkBackBD() as Bitmap).bitmapData);
-			_backLightSBM = new ScaleBitmap((new Embeds.panelLightBackBD() as Bitmap).bitmapData);
-			_backBlue1SBM = new ScaleBitmap((new Embeds.panelBlue1BackBD() as Bitmap).bitmapData);
-			_backBlue2SBM = new ScaleBitmap((new Embeds.panelBlue2BackBD() as Bitmap).bitmapData);			_backBlackSBM = new ScaleBitmap((new Embeds.panelBlackBackBD() as Bitmap).bitmapData);
-			
-			// set background ScaleBitmaps parameters
-			_backDarkSBM.scale9Grid = _backLightSBM.scale9Grid = _backBlue1SBM.scale9Grid = _backBlue2SBM.scale9Grid = _backBlackSBM.scale9Grid = new Rectangle(17, 19, 66, 2);
-			_backDarkSBM.width = _backLightSBM.width = _backBlue1SBM.width = _backBlue2SBM.width = _backBlackSBM.width = Settings.STAGE_WIDTH;
-			_backDarkSBM.height = _backLightSBM.height = _backBlue1SBM.height = _backBlue2SBM.height = _backBlackSBM.height = 40;
-			_backDarkSBM.y = _backLightSBM.y = _backBlue1SBM.y = _backBlue2SBM.y = _backBlackSBM.y = -10;
-			_backDarkSBM.alpha = _backLightSBM.alpha = _backBlue1SBM.alpha = _backBlue2SBM.alpha = _backBlackSBM.alpha = .5;
-			_backDarkSBM.visible = _backLightSBM.visible = _backBlue1SBM.visible = _backBlue2SBM.visible = _backBlackSBM.visible = false;
+						
+			// New canvas scalebitmap
+			_backWhiteSBM = new ScaleBitmap((new Embeds.backgroundCanvasWhite() as Bitmap).bitmapData);
+			_backWhiteSBM.scale9Grid = new Rectangle(17, 19, 66, 2)
+			_backWhiteSBM.width = Settings.STAGE_WIDTH;
+			_backWhiteSBM.height = 40;
+			_backWhiteSBM.y = -10;
+			_backWhiteSBM.visible = false
 
 			// other sprites
 			_canvasMaskSpr = new QSprite({x:6, y:0});
@@ -80,10 +67,10 @@ package application {
 
 			// drawing
 			Drawing.drawRect($canvasSpr, 0, 0, Settings.STAGE_WIDTH - 12, 1, 0xFF0000, 0);
-			Drawing.drawRect(_canvasMaskSpr, 0, 0, Settings.STAGE_WIDTH - 12, 100, 0x000000, .25);
+			Drawing.drawRect(_canvasMaskSpr, 0, 0, Settings.STAGE_WIDTH - 12, 100, 0x000000, 0.25);
 
 			// add to display list
-			addChildren(this, $behindSpr, _backDarkSBM, _backLightSBM, _backBlue1SBM, _backBlue2SBM, _backBlackSBM, $canvasSpr, _canvasMaskSpr, $aboveSpr);
+			addChildren(this, $behindSpr, _backWhiteSBM, $canvasSpr, _canvasMaskSpr, $aboveSpr);
 		}
 
 		
@@ -153,8 +140,8 @@ package application {
 		
 		/**
 		 * Set panel background type.
-		 * Type could be: BACK_TYPE_DARK, BACK_TYPE_LIGHT, BACK_RECORD_TRACK_1 and BACK_RECORD_TRACK_2
-		 * @param bt Back type (BACK_TYPE_DARK, BACK_TYPE_LIGHT, BACK_RECORD_TRACK_1 or BACK_RECORD_TRACK_2)
+		 * Type could be only: BACK_TYPE_WHITE
+		 * @param bt Back type (BACK_TYPE_WHITE)
 		 */
 		public function setBackType(bt:String):void {
 			// don't fade if nothing changes
@@ -163,24 +150,8 @@ package application {
 			var bto:ScaleBitmap;
 			switch(bt) {
 				
-				case BACK_TYPE_DARK:
-					bto = _backDarkSBM;
-					break;
-					
-				case BACK_TYPE_LIGHT:
-					bto = _backLightSBM;
-					break;
-					
-				case BACK_TYPE_BLUE_1:
-					bto = _backBlue1SBM;
-					break;
-					
-				case BACK_TYPE_BLUE_2:
-					bto = _backBlue2SBM;
-					break;
-					
-				case BACK_TYPE_BLACK:
-					bto = _backBlackSBM;
+				case BACK_TYPE_WHITE:
+					bto = _backWhiteSBM;
 					break;
 					
 				default:
