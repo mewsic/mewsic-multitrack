@@ -289,7 +289,7 @@ package controls {
 		
 		
 		private function _refreshAlign():void {
-			var my:Number = Math.round(height / 2);
+			var half_height:Number = Math.round(height / 2);
 
 			var iconWidth:Number = ($isIconEnabled) ? ($iconOutBM.width + (($isTextEnabled) ? $iconPadding : 0)) : 0;
 			$textOutTextField.width = width - 1 - iconWidth;
@@ -299,7 +299,7 @@ package controls {
 			$textOverTextField.x = iconWidth;
 			$textPressTextField.x = iconWidth;
 
-			var textY:Number = my - Math.round($textOutTextField.textHeight / 2);
+			var textY:Number = half_height - Math.round($textOutTextField.textHeight / 2);
 			$textOutTextField.y = textY + $textOutOffsY;
 			$textOverTextField.y = textY + $textOverOffsY;
 			$textPressTextField.y = textY + $textPressOffsY;
@@ -309,8 +309,8 @@ package controls {
 			$textPressTextField.height = $textPressTextField.textHeight + 5;
 
 			if($isIconEnabled) {
-				var iconX:Number = Math.round((width - $textOutTextField.textWidth - iconWidth) / 2);
-				var iconY:Number = my - $iconOffset;
+				var iconX:Number = Math.round((width - $textOutTextField.textWidth - iconWidth) / 2) + 1;
+				var iconY:Number = half_height - $iconOffset;
 				$iconOutBM.x = iconX;
 				$iconOverBM.x = iconX;
 				$iconPressBM.x = iconX;
