@@ -50,7 +50,6 @@ package editor_panel.tracks {
 		private var _volumeSlider:Slider;
 		private var _knob:Knob;
 		private var _instrumentThumbnail:Thumbnail;
-		private var _instrumentTF:QTextField;
 
 		
 		
@@ -70,11 +69,10 @@ package editor_panel.tracks {
 			_killBtn = new Button({x:423, y:25, skin:new Embeds.buttonContainerToolbarRBBD(), icon:new Embeds.glyphKillSmallBD(), textOutFilters:Filters.buttonBeigeLabel, textOverFilters:Filters.buttonBeigeLabel, textPressFilters:Filters.buttonBeigeLabel}, Button.TYPE_NOSCALE_BUTTON);
 			_volumeSlider = new Slider({x:350, backSkin:new Embeds.sliderStandardContainerVolumeBD(), thumbSkin:new Embeds.standardContainerVolumeThumbBD(), marginBegin:5, marginEnd:5, wheelRatio:.015}, Slider.DIRECTION_VERTICAL);
 			_knob = new Knob({x:458, y:1, backSkin:new Embeds.buttonContainerPanKnobBD(), pointerSpr:new Embeds.buttonContainerPanKnobPointerSpr(), rangeBegin:-118, rangeEnd:118});
-			_instrumentTF = new QTextField({alpha:0, x:82, width:61, height:52, defaultTextFormat:Formats.standardContainerInstrument, filters:Filters.standardContainerContentTitle, sharpness:-25, thickness:-50});
 			_instrumentThumbnail = new Thumbnail({x:47, y:6});
 
 			// add to display list
-			addChildren(this, _soloOffBtn, _soloOnBtn, _muteOffBtn, _muteOnBtn, _saveBtn, _killBtn, _volumeSlider, _knob, _instrumentThumbnail, _instrumentTF);
+			addChildren(this, _soloOffBtn, _soloOnBtn, _muteOffBtn, _muteOnBtn, _saveBtn, _killBtn, _volumeSlider, _knob, _instrumentThumbnail);
 			
 			// add handlers
 			$addHandlers();
@@ -119,7 +117,7 @@ package editor_panel.tracks {
 			super.removeEventListener(TrackEvent.REFRESH, _onRefresh);
 
 			// remove from display list
-			removeChildren(this, _soloOffBtn, _soloOnBtn, _muteOffBtn, _muteOnBtn, _saveBtn, _killBtn, _volumeSlider, _knob, _instrumentThumbnail, _instrumentTF);
+			removeChildren(this, _soloOffBtn, _soloOnBtn, _muteOffBtn, _muteOnBtn, _saveBtn, _killBtn, _volumeSlider, _knob, _instrumentThumbnail);
 
 			// destroy components
 			_soloOffBtn.destroy();
@@ -136,8 +134,6 @@ package editor_panel.tracks {
 		
 		
 		override public function refresh():void {
-			_instrumentTF.y = Math.round((52 - _instrumentTF.textHeight) / 2) - 5;
-			
 			_knob.angle = 118 * $trackData.trackBalance;
 			_volumeSlider.thumbPos = $trackData.trackVolume;
 			
@@ -150,22 +146,11 @@ package editor_panel.tracks {
 			super.load();
 			
 			// get instrument description and icon
-			var instrumentDescription:String;
-			var instrumentIconURL:String;
-			try {
-				instrumentDescription = App.connection.instrumentsService.byID($trackData.trackInstrumentID).instrumentName;
-				instrumentIconURL = App.connection.instrumentsService.byID($trackData.trackInstrumentID).instrumentIconURL;
-			}
-			catch(err2:Error) {
-				instrumentDescription = 'Unknown instrument'; 
-			}
-			
-			_instrumentTF.text = instrumentDescription;
+			var instrumentIconURL:String = App.connection.instrumentsService.byID($trackData.trackInstrumentID).instrumentIconURL;
+
 			_instrumentThumbnail.load(App.connection.serverPath + instrumentIconURL);
 			
 			refresh();
-			
-			Tweener.addTween(_instrumentTF, {time:Settings.FADEIN_TIME, alpha:1, transition:'easeOutSine'});
 			
 			// load sampler and waveform
 			$sampler.load(App.connection.serverPath + $trackData.trackSampleURL, $trackData.trackMilliseconds);
