@@ -10,13 +10,54 @@ package config {
 	 */
 	public class Embeds {
 		
-		// NEW assets
-		// Buttons
-		//
-		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='GlyphPlay')] public static var glyphPlay:Class;
-		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonPlayLarge')] public static var buttonPlay:Class;
+		///////////////////////////////////// NEW assets
+		/// Controller bar buttons
+		// Play
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonPlayLarge')]
+			public static var buttonPlayLarge:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='GlyphPlay')]
+			public static var glyphPlayLarge:Class;
 		
-		// OLD assets
+		// Record
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonRecordLarge')]
+			public static var buttonRecordLarge:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='GlyphRecLarge')]
+			public static var glyphRecordLarge:Class;
+			
+		// Search
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonSearchLarge')]
+			public static var buttonSearchLarge:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='GlyphSearchLarge')]
+			public static var glyphSearchLarge:Class;
+
+		// Upload		
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonUploadLarge')]
+			public static var buttonUploadLarge:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='GlyphUploadLarge')]
+			public static var glyphUploadLarge:Class;
+		
+		
+		/// "Add track" bar buttons 
+		// Record
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonRecordSmall')]
+			public static var buttonRecordSmall:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='GlyphRecSmall')]
+			public static var glyphRecordSmall:Class;
+	
+		// Search
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonSearchSmall')]
+			public static var buttonSearchSmall:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='GlyphSearchSmall')]
+			public static var glyphSearchSmall:Class;
+		
+		// Upload
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonUploadSmall')]
+			public static var buttonUploadSmall:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='GlyphUploadSmall')]
+			public static var glyphUploadSmall:Class;
+		
+		
+		///////////////////////////// OLD assets
 		// panels
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='PanelBackDarkBD')] public static var panelDarkBackBD:Class;
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='PanelBackLightBD')] public static var panelLightBackBD:Class;

@@ -23,7 +23,7 @@ package config {
 		public static const FADEIN_TIME:Number = .3;
 		public static const DEFAULT_CONNECTION_TIMEOUT:Number = 20;
 		public static const PREVENT_CACHING:Boolean = false;
-		public static const IGNORE_FMS_CALLS:Boolean = false;
+		public static const IGNORE_FMS_CALLS:Boolean = false; // :D
 		public static const MAX_TRACKS:uint = 16;
 		public static const WORKER_INTERVAL:Number = 10;
 		public static const COUNTRY_LIST:Array =
