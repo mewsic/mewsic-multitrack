@@ -69,7 +69,7 @@ package controls {
 			// remove event listeners
 			super.removeEventListener(MouseEvent.CLICK, _onInputClick);
 			_resetBtn.removeEventListener(MouseEvent.CLICK, _onResetClick);
-			if(_isEventAdded) App.dropboxContent.removeEventListener(DropboxEvent.CLICK, _onItemClick);
+//			if(_isEventAdded) App.dropboxContent.removeEventListener(DropboxEvent.CLICK, _onItemClick);
 			
 			// remove form display list
 			removeChildren(this, _dropBtn, _resetBtn);
@@ -126,20 +126,20 @@ package controls {
 			
 			if(!_isEventAdded) {
 				// attach click handler
-				App.dropboxContent.addEventListener(DropboxEvent.CLICK, _onItemClick, false, 0, true);
+//				App.dropboxContent.addEventListener(DropboxEvent.CLICK, _onItemClick, false, 0, true);
 				_isEventAdded = true;
 			}
 			
 			// if it's clicked for the second time,
 			// it means user wants to hide dropbox
-			if(App.dropboxContent.currentID == _id) {
-				App.dropboxContent.hide();
-				return;
-			}
+//			if(App.dropboxContent.currentID == _id) {
+//				App.dropboxContent.hide();
+//				return;
+//			}
 			
 			// no, just show it.
 			// new dropbox is visible now.
-			App.dropboxContent.show(_id, p.x, p.y, this.width, _list);
+//			App.dropboxContent.show(_id, p.x, p.y, this.width, _list);
 		}
 
 		
