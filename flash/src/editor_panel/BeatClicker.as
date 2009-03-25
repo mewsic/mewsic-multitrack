@@ -145,7 +145,7 @@ package editor_panel {
 			
 			var sync:int = (_interval * _beatCounter) - (uint(new Date()) - _firstBeat);
 			Logger.debug(sprintf('Beat synchronization (%d ms)', sync));
-			_beatTimeout = setTimeout(_onBeat, _interval + sync);
+			try { _beatTimeout = setTimeout(_onBeat, _interval + sync); } catch(e:Error) {};
 			
 			// dispatch
 			dispatchEvent(new BeatClickerEvent(BeatClickerEvent.BEAT, true, false, _bpm, _polarity));

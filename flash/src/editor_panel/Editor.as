@@ -26,7 +26,6 @@ package editor_panel {
 	import editor_panel.ruler.Ruler;
 	import editor_panel.sampler.SamplerEvent;
 	import editor_panel.tracks.RecordTrack;
-	import editor_panel.tracks.StandardTrack;
 	import editor_panel.tracks.TrackCommon;
 	import editor_panel.tracks.TrackEvent;
 	
@@ -37,9 +36,6 @@ package editor_panel {
 	import flash.media.SoundTransform;
 	import flash.system.Capabilities;
 	import flash.utils.ByteArray;
-	import flash.utils.clearInterval;
-	import flash.utils.clearTimeout;
-	import flash.utils.setInterval;
 	import flash.utils.setTimeout;
 	
 	import modals.MessageModal;
@@ -49,7 +45,8 @@ package editor_panel {
 	import org.vancura.graphics.QBitmap;
 	import org.vancura.util.addChildren;
 	
-	import remoting.data.TrackData;	
+	import remoting.data.TrackData;
+	import remoting.events.UserEvent;	
 
 	
 	
@@ -65,11 +62,23 @@ package editor_panel {
 
 		
 		
+		// playback machine consts
 		private static const _SEEK_STEP:uint = 10000;
 		private static const _VIEWPORT_MOVE_INTERVAL:uint = 250;
+		
 		private static const _STILL_SEEK_TIMEOUT:uint = 600;
 		private static const _STILL_SEEK_INTERVAL:uint = 300;
 		private static const _STILL_SEEK_STEP:uint = 10000;
+		
+		// editor machine state definitions
+		private static const _STATE_STOPPED:uint   = 0x0;
+		private static const _STATE_PLAYING:uint   = 0x2;
+		private static const _STATE_PAUSED:uint    = 0x3;
+		private static const _STATE_WAIT_REC:uint  = 0x4;
+		private static const _STATE_RECORDING:uint = 0x5;
+		
+		private var _state:uint;
+		
 		private var _scroller:Scroller;
 		private var _ruler:Ruler;
 		private var _playhead:Playhead;
@@ -78,43 +87,53 @@ package editor_panel {
 		private var _headerSpr:MorphSprite;
 		private var _containersContentSpr:MorphSprite;
 		private var _footerSpr:MorphSprite;
-		private var _topToolbar:Toolbar;
-		private var _botToolbar:Toolbar;
+
+		// Controller toolbar
 		private var _controllerToolbar:Toolbar;
-		private var _globalVUToolbar:Toolbar;
-		private var _globalVolumeToolbar:Toolbar;
-		private var _bpmToolbar:Toolbar;
-		private var _topRecordBtn:Button;
-		private var _topUploadBtn:Button;
-		private var _botExportBtn:Button;
-		private var _botSaveBtn:Button;
 		private var _controllerPlayBtn:Button;
+		private var _controllerRecordBtn:Button;
+		private var _controllerSearchBtn:Button;
+		private var _controllerUploadBtn:Button;
+
+		// Vu meter
+		private var _globalVUToolbar:Toolbar;
+		
+		// Volume toolbar - remove me
+		private var _globalVolumeToolbar:Toolbar;
+
+		private var _bpmToolbar:Toolbar;
 		private var _bpmOffBtn:Button;
 		private var _bpmOnBtn:Button;
 		private var _bpmInput:Input;
+
 		private var _globalVolumeSlider:Slider;
 		private var _globalVUMeter:VUMeter;
+
 		private var _topDivBM:QBitmap;
 		private var _botDivBM:QBitmap;
+
 		private var _standardContainer:ContainerCommon;
 		private var _recordContainer:ContainerCommon;
+
 		private var _width:uint;
-		private var _isPlaying:Boolean;
-		private var _isPaused:Boolean;
 		private var _currentScrollPos:int;
 		private var _milliseconds:uint;
+
 		private var _completedTracksCounter:uint;
 		private var _recordTrack:RecordTrack;
+
 		private var _beatClicker:BeatClicker;
-		private var _isRecording:Boolean;
 		private var _metronomeIcon1:Bitmap;
 		private var _metronomeIcon2:Bitmap;
+
 		private var _lastViewportBang:int;
 		private var _isStillSeekBtnPressed:Boolean;
 		private var _stillSeekTimeout:uint;
 		private var _stillSeekInterval:uint;
+
 		private var _vuMeterBytes:ByteArray;
 		private var _isVUMeterEnabled:Boolean;
+
 		private var _recordLimit:uint;
 		private var _isCoreBPMSet:Boolean;
 		private var _isStreamDown:Boolean;
@@ -165,31 +184,31 @@ package editor_panel {
 
 			// add controller toolbar
 			_controllerToolbar = new Toolbar({x:14, y:15});
-			_controllerPlayBtn = new Button({width:80, height:41, iconOffset:12, skin:new Embeds.buttonPlay(), icon:new Embeds.glyphPlay()});
+
+			_controllerPlayBtn = new Button({width:78, height:49, iconOffset:10,
+				skin:new Embeds.buttonPlayLarge(), icon:new Embeds.glyphPlayLarge()});
+
+			_controllerRecordBtn = new Button({width:78, height:49, iconOffset:8,
+				skin:new Embeds.buttonRecordLarge(), icon:new Embeds.glyphRecordLarge()});
+		
+			_controllerSearchBtn = new Button({width:78, height:49, iconOffset:8,
+				skin:new Embeds.buttonSearchLarge(), icon:new Embeds.glyphSearchLarge()});
+				
+			_controllerUploadBtn = new Button({width:78, height:49, iconOffset:8,
+				skin:new Embeds.buttonUploadLarge(), icon:new Embeds.glyphUploadLarge()});
 			
 			// insert record, search & upload
 			// 
 
 			_controllerToolbar.addChildRight(_controllerPlayBtn);
+			_controllerToolbar.addChildRight(_controllerRecordBtn);
+			_controllerToolbar.addChildRight(_controllerSearchBtn);
+			_controllerToolbar.addChildRight(_controllerUploadBtn);
 
 			// add global volume toolbar
-			_globalVolumeToolbar = new Toolbar({x:249, y:15, paddingH:0, paddingV:0, skin:new Embeds.toolbarPlainBD()});
-			_globalVolumeSlider = new Slider({width:169, slideTime:1, marginBegin:19, marginEnd:19, backSkin:new Embeds.sliderVolumeHorizontalBD(), thumbSkin:new Embeds.buttonGlobalVolumeThumbBD});
-			_globalVolumeToolbar.addChildRight(_globalVolumeSlider);
-
-			// add top toolbar
-			_topToolbar = new Toolbar({skin:new Embeds.toolbarPlainBD(), y:15, paddingH:0, paddingV:0});
-			_topRecordBtn = new Button({width:135, text:'Record track live', icon:new Embeds.glyphMicBD()});
-			_topUploadBtn = new Button({width:120, text:'Upload track', icon:new Embeds.glyphUploadBD()});
-			_topToolbar.addChildRight(_topRecordBtn);
-			_topToolbar.addChildRight(_topUploadBtn);
-
-			// add bot toolbar
-			_botToolbar = new Toolbar({y:12, paddingH:0, paddingV:0, skin:new Embeds.toolbarPlainBD()});
-			_botExportBtn = new Button({width:110, text:'Export song', skin:new Embeds.buttonGreenBD(), icon:new Embeds.glyphSaveBD(), textOutFilters:Filters.buttonGreenLabel, textOverFilters:Filters.buttonGreenLabel, textPressFilters:Filters.buttonGreenLabel});
-			_botSaveBtn = new Button({width:165, text:'Save Myousica project', icon:new Embeds.glyphMyousicaBD()});
-			_botToolbar.addChildRight(_botExportBtn);
-			_botToolbar.addChildRight(_botSaveBtn);
+			//_globalVolumeToolbar = new Toolbar({x:249, y:15, paddingH:0, paddingV:0, skin:new Embeds.toolbarPlainBD()});
+			//_globalVolumeSlider = new Slider({width:169, slideTime:1, marginBegin:19, marginEnd:19, backSkin:new Embeds.sliderVolumeHorizontalBD(), thumbSkin:new Embeds.buttonGlobalVolumeThumbBD});
+			//_globalVolumeToolbar.addChildRight(_globalVolumeSlider);
 
 			// add global vu meter toolbar
 			_globalVUToolbar = new Toolbar({visible:_isVUMeterEnabled, x:130, y:12, width:255, height:32});
@@ -215,29 +234,24 @@ package editor_panel {
 			Drawing.drawRect(_playheadMaskSpr, 0, 0, Settings.STAGE_WIDTH, 170);
 
 			// align some toolbars right
-			_topToolbar.x = $canvasSpr.width - _topToolbar.width - 14;
-			_botToolbar.x = $canvasSpr.width - _botToolbar.width - 14;
+			//_topToolbar.x = $canvasSpr.width - _topToolbar.width - 14;
+			//_botToolbar.x = $canvasSpr.width - _botToolbar.width - 14;
 			
-			// deactivate some buttons
-			_controllerPlayBtn.areEventsEnabled = false;
+			// deactivate the play button, it'll be enabled in _refreshVisual() after a
+			// track is being added, via the _onContainerTrackAdded listener
+			// 
+			_disableButton(_controllerPlayBtn);
 			
-			_botExportBtn.areEventsEnabled = false;
-			_botSaveBtn.areEventsEnabled = false;
 			_bpmOffBtn.areEventsEnabled = false;
-
-			_controllerPlayBtn.alpha = .4;
-
-			_botExportBtn.alpha = .4;
-			_botSaveBtn.alpha = .4;
 			_bpmOffBtn.alpha = .4;
 			
 			// set default volume
-			_globalVolumeSlider.thumbPos = .9;
+			//_globalVolumeSlider.thumbPos = .9;
 			
 			// add to display list
-			addChildren(_headerSpr, _topDivBM, _controllerToolbar, _globalVolumeToolbar, _topToolbar);
+			addChildren(_headerSpr, _topDivBM, _controllerToolbar/*, _globalVolumeToolbar*/);
 			addChildren(_containersContentSpr, _standardContainer, _recordContainer);
-			addChildren(_footerSpr, _botDivBM, _globalVUToolbar, _bpmToolbar, _botToolbar);
+			addChildren(_footerSpr, _botDivBM, _globalVUToolbar, _bpmToolbar);
 			addChildren($canvasSpr, _ruler, _headerSpr, _containersContentSpr, _playhead, _footerSpr, _scroller, _containersMaskSpr, _playheadMaskSpr);
 			
 			// add container event listeners
@@ -265,14 +279,12 @@ package editor_panel {
 			// add scroller event listeners
 			_scroller.addEventListener(SliderEvent.REFRESH, _onScrollerRefresh, false, 0, true);
 			
-			// add buttons event listeners
-			_controllerPlayBtn.addEventListener(MouseEvent.CLICK, play, false, 0, true);
-			// Implement play behaviour with an _onplay that sets the new glyph and adds a new listener
+			// add controller toolbar buttons event listeners
+			_controllerPlayBtn.addEventListener(MouseEvent.CLICK, _onPlayButtonClick, false, 0, true);
+			_controllerSearchBtn.addEventListener(MouseEvent.CLICK, _onSearchButtonClick, false, 0, true);
+			_controllerRecordBtn.addEventListener(MouseEvent.CLICK, _onRecordButtonClick, false, 0, true);
+			_controllerUploadBtn.addEventListener(MouseEvent.CLICK, _onUploadButtonClick, false, 0, true);
 
-			_topRecordBtn.addEventListener(MouseEvent.CLICK, _onRecordTrackBtnClick, false, 0, true);
-			_topUploadBtn.addEventListener(MouseEvent.CLICK, _onUploadTrackBtnClick, false, 0, true);
-			_botExportBtn.addEventListener(MouseEvent.CLICK, _onExportSongBtnClick, false, 0, true);
-			_botSaveBtn.addEventListener(MouseEvent.CLICK, _onSaveSongBtnClick, false, 0, true);
 			_bpmOffBtn.addEventListener(MouseEvent.CLICK, _onBPMBtnClick, false, 0, true);
 			_bpmOnBtn.addEventListener(MouseEvent.CLICK, _onBPMBtnClick, false, 0, true);
 			
@@ -280,7 +292,7 @@ package editor_panel {
 			_playhead.addEventListener(Event.ENTER_FRAME, _onPlayheadRefresh, false, 0, true);
 			
 			// add global volume event listeners
-			_globalVolumeSlider.addEventListener(SliderEvent.REFRESH, _onGlobalVolumeRefresh, false, 0, true);
+			// _globalVolumeSlider.addEventListener(SliderEvent.REFRESH, _onGlobalVolumeRefresh, false, 0, true);
 			
 			// add bpm input events
 			_bpmInput.addEventListener(InputEvent.CHANGE, _onBPMInputChanged, false, 0, true);
@@ -344,6 +356,8 @@ package editor_panel {
 		
 		public function killRecordTrack():void {
 			// kill track
+			_state = _STATE_STOPPED;
+
 			_recordContainer.killTrack(_recordTrack.trackID);
 			_recordTrack = null;
 			
@@ -354,47 +368,167 @@ package editor_panel {
 		
 		
 		/**
-		 * Play.
+		 *  Behavioural callback for the Play button: plays if stopped,
+		 *  sets pause if playing.
 		 */
-		public function play(event:Event = null):void {
-			if(_isPlaying && !_isPaused) {
-				Logger.warn('Playing, could not play playback.');
+		private function _onPlayButtonClick(event:MouseEvent = null):void {
+			if(allTrackCount == 0) {
+				Logger.warn("Machine error: editor is empty");
 				return;
 			}
 			
-			if(_isPaused) {
-				resume();
-			} else {
-				Logger.info('Play playback.');
-				_isPlaying = true;
-				_standardContainer.play();
-				_beatClicker.play();
+			switch(_state) {
+				case _STATE_STOPPED:
+					_state = _STATE_PLAYING;
+					play();
+					break;
+					
+				case _STATE_PLAYING:
+					_state = _STATE_PAUSED;
+					pause();
+					break;
+					
+				case _STATE_PAUSED:
+					_state = _STATE_PLAYING;
+					resume();
+					break;
+					
+				default:
+					Logger.warn('Machine error: should be in STOP, PLAY or PAUSE state');
+					return;
 			}
-			
+		}
+
+		/**
+		 * Record track button clicked event handler.
+		 * If stopped, add a new track lane and initialize microphone,
+		 * asking user for permission.
+		 * If recording, stop.
+		 */
+		private function _onRecordButtonClick(event:MouseEvent = null):void {
+			// only logged in user can use recording
+			//if(!App.connection.coreUserLoginStatus) {
+			//	App.messageModal.show({title:'Record track', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
+			//	return;
+			//}
+						
+			switch (_state) {
+				case _STATE_STOPPED:
+					// initialize microphone, when it is ready, the UserEvent.ALLOWED_MIKE
+					// event is dispatched
+					try {
+						App.connection.streamService.prepare();
+						App.connection.streamService.addEventListener(UserEvent.ALLOWED_MIKE, _onMicrophoneAllowed, false, 0, true);
+						App.connection.streamService.addEventListener(UserEvent.DENIED_MIKE, _onMicrophoneDenied, false, 0, true);
+	
+						if(_recordTrack == null)
+							_recordTrack = _recordContainer.createRecordTrack();
+
+					}
+					catch(err1:Error) {
+						// something is blatantly wrong
+						App.messageModal.show({title:'Record track', description:err1.message, buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
+						return;
+					}
+
+					_state = _STATE_WAIT_REC;
+					break;
+					
+				case _STATE_RECORDING:
+					_state = _STATE_STOPPED;
+					stop();
+					
+					break;
+			}
+
+			//dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
+
 			// refresh visual
 			_refreshVisual();
+		}
+		
+		private function _onMicrophoneAllowed(event:UserEvent = null):void {
+			_state = _STATE_RECORDING;
+			_recordTrack.startRecording();
+			
+			_refreshVisual();
+		}
+		
+		private function _onMicrophoneDenied(event:UserEvent = null):void {
+			_state = _STATE_STOPPED;
+			this.killRecordTrack();
+			
+			_refreshVisual();
+		}
+		
+
+		private function _onSearchButtonClick(event:MouseEvent = null):void {
+			App.messageModal.show({title:'Show search', description:'now call the lightwindow in JS'});
+		}
+		
+		
+		/**
+		 * Upload track button clicked event handler.
+		 * Display upload trac modal.
+		 * @param event Event data
+		 */
+		private function _onUploadButtonClick(event:MouseEvent = null):void {
+			if(!App.connection.coreUserLoginStatus) {
+				// user is not logged in, don't allow him to display My List
+				App.messageModal.show({title:'Upload track', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
+				return;
+			}
+			App.uploadTrackModal.show();
+			
+			// dispatch
+			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
 		
 		/**
-		 * Stop.
+		 * Save song button clicked event handler.
+		 * Display save song modal.
+		 * @param event Event data
+		 */
+		private function _onSaveSongBtnClick(event:MouseEvent = null):void {
+			if(!App.connection.coreUserLoginStatus) {
+				// user is not logged in, don't allow him to display My List
+				App.messageModal.show({title:'Save song', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
+				return;
+			}
+			App.saveSongModal.show();
+			
+			// dispatch
+			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
+		}
+
+
+
+				
+		
+		/**
+		 * Low-level play method, XXX: make it protected
+		 */
+		public function play(event:Event = null):void {
+			Logger.info('Play!');
+
+			_standardContainer.play();
+			_beatClicker.play(); // XXX REMOVE ME
+		}
+
+		
+		
+		/**
+		 * Low-level stop method.
 		 */
 		public function stop(event:Event = null):void {
-			if(_isRecording) {
-				_recordTrack.stopRecording();
-			}
-			
 			Logger.info('Stop playback.');
-			_isPlaying = false;
-			_isPaused = false;
+	
 			_standardContainer.stop();
 			_recordContainer.stop();
-			_beatClicker.stop();
+			_beatClicker.stop(); // XXX
 			_scroller.position = 0;
-			
-			// refresh visual
-			_refreshVisual();
 		}
 
 		
@@ -403,28 +537,10 @@ package editor_panel {
 		 * Pause.
 		 */
 		public function pause(event:Event = null):void {
-			if(_isRecording) {
-				Logger.warn('Recording, could not pause playback.');
-				return; 
-			}
-			
-			if(!_isPlaying) {
-				Logger.warn('Not playing, could not pause playback.');
-				return;
-			}
-			
-			else if(_isPaused) {
-				Logger.warn('Paused, could not pause playback.');
-				return;
-			}
-			
 			Logger.info('Pause playback.');
-			_isPaused = true;
+
 			_standardContainer.pause();
 			_beatClicker.pause();
-			
-			// refresh visual
-			_refreshVisual();
 		}
 
 		
@@ -433,39 +549,9 @@ package editor_panel {
 		 * Resume.
 		 */
 		public function resume(event:Event = null):void {
-			if(_isRecording) {
-				Logger.warn('Recording, could not resume playback.');
-				return;
-			}
-			
-			if(!_isPlaying) {
-				Logger.warn('Not playing, could not resume playback.');
-				return;
-			}
-			
-			else if(!_isPaused) {
-				Logger.warn('Paused, could not resume playback.');
-				return;
-			}
-			
 			Logger.info('Resume playback.');
-			_isPaused = false;
 			_standardContainer.resume();
 			_beatClicker.resume();
-			
-			// refresh visual
-			_refreshVisual();
-		}
-
-		
-		
-		public function alterPlaybackState():void {
-			if(allTrackCount == 0) return;
-			if(_isRecording) stop();
-			else if(_recordTrack != null) return;
-			else if(_isPlaying && _isPaused) resume();
-			else if(_isPlaying && !_isPaused) pause();
-			else play();
 		}
 
 		
@@ -481,9 +567,6 @@ package editor_panel {
 			
 			_standardContainer.seek(p);
 			_beatClicker.seek(p);
-			
-			// refresh visual
-			_refreshVisual();
 		}
 
 		
@@ -492,29 +575,16 @@ package editor_panel {
 		 * Forward the stage by _SEEK_STEP ms. 
 		 */
 		public function forward(event:Event = null):void {
-			if(_isRecording) {
-				Logger.warn('Recording, could not forward playback.');
-				return;
-			}
-			
 			Logger.info('Forward playback.');
 			var p:uint = currentPosition + _SEEK_STEP;
 			if(p > _milliseconds) p = _milliseconds;
 			_standardContainer.seek(p);
 			_beatClicker.seek(p);
-			
-			// refresh visual
-			_refreshVisual();
 		}
 
 		
 		
 		public function seek(value:uint):void {
-			if(_isRecording) {
-				Logger.warn('Recording, could not forward playback.');
-				return;
-			}
-			
 			if(value > _milliseconds) value = _milliseconds;
 			if(value < 0) value = 0;
 			
@@ -537,9 +607,7 @@ package editor_panel {
 			Logger.info('Disabling stream functions.');
 			
 			_isStreamDown = true;
-			
-			_topRecordBtn.alpha = .4;
-			_topRecordBtn.areEventsEnabled = false;
+			_disableButton(_controllerRecordBtn);
 		}
 
 		
@@ -563,13 +631,15 @@ package editor_panel {
 		}
 
 		
-		
+
+		/*		
 		public function createAndRecord():void {
 			if(_isRecording) return;
 			if(_isPlaying) stop();
 			if(_recordTrack == null) _onRecordTrackBtnClick();
 			else _recordTrack.startRecording(); 
 		}
+		*/
 
 		
 		
@@ -579,12 +649,7 @@ package editor_panel {
 
 		
 		
-		public function upload():void {
-			_onUploadTrackBtnClick();
-		}
-
-		
-		
+		/*		
 		public function export():void {
 			if(allTrackCount > 0 && !_isPlaying && !_isRecording) _onExportSongBtnClick();
 		}
@@ -594,53 +659,10 @@ package editor_panel {
 		public function save():void {
 			if(allTrackCount > 0 && !_isPlaying && !_isRecording) _onSaveSongBtnClick();
 		}
+		*/
 
-		
-		
-		public function toggleTrackMute(track:uint):void {
-			try {
-				var tr:StandardTrack = _standardContainer.getTrack(track);
-				if(tr != null) tr.toggleMute();
-			}
-			catch(err:Error) {
-			}
-		}
 
-		
-		
-		public function toggleTrackSolo(track:uint):void {
-			try {
-				var tr:StandardTrack = _standardContainer.getTrack(track);
-				if(tr != null) tr.toggleSolo();
-			}
-			catch(err:Error) {
-			}
-		}
 
-		
-		
-		public function alterTrackVolume(track:uint, step:Number):void {
-			try {
-				var tr:StandardTrack = _standardContainer.getTrack(track);
-				if(tr != null) tr.alterVolume(step);
-			}
-			catch(err:Error) {
-			}
-		}
-
-		
-		
-		public function alterTrackBalance(track:uint, step:Number):void {
-			try {
-				var tr:StandardTrack = _standardContainer.getTrack(track);
-				if(tr != null) tr.alterBalance(step);
-			}
-			catch(err:Error) {
-			}
-		}
-
-		
-		
 		/**
 		 * Get count of all tracks.
 		 * @return All tracks count
@@ -666,7 +688,7 @@ package editor_panel {
 		public function get currentPosition():uint {
 			if(_recordContainer.trackCount > 0) {
 				// recording first track
-				if(_isPlaying) return _recordContainer.position;
+				if(_state == _STATE_PLAYING) return _recordContainer.position;
 				return 0;
 			} else {
 				// standard track
@@ -712,7 +734,18 @@ package editor_panel {
 			}
 		}
 
+		private function _setButtonActive(button:Button, active:Boolean):void {
+			button.areEventsEnabled = active;
+			button.alpha = active ? 1 : .4;
+		}
 		
+		private function _enableButton(button:Button):void {
+			_setButtonActive(button, true);
+		} 
+		
+		private function _disableButton(button:Button):void {
+			_setButtonActive(button, false);
+		}
 		
 		private function _refreshVisual():void {
 			// recound song length from core song data
@@ -726,29 +759,41 @@ package editor_panel {
 			Logger.debug(sprintf('Current song length is %f ms', _milliseconds));
 			
 			// set buttons states
-			var isf:Boolean = (allTrackCount > 0);
-			
-			var isplay:Boolean = (isf && (!_isPlaying || (_isPlaying && _isPaused)) && !_isRecording && (_recordContainer.trackCount == 0));
-			var ispause:Boolean = (isf && _isPlaying && !_isRecording && !_isPaused);
-			var isstop:Boolean = (isf && _isPlaying);
-			//var isrewind:Boolean = (isf && !_isRecording && (_recordContainer.trackCount == 0));
-			//var isforward:Boolean = (isf && !_isRecording && (_recordContainer.trackCount == 0));
-			var isbot:Boolean = (isf && !_isPlaying && !_isRecording);
-			var isbpm:Boolean = (!_isPlaying && !_isRecording);
-			
-			_controllerPlayBtn.areEventsEnabled = isplay;
-
-			_botExportBtn.areEventsEnabled = isbot;
-			_botSaveBtn.areEventsEnabled = isbot;
-			_bpmInput.areEventsEnabled = isbpm;
-			
-			// remove this and change the glyph into "stop"
-			// 
-			_controllerPlayBtn.alpha = (isplay) ? 1 : .4;
-			
-			_botExportBtn.alpha = (isbot) ? 1 : .4;
-			_botSaveBtn.alpha = (isbot) ? 1 : .4;
-			_bpmInput.alpha = (isbpm) ? 1 : .4;
+			switch(_state) {
+				case _STATE_STOPPED:
+					// Set play active only if there's already a track loaded, enable all other buttons
+					_setButtonActive(_controllerPlayBtn, allTrackCount > 0);
+					_setButtonActive(_controllerRecordBtn, !App.connection.streamService.microphoneDenied);
+					_enableButton(_controllerSearchBtn);
+					_enableButton(_controllerUploadBtn);
+					
+					break;
+					
+				case _STATE_PLAYING:
+					// Set pause glyph on play button, disable record and upload button
+					// _setPauseGlyph()
+					_disableButton(_controllerRecordBtn);
+					_enableButton(_controllerSearchBtn);
+					_enableButton(_controllerUploadBtn);
+					
+					break;
+					
+				case _STATE_PAUSED:
+					// _setPayGlyph()
+					_enableButton(_controllerRecordBtn);
+					_enableButton(_controllerSearchBtn);
+					_enableButton(_controllerUploadBtn);
+					
+					break;
+				
+				case _STATE_RECORDING:
+					// _setStopGlyph()
+					_disableButton(_controllerPlayBtn);
+					_disableButton(_controllerSearchBtn);
+					_disableButton(_controllerUploadBtn);
+					
+					break;
+			}
 			
 			// dispatch
 			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
@@ -847,7 +892,7 @@ package editor_panel {
 		
 		
 		private function _recountSongLength():void {
-			if(_isRecording && _standardContainer.trackCount == 0) {
+			if((_state == _STATE_RECORDING) && _standardContainer.trackCount == 0) {
 				_milliseconds = _recordTrack.position;
 			} else {
 				_milliseconds = 0;
@@ -886,96 +931,12 @@ package editor_panel {
 		}
 
 		
-		
-		/**
-		 * Record track button clicked event handler.
-		 * Display record track modal.
-		 * @param event Event data
-		 */
-		private function _onRecordTrackBtnClick(event:MouseEvent = null):void {
-			// only logged in user can use recording
-			//if(!App.connection.coreUserLoginStatus) {
-			//	App.messageModal.show({title:'Record track', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
-			//	return;
-			//}
-			
-			// test if a record track is already present
-			if(_recordTrack != null) {
-				// record track is already present
-				App.messageModal.show({title:'Record track', description:'Please save the current recorded track first.', buttons:MessageModal.BUTTONS_OK});
-				return;
-			}
-			
-			// test if bpm is already set
-			if(App.connection.coreSongData.songBPM == 0) {
-				// bpm is not set
-				App.messageModal.show({title:'Record track', description:'Please set tempo first.', buttons:MessageModal.BUTTONS_OK});
-				return;
-			}
-			
-			// prepare recording
-			// initialize microphone
-			try {
-				App.connection.streamService.prepare();
-			}
-			catch(err1:Error) {
-				// something is wrong
-				App.messageModal.show({title:'Record track', description:err1.message, buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
-				return;
-			}
-			
-			// add recording track
-			_recordTrack = _recordContainer.createRecordTrack();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
-		}
-
-		
-		
-		/**
-		 * Upload track button clicked event handler.
-		 * Display upload trac modal.
-		 * @param event Event data
-		 */
-		private function _onUploadTrackBtnClick(event:MouseEvent = null):void {
-			if(!App.connection.coreUserLoginStatus) {
-				// user is not logged in, don't allow him to display My List
-				App.messageModal.show({title:'Upload track', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
-				return;
-			}
-			App.uploadTrackModal.show();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
-		}
-
-		
-		
-		/**
-		 * Save song button clicked event handler.
-		 * Display save song modal.
-		 * @param event Event data
-		 */
-		private function _onSaveSongBtnClick(event:MouseEvent = null):void {
-			if(!App.connection.coreUserLoginStatus) {
-				// user is not logged in, don't allow him to display My List
-				App.messageModal.show({title:'Save song', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
-				return;
-			}
-			App.saveSongModal.show();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
-		}
-
-		
-		
+				
 		/**
 		 * Export song button clicked event handler.
 		 * Display export song modal.
 		 * @param event Event data
-		 */
+		 *
 		private function _onExportSongBtnClick(event:MouseEvent = null):void {
 			if(!App.connection.coreUserLoginStatus) {
 				// user is not logged in, don't allow him to display My List
@@ -987,6 +948,7 @@ package editor_panel {
 			// dispatch
 			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
+		 */
 
 		
 		
@@ -997,16 +959,18 @@ package editor_panel {
 		 */
 		private function _onTrackPlaybackComplete(event:SamplerEvent):void {
 			_completedTracksCounter++;
-			if(_isRecording) {
+			if(_state == _STATE_RECORDING) {
 				if(_completedTracksCounter == allTrackCount - 1) {
 					Logger.info('Song recording completed.');
 					_completedTracksCounter = 0;
+					_state = _STATE_STOPPED;
 					stop();
 				}
 			} else {
 				if(_completedTracksCounter == allTrackCount) {
 					Logger.info('Song playback completed.');
 					_completedTracksCounter = 0;
+					_state = _STATE_STOPPED;
 					stop();
 				}
 			}
@@ -1038,7 +1002,7 @@ package editor_panel {
 		private function _onPlayheadRefresh(event:Event):void {
 			var x:int;
 			
-			if(_isRecording) {
+			if(_state == _STATE_RECORDING) {
 				// recording mode
 				x = _recordTrack.position / 100;
 				
@@ -1047,7 +1011,7 @@ package editor_panel {
 				
 				// set visual properties
 				_ruler.info.label = App.getTimeCode(_milliseconds);
-				_scroller.isEnabled = (_milliseconds > 44700);
+				_scroller.isEnabled = (_milliseconds > 44700); // WTF? -vjt
 			} else {
 				// playback mode
 				x = currentPosition / 100;
@@ -1122,7 +1086,7 @@ package editor_panel {
 				_recordLimit = _milliseconds;
 			}
 			
-			_isRecording = true;
+			_state = _STATE_RECORDING;
 			
 			// Great work, Vaclav.
 			// -vjt, 24/03/2009
@@ -1133,10 +1097,13 @@ package editor_panel {
 		
 		
 		private function _onRecordStop(event:TrackEvent):void {
-			_isRecording = false;
+			_state = _STATE_STOPPED;
 			stop();
 			
-			App.saveTrackModal.show();
+			_refreshVisual();
+			
+			// start encoding the track and reset the "add new track" tab 
+			// App.saveTrackModal.show();
 		}
 
 		

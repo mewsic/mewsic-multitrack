@@ -1,6 +1,6 @@
 package remoting.events {
 	import flash.events.Event;
-
+	
 	import remoting.data.UserData;	
 
 	
@@ -16,6 +16,8 @@ package remoting.events {
 		
 		
 		public static const REQUEST_DONE:String = 'requestDone';
+		public static const ALLOWED_MIKE:String = 'allowedMike';
+		public static const DENIED_MIKE:String = 'deniedMike';
 		public var userData:UserData;
 
 		

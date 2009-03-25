@@ -11,12 +11,10 @@ package remoting.static_services {
 	import flash.events.IOErrorEvent;
 	import flash.events.NetStatusEvent;
 	import flash.events.SecurityErrorEvent;
+	import flash.events.StatusEvent;
 	import flash.media.Microphone;
 	import flash.net.NetConnection;
 	import flash.net.NetStream;
-	import flash.net.Responder;
-	import flash.system.Security;
-	import flash.system.SecurityPanel;
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
 	
@@ -24,7 +22,8 @@ package remoting.static_services {
 	
 	import remoting.IService;
 	import remoting.ServiceCommon;
-	import remoting.events.RemotingEvent;	
+	import remoting.events.RemotingEvent;
+	import remoting.events.UserEvent;	
 
 	
 	
@@ -43,6 +42,7 @@ package remoting.static_services {
 		private var _stream:NetStream;
 		private var _isMicrophoneReady:Boolean;
 		private var _microphone:Microphone;
+		private var _microphoneDenied:Boolean;
 		private var _filename:String;
 
 		
@@ -128,30 +128,48 @@ package remoting.static_services {
 
 		
 		
-		public function prepare():void {
-			if(!_stream) {
+		public function prepare():void {			
+			if(!($isConnected || Settings.IGNORE_FMS_CALLS)) {
 				throw new Error('Recording is not available at this time.');
 			}
 
-			if(!_isMicrophoneReady) {
-				Security.showSettings(SecurityPanel.MICROPHONE);
-				
-				_microphone = Microphone.getMicrophone();
+			if(_microphoneDenied) {
+				throw new Error('Access denied to microphone');				
+			}
+
+			if(!_isMicrophoneReady) {				
+				_microphone = Microphone.getMicrophone(-1);
+
+				if(_microphone == null)
+					throw new Error('No audio support available.');
+	
 				_microphone.rate = 44;
 				_microphone.setSilenceLevel(0);
-				
-				if(_microphone == null) throw new Error('No microphone available.');
-				else _isMicrophoneReady = true;
-				
-				_stream.attachAudio(_microphone);
+				_microphone.addEventListener(StatusEvent.STATUS, _onUserPermissionToUseMic, false, 0, true);			
+
+				_stream.attachAudio(_microphone); // this will trigger the flash security auth dialog box
 			}
+
+		}
+		
+		private function _onUserPermissionToUseMic(event:StatusEvent):void {
+			_microphone.removeEventListener(StatusEvent.STATUS, _onUserPermissionToUseMic);
+
+			if(event.code == 'Microphone.Muted') {
+				_microphone = null;
+				_microphoneDenied = true;
+				dispatchEvent(new UserEvent(UserEvent.DENIED_MIKE, true));
+				return;
+			}
+
+			_isMicrophoneReady = true;
+			
+			dispatchEvent(new UserEvent(UserEvent.ALLOWED_MIKE, true));
 		}
 
 		
 		
 		public function record():void {
-			if(!_stream) return;
-	
 			if(!$isConnected) throw new Error('Recording not yet available, please wait a bit.');
 			if(!_isMicrophoneReady) throw new Error('Microphone not ready.');
 			
@@ -163,7 +181,7 @@ package remoting.static_services {
 		
 		
 		public function stop():void {
-			if(!_stream) return;
+			if(!$isConnected) return;
 	
 			_stream.publish('false');
 			_stream.close();
@@ -173,7 +191,7 @@ package remoting.static_services {
 		
 		
 		public function get recordLevel():Number {
-			return _microphone.activityLevel;
+			return _microphone ? _microphone.activityLevel : 0;
 		}
 
 		
@@ -182,6 +200,12 @@ package remoting.static_services {
 			return _filename;
 		}
 
+		
+		
+		public function get microphoneDenied():Boolean {
+			return _microphoneDenied;
+		}
+		
 		
 		
 		/**
@@ -208,7 +232,7 @@ package remoting.static_services {
 				$isConnected = true;
 				$isConnecting = false;
 				_stream = new NetStream(_gateway);
-				_stream.bufferTime = 2;
+				// _stream.bufferTime = 2; // WTF?
 				
 				// start ping service timeout
 				//setTimeout(_bangPingService, _BANG_PING_INTERVAL);
