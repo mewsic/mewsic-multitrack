@@ -292,8 +292,8 @@ package editor_panel {
 		 */
 		public function refreshSongData():void {
 			Logger.info('Refreshing song');
-			_standardContainer.refresh(App.connection.coreSongData);
-			_recordContainer.refresh(App.connection.coreSongData);
+//			_standardContainer.refresh(App.connection.coreSongData);
+//			_recordContainer.refresh(App.connection.coreSongData);
 		}
 
 		
@@ -303,8 +303,6 @@ package editor_panel {
 		 */
 		public function postInit():void {
 			Logger.info(sprintf('Initializing song (songID=%u)', App.connection.coreSongData.songID));
-			_standardContainer.header.setData(App.connection.coreSongData);
-			_recordContainer.header.setData(App.connection.coreSongData);
 		}
 
 		

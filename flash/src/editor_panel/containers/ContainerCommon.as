@@ -56,7 +56,6 @@ package editor_panel.containers {
 		private var _trackList:Array = new Array();
 		private var _contentHeight:Number = 0;
 		private var _type:String;
-		private var _header:ContainerHeaderCommon;
 		private var _songQueue:Array = new Array();
 		private var _trackQueue:Array = new Array();
 
@@ -77,9 +76,6 @@ package editor_panel.containers {
 			else _type = t;
 
 			// add graphics
-			if(_type == TrackCommon.STANDARD_TRACK) _header = new StandardContainerHeader(_type);
-			else _header = new RecordContainerHeader(_type);
-			
 			_trackSpr = new QSprite();
 			_viewportBackBM = new QBitmap({x:520, height:1200, embed:new Embeds.viewportBackBD()});
 			_viewportGradsBM = new QBitmap({x:520, height:1200, embed:new Embeds.viewportGradsBD()});
@@ -96,7 +92,7 @@ package editor_panel.containers {
 
 			// intro animation
 			Tweener.addTween(this, {delay:.05, onComplete:function():void {
-				addChildren(this, _viewportBackBM, _viewportGradsBM, _trackSpr, _header);
+				addChildren(this, _viewportBackBM, _viewportGradsBM, _trackSpr);
 				_recountHeight();
 			}});
 		}
@@ -431,9 +427,8 @@ package editor_panel.containers {
 		 * Refresh container.
 		 * @param sd Song data
 		 */
-		public function refresh(sd:SongData):void {
-			_header.setData(sd);
-		}
+		//public function refresh(sd:SongData):void {
+		//}
 
 		
 		
@@ -567,16 +562,6 @@ package editor_panel.containers {
 		 */
 		override public function get height():Number {
 			return _contentHeight + 14;
-		}
-
-		
-		
-		/**
-		 * Get header.
-		 * @return Header
-		 */
-		public function get header():ContainerHeaderCommon {
-			return _header;
 		}
 
 		
