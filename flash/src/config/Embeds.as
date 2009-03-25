@@ -56,6 +56,9 @@ package config {
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='GlyphUploadSmall')]
 			public static var glyphUploadSmall:Class;
 		
+		// top panel
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundTopGrey')]
+			public static var backgroundTopGrey:Class;
 		
 		///////////////////////////// OLD assets
 		// panels

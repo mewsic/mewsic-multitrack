@@ -109,7 +109,6 @@ package editor_panel {
 		private var _globalVUMeter:VUMeter;
 
 		private var _topDivBM:QBitmap;
-		private var _botDivBM:QBitmap;
 
 		private var _standardContainer:ContainerCommon;
 		private var _recordContainer:ContainerCommon;
@@ -122,8 +121,6 @@ package editor_panel {
 		private var _recordTrack:RecordTrack;
 
 		private var _beatClicker:BeatClicker;
-		private var _metronomeIcon1:Bitmap;
-		private var _metronomeIcon2:Bitmap;
 
 		private var _lastViewportBang:int;
 		private var _isStillSeekBtnPressed:Boolean;
@@ -148,7 +145,7 @@ package editor_panel {
 			
 			super();
 			
-			setBackType(BACK_TYPE_LIGHT);
+			setBackType(BACK_TYPE_BLUE_1);
 		}
 
 		
@@ -157,10 +154,6 @@ package editor_panel {
 		 * Config is loaded, launch it.
 		 */
 		public function launch():void {
-			// add metronome icons
-			_metronomeIcon1 = new Embeds.glyphMetronome1BD() as Bitmap;
-			_metronomeIcon2 = new Embeds.glyphMetronome2BD() as Bitmap;
-			
 			// add masks
 			_containersMaskSpr = new MorphSprite({y:85, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'});
 			_playheadMaskSpr = new MorphSprite({y:53, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'});
@@ -173,15 +166,14 @@ package editor_panel {
 
 			// add parts
 			_headerSpr = new MorphSprite();
-			_containersContentSpr = new MorphSprite({y:85, mask:_containersMaskSpr});
+			_containersContentSpr = new MorphSprite({y:129, mask:_containersMaskSpr});
 			_footerSpr = new MorphSprite({y:224, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'});
 
-			// add other graphics
-			_topDivBM = new QBitmap({y:55, embed:new Embeds.panelLightDivBD()});
-			_botDivBM = new QBitmap({y:-6, embed:new Embeds.panelLightDivBD()});
+			// add top panel background
+			_topDivBM = new QBitmap({y:5, embed:new Embeds.backgroundTopGrey()});
 
 			// add controller toolbar
-			_controllerToolbar = new Toolbar({x:14, y:15});
+			_controllerToolbar = new Toolbar({x:0, y:15});
 
 			_controllerPlayBtn = new Button({width:78, height:49, iconOffset:10,
 				skin:new Embeds.buttonPlayLarge(), icon:new Embeds.glyphPlayLarge()});
@@ -255,7 +247,7 @@ package editor_panel {
 			// add to display list
 			addChildren(_headerSpr, _topDivBM, _controllerToolbar/*, _globalVolumeToolbar*/);
 			addChildren(_containersContentSpr, _standardContainer, _recordContainer);
-			addChildren(_footerSpr, _botDivBM, _globalVUToolbar);
+			addChildren(_footerSpr, _globalVUToolbar);
 			addChildren($canvasSpr, _ruler, _headerSpr, _containersContentSpr, _playhead, _footerSpr, _scroller, _containersMaskSpr, _playheadMaskSpr);
 			
 			// add container event listeners
@@ -773,7 +765,7 @@ package editor_panel {
 			_containersMaskSpr.morph({height:_standardContainer.height + _recordContainer.height + 1});
 			_playheadMaskSpr.morph({height:_standardContainer.height + _recordContainer.height + 50});
 
-			$animateHeightChange(_standardContainer.height + _recordContainer.height + _containersContentSpr.y + 79);
+			$animateHeightChange(_standardContainer.height + _recordContainer.height + _containersContentSpr.y + 119);
 		}
 
 		

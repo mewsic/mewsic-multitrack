@@ -95,7 +95,7 @@ package application {
 		public function App(data:Object) {
 			super();
 			
-			flash.system.Security.allowDomain('*');
+			flash.system.Security.allowDomain('*'); /// XXX REMOVE ME
 
 			// init embeds
 			Embeds;
@@ -137,7 +137,7 @@ package application {
 				// add fps meter and enable it if needed
 				if(Settings.isLogEnabled) {
 					fps = new FPS(Formats.fps);
-					fps.x = 606;
+					fps.x = 706;
 					fps.y = 10;
 				}
 			}
@@ -270,7 +270,7 @@ package application {
 			Button.defTextPressOffsY = -2;
 
 			// define toolbar defaults
-			Toolbar.defSkin = (new Embeds.toolbarMidGrayBD() as Bitmap).bitmapData;
+			Toolbar.defSkin = (new Embeds.toolbarPlainBD() as Bitmap).bitmapData;
 
 			// define input defaults
 			Input.defBackSkin = (new Embeds.inputStandardBD() as Bitmap).bitmapData;
