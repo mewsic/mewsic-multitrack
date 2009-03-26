@@ -26,6 +26,7 @@ package editor_panel {
 	import editor_panel.tracks.RecordTrack;
 	import editor_panel.tracks.TrackCommon;
 	import editor_panel.tracks.TrackEvent;
+	import editor_panel.waveform.Waveform;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -33,7 +34,6 @@ package editor_panel {
 	import flash.media.SoundTransform;
 	import flash.system.Capabilities;
 	import flash.utils.ByteArray;
-	import flash.utils.setTimeout;
 	
 	import modals.MessageModal;
 	
@@ -80,7 +80,6 @@ package editor_panel {
 		
 		private var _state:uint;
 		
-		private var _scroller:Scroller;
 		private var _playhead:Playhead;
 		private var _containersMaskSpr:MorphSprite;
 		private var _playheadMaskSpr:MorphSprite;
@@ -114,7 +113,6 @@ package editor_panel {
 		private var _recordContainer:ContainerCommon;
 
 		private var _width:uint;
-		private var _currentScrollPos:int;
 		private var _milliseconds:uint;
 
 		private var _completedTracksCounter:uint;
@@ -160,7 +158,6 @@ package editor_panel {
 
 			// add modules
 			_playhead = new Playhead({x:521, y:_OFF_PLAYHEAD, mask:_playheadMaskSpr});
-			_scroller = new Scroller({y:204, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'});
 			_beatClicker = new BeatClicker();
 
 			// add parts
@@ -247,31 +244,33 @@ package editor_panel {
 			addChildren(_headerSpr, _topDivBM, _controllerToolbar/*, _globalVolumeToolbar*/);
 			addChildren(_containersContentSpr, _standardContainer, _recordContainer);
 			addChildren(_footerSpr, _globalVUToolbar);
-			addChildren($canvasSpr, _headerSpr, _containersContentSpr, _playhead, _footerSpr, _scroller, _containersMaskSpr, _playheadMaskSpr);
+			addChildren($canvasSpr, _headerSpr, _containersContentSpr, _playhead, _footerSpr, _containersMaskSpr, _playheadMaskSpr);
 			
 			// add container event listeners
 			_standardContainer.addEventListener(ContainerEvent.CONTENT_HEIGHT_CHANGE, _onContainerContentHeightChange, false, 0, true);
-			_standardContainer.addEventListener(ContainerEvent.SONG_FETCH_FAILED, _onContainerSongFetchFailed, false, 0, true);
+
 			_standardContainer.addEventListener(ContainerEvent.TRACK_FETCH_FAILED, _onContainerTrackFetchFailed, false, 0, true);
 			_standardContainer.addEventListener(ContainerEvent.SONG_FETCH_FAILED, _onContainerSongFetchFailed, false, 0, true);
 			_standardContainer.addEventListener(ContainerEvent.TRACK_ADDED, _onContainerTrackAdded, false, 0, true);
 			_standardContainer.addEventListener(ContainerEvent.TRACK_KILL, _onContainerTrackKilled, false, 0, true);
+
 			_standardContainer.addEventListener(SamplerEvent.PLAYBACK_COMPLETE, _onTrackPlaybackComplete, false, 0, true);
 			_standardContainer.addEventListener(SamplerEvent.SAMPLE_ERROR, _onTrackSampleError, false, 0, true);
+
+
 			_recordContainer.addEventListener(ContainerEvent.CONTENT_HEIGHT_CHANGE, _onContainerContentHeightChange, false, 0, true);
-			_recordContainer.addEventListener(ContainerEvent.SONG_FETCH_FAILED, _onContainerSongFetchFailed, false, 0, true);
+
 			_recordContainer.addEventListener(ContainerEvent.TRACK_FETCH_FAILED, _onContainerTrackFetchFailed, false, 0, true);
 			_recordContainer.addEventListener(ContainerEvent.SONG_FETCH_FAILED, _onContainerSongFetchFailed, false, 0, true);
 			_recordContainer.addEventListener(ContainerEvent.TRACK_ADDED, _onContainerTrackAdded, false, 0, true);
 			_recordContainer.addEventListener(ContainerEvent.TRACK_KILL, _onContainerTrackKilled, false, 0, true);
+
 			_recordContainer.addEventListener(SamplerEvent.PLAYBACK_COMPLETE, _onTrackPlaybackComplete, false, 0, true);
 			_recordContainer.addEventListener(SamplerEvent.SAMPLE_ERROR, _onTrackSampleError, false, 0, true);
+
 			_recordContainer.addEventListener(TrackEvent.RECORD_START, _onRecordStart, false, 0, true);
 			_recordContainer.addEventListener(TrackEvent.RECORD_STOP, _onRecordStop, false, 0, true);
-			
-			// add scroller event listeners
-			_scroller.addEventListener(SliderEvent.REFRESH, _onScrollerRefresh, false, 0, true);
-			
+
 			// add controller toolbar buttons event listeners
 			_controllerPlayBtn.addEventListener(MouseEvent.CLICK, _onPlayButtonClick, false, 0, true);
 			_controllerSearchBtn.addEventListener(MouseEvent.CLICK, _onSearchButtonClick, false, 0, true);
@@ -510,7 +509,6 @@ package editor_panel {
 			_standardContainer.stop();
 			_recordContainer.stop();
 			_beatClicker.stop(); // XXX
-			_scroller.position = 0;
 		}
 
 		
@@ -576,11 +574,7 @@ package editor_panel {
 			_beatClicker.seek(value);
 			
 			// refresh visual
-			_refreshVisual();
-			
-			// autoscroll
-			// after a while so the playhead has time to tween
-			setTimeout(_autoScroll, 500 + 100);
+			_refreshVisual();			
 		}
 
 		
@@ -655,12 +649,6 @@ package editor_panel {
 
 		
 		
-		public function get currentScrollPos():int {
-			return _currentScrollPos;
-		}
-
-		
-		
 		public function get currentPosition():uint {
 			if(_recordContainer.trackCount > 0) {
 				// recording first track
@@ -690,9 +678,6 @@ package editor_panel {
 		private function _refreshVisual():void {
 			// recound song length from core song data
 			_recountSongLength();
-			
-			// set visual properties
-			_scroller.isEnabled = (allTrackCount > 0 && _milliseconds > 44700);
 			
 			Logger.debug(sprintf('Current maximal waveform width is %d px', _width));
 			Logger.debug(sprintf('Current song length is %f ms', _milliseconds));
@@ -740,15 +725,6 @@ package editor_panel {
 
 		
 		
-		private function _autoScroll():void {
-			if((currentPosition - 40000 > currentScrollPos * -100) || (currentPosition + 40000 < currentScrollPos * -100)) {
-				Logger.debug('Autoscrolling.');
-				_scroller.position = 1 / ((_milliseconds - 44700) / (currentPosition - 6000));
-			}
-		}
-
-		
-		
 		/**
 		 * Container changed it's height event handler.
 		 * Animate it
@@ -757,8 +733,6 @@ package editor_panel {
 		private function _onContainerContentHeightChange(event:ContainerEvent):void {
 			_recordContainer.morph({y:_standardContainer.height});
 			
-			_scroller.morph({y:_standardContainer.height + _recordContainer.height + _containersContentSpr.y});
-			
 			_footerSpr.morph({y:_standardContainer.height + _recordContainer.height + _containersContentSpr.y});
 			
 			_containersMaskSpr.morph({height:_standardContainer.height + _recordContainer.height + 40});
@@ -766,20 +740,6 @@ package editor_panel {
 			_playheadMaskSpr.morph({height:_standardContainer.height + _recordContainer.height + 40});
 
 			$animateHeightChange(_standardContainer.height + _recordContainer.height + _containersContentSpr.y + 40); // fixed 40px bottom margin
-		}
-
-		
-		
-		/**
-		 * Scroller moved event handler.
-		 * @param event Event data
-		 */
-		private function _onScrollerRefresh(event:SliderEvent):void {
-			if(_milliseconds > 44700) {
-				_currentScrollPos = event.thumbPos * (_width - 447) * -1; 
-				_standardContainer.scrollTo(_currentScrollPos);
-				_recordContainer.scrollTo(_currentScrollPos);
-			}
 		}
 
 		
@@ -908,6 +868,35 @@ package editor_panel {
 		}
 
 		
+		public function msecToStageX(m:Number):uint {
+			return m / milliseconds * Waveform.MAX_WIDTH;
+		}
+		
+		public function stageXToMsec(x:int):uint {
+			return x * milliseconds / Waveform.MAX_WIDTH; 
+		}
+		
+		public function get playheadPosition():Number {
+			var msec:int;
+
+			if(_state == _STATE_RECORDING) {
+				// recording mode
+				msec = _recordTrack.position;
+				
+				// recount song length from core song data
+				_recountSongLength();				
+			} else {
+				// playback mode
+				msec = currentPosition;
+			}
+
+			// Shift relative to waveform width
+			return msecToStageX(msec);
+		}
+		
+		public function get playheadStageWidth():Number {
+			return Waveform.MAX_WIDTH;
+		}
 		
 		/**
 		 * Playhead refresh event handler.
@@ -916,50 +905,20 @@ package editor_panel {
 		 * @param event Event data
 		 */
 		private function _onPlayheadRefresh(event:Event):void {
-			var x:int;
+			// Shift relative to waveform width, and add left margin of right panel
+			var x:int = playheadPosition + 521;
 			
-			if(_state == _STATE_RECORDING) {
-				// recording mode
-				x = _recordTrack.position / 100;
-				
-				// recound song length from core song data
-				_recountSongLength();
-				
-				// set visual properties
-				_scroller.isEnabled = (_milliseconds > 44700); // WTF? -vjt
-			} else {
-				// playback mode
-				x = currentPosition / 100;
-			}
-			 
-			x += 521; 
-			// left margin of right panel
-			x += currentScrollPos; 
-			// so we can scroll around
 			if(_playhead.x != x) {
-				// position changed
-				// change position
+				// position changed  <-- All good coders smoke.
+				// change position   <-- Vaclav, you too! :D -vjt
+				// 
 				Tweener.removeTweens(_playhead);
 				Tweener.addTween(_playhead, {time:.5, x:x, rounded:true});
 				
 				// change label
 				_playhead.label = App.getTimeCode(currentPosition);
 			}
-			
-			// if playhead is above left area, make it transparent
-			_playhead.alpha = (x < 521) ? .2 : 1;
-			
-			// autoscroll viewport
-			var sx:int = Math.round((currentPosition - 300) / _VIEWPORT_MOVE_INTERVAL);
-			if(sx % 10 == 0 && _lastViewportBang != sx) {
-				// scroll only once in a while
-				// and don't scroll when on 0 (stopped)
-				Logger.debug(sprintf('Autoscroll check (position=%u, scrollpos=%u).', currentPosition, currentScrollPos * -100));
-				_lastViewportBang = sx;
-				// don't check more than once (round gives true more often than needed)
-				_autoScroll();				
-			}
-			
+						
 			if(_isVUMeterEnabled) {
 				SoundMixer.computeSpectrum(_vuMeterBytes, false, 256);
 				_globalVUMeter.leftLevel = Math.abs(_vuMeterBytes.readFloat()) * 100;

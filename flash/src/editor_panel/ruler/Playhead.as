@@ -6,14 +6,16 @@ package editor_panel.ruler {
 	import config.Embeds;
 	import config.Formats;
 	
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.text.TextFieldAutoSize;
+	
+	import org.osflash.thunderbolt.Logger;
+	
 	import org.vancura.graphics.QBitmap;
 	import org.vancura.graphics.QSprite;
 	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-	
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.text.TextFieldAutoSize;	
+	import org.vancura.util.addChildren;	
 
 	
 	
@@ -118,7 +120,7 @@ package editor_panel.ruler {
 				// so stop it
 				_isDragging = false;
 				
-				// animate
+				// hide ghost cursor
 				Tweener.addTween(_dragContainerSpr, {x:_dragContainerSpr.x - _lastDragPos, alpha:0, time:.5});
 				Tweener.addTween(_dragContainerSpr, {alpha:0, time:.8, transition:'easeOutSine', onComplete:function():void {
 					_dragContainerSpr.visible = false;
@@ -128,7 +130,7 @@ package editor_panel.ruler {
 				App.editor.removeEventListener(Event.ENTER_FRAME, _onDragMove);
 				
 				// seek editor to a new position
-				App.editor.seek((_lastDragPos * 100) + App.editor.currentPosition);
+				App.editor.seek(App.editor.stageXToMsec(_lastDragPos) + App.editor.currentPosition);
 			}
 		}
 		
@@ -141,17 +143,22 @@ package editor_panel.ruler {
 		private function _onDragMove(event:Event):void {
 			if(_isDragging) {
 				// we are dragging
-				var mx:int = event.currentTarget.mouseX - _dragMouseOffs - App.editor.currentScrollPos - (App.editor.currentPosition / 100) - 521 - 6;
-				var sx:int = App.editor.currentPosition / -100;
+				var offset:int = event.currentTarget.mouseX - _dragMouseOffs - App.editor.playheadPosition - 521 - 6;
+				var current:int = App.editor.playheadPosition;
 				
+				var ts:int = new Date().getTime()/1000;
+
 				// count limits
-				if(mx < sx) mx = sx;
-				if(mx > App.editor.milliseconds / 100 + sx) mx = App.editor.milliseconds / 100 + sx;
+				if(offset < current)
+					offset = current;
+				if(offset > App.editor.playheadStageWidth + current)
+					offset = App.editor.playheadStageWidth + current;
+				
 				
 				// move playhead
-				_dragContainerSpr.x = mx;
-				_dragValueTF.text = App.getTimeCode((mx - sx) * 100);
-				_lastDragPos = mx;
+				_dragContainerSpr.x = offset;
+				_dragValueTF.text = App.getTimeCode(App.editor.stageXToMsec(offset + current));
+				_lastDragPos = offset;
 				
 				// make sure it's visible
 				_dragContainerSpr.visible = true;

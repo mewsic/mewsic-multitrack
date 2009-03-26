@@ -42,6 +42,9 @@ package editor_panel.waveform {
 
 		
 		
+		public static const MAX_WIDTH:uint = 442;
+		
+		
 		private var _backSpr:QSprite;
 		private var _waveformBackBM:QBitmap;
 		private var _waveformFrontMaskSpr:QSprite;
@@ -170,8 +173,7 @@ package editor_panel.waveform {
 			_bitmap = App.bulkLoader.getBitmapData(_waveformID, true).clone();
 
 			// draw preloader mask
-			Drawing.drawRect(_waveformFrontMaskSpr, 0, 0, 422, 49, 0xFF0000, .3);
-			//_waveformFrontMaskSpr.x = -422;
+			Drawing.drawRect(_waveformFrontMaskSpr, 0, 0, MAX_WIDTH, 49, 0xFF0000, .3);
 			
 			Logger.debug(sprintf('Waveform %s loaded, width=%d', _waveformID, _waveformWidth));
 			_drawWaveform();	
@@ -180,7 +182,7 @@ package editor_panel.waveform {
 
 		
 		public function stretch(maxLength:uint):void {
-			_waveformWidth = _milliseconds * 422 / maxLength;
+			_waveformWidth = _milliseconds * MAX_WIDTH / maxLength;
 
 			// If already loaded, ease out transition with fading
 			if (_bitmap && _waveformSpr.alpha > 0) {
@@ -192,7 +194,7 @@ package editor_panel.waveform {
 			_waveformBackBM.bitmapData = _bitmap;
 			_waveformFrontBM.bitmapData = _bitmap;
 
-			if(!_waveformWidth) _waveformWidth = 422;
+			if(!_waveformWidth) _waveformWidth = MAX_WIDTH;
 			_waveformBackBM.width = _waveformWidth;
 			_waveformFrontBM.width = _waveformWidth;
 
