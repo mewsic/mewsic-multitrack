@@ -29,8 +29,6 @@ package editor_panel.containers {
 	
 	import remoting.data.TrackData;
 	import remoting.dynamic_services.SongFetchService;
-	import remoting.dynamic_services.SongLoadService;
-	import remoting.dynamic_services.SongUnloadService;
 	import remoting.dynamic_services.TrackFetchService;
 	import remoting.events.RemotingEvent;
 	import remoting.events.SongFetchEvent;
@@ -196,7 +194,8 @@ package editor_panel.containers {
 		
 		
 		/**
-		 * Add standard track by it's track data.
+		 * Add standard track by its track data. Used by song fetch done handler
+		 * @dispatches ContainerEvent.TRACK_ADDED, AppEvent.REFRESH_TOP_PANE
 		 * @param td Track data
 		 * @throws Error if track is already in the queue.
 		 */
@@ -225,7 +224,7 @@ package editor_panel.containers {
 				// update core song
 				var i:uint = App.connection.coreSongData.songTracks.push(td);
 				for each(var p:TrackCommon in _trackList) if(p.trackID == td.trackID) {
-					p.trackData = App.connection.coreSongData.songTracks[i - 1];
+					p.trackData = td; //App.connection.coreSongData.songTracks[i - 1];
 					p.load();
 				}
 				
@@ -333,7 +332,7 @@ package editor_panel.containers {
 		 */
 		public function killTrack(id:uint):void {
 			// call song unload service
-			try {
+/*			try {
 				var service:SongUnloadService = new SongUnloadService();
 				service.url = App.connection.serverPath + App.connection.configService.songUnloadRequestURL;
 				service.addEventListener(RemotingEvent.REQUEST_DONE, _onRefreshTopPane, false, 0, true);
@@ -342,7 +341,7 @@ package editor_panel.containers {
 			catch(err:Error) {
 				// something went wrong
 				Logger.warn(sprintf('Error unloading track:\n%s', err.message));
-			}
+			}*/
 
 			// remove track
 			var i:int = 0;
@@ -427,8 +426,18 @@ package editor_panel.containers {
 		 * Refresh container.
 		 * @param sd Song data
 		 */
-		//public function refresh(sd:SongData):void {
-		//}
+		private function _refreshWaveforms():void {
+			var max:uint = 0;
+			var t:TrackCommon;
+			
+			for each(t in _trackList) {
+				max = Math.max(max, t.trackData.trackMilliseconds); 
+			}
+			
+			for each(t in _trackList) {
+				t.stretchWaveform(max);
+			}
+		}
 
 		
 		
@@ -649,6 +658,8 @@ package editor_panel.containers {
 					}
 					
 					s.isLoaded = true;
+					
+					_refreshWaveforms();
 				}
 			}
 		}
@@ -683,11 +694,13 @@ package editor_panel.containers {
 					// load sample and waveform
 					p.load();
 					
+					_refreshWaveforms();
+					
 					// dispatch events
 					dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {trackData:event.trackData}));
 					
 					// call song load service
-					try {
+					/*try {
 						var service:SongLoadService = new SongLoadService();
 						service.url = App.connection.serverPath + App.connection.configService.songLoadRequestURL;
 						service.addEventListener(RemotingEvent.REQUEST_DONE, _onRefreshTopPane, false, 0, true);
@@ -696,7 +709,7 @@ package editor_panel.containers {
 					catch(err:Error) {
 						// something went wrong
 						Logger.warn(sprintf('Error loading track:\n%s', err.message));
-					}
+					}*/
 				}
 			}
 		}
@@ -730,6 +743,7 @@ package editor_panel.containers {
 		private function _onTrackKill(event:TrackEvent):void {
 			var t:TrackCommon = event.target as TrackCommon;
 			killTrack(t.trackID);
+			_refreshWaveforms();
 		}
 
 		

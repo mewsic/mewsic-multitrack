@@ -200,6 +200,11 @@ package editor_panel.tracks {
 			}
 		}
 
+
+
+		public function stretchWaveform(_milliseconds:uint):void {
+			$waveform.stretch(_milliseconds);
+		}
 		
 		
 		public function load():void {
@@ -362,6 +367,7 @@ package editor_panel.tracks {
 			
 			// add event listeners
 			$sampler.addEventListener(SamplerEvent.SAMPLE_PROGRESS, _onSamplerProgress, false, 0, true);
+			$sampler.addEventListener(SamplerEvent.SAMPLE_DOWNLOADED, _onSamplerDownloaded, false, 0, true);
 			$sampler.addEventListener(SamplerEvent.PLAYBACK_COMPLETE, _onSamplerPlaybackComplete, false, 0, true);
 		}
 
@@ -384,6 +390,10 @@ package editor_panel.tracks {
 		
 		private function _onSamplerProgress(event:SamplerEvent):void {
 			$waveform.progress = event.data.progress;
+		}
+		
+		private function _onSamplerDownloaded(event:SamplerEvent):void {
+			$waveform.progress = 1;
 		}
 		
 		

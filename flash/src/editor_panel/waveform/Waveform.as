@@ -5,15 +5,20 @@ package editor_panel.waveform {
 	
 	import caurina.transitions.Tweener;
 	
+	import com.gskinner.utils.Rnd;
+	
 	import config.Embeds;
 	import config.Formats;
 	import config.Settings;
 	
-	import editor_panel.tracks.TrackCommon;
-	
 	import de.popforge.utils.sprintf;
 	
-	import com.gskinner.utils.Rnd;
+	import editor_panel.tracks.TrackCommon;
+	
+	import flash.display.BitmapData;
+	import flash.display.BlendMode;
+	import flash.events.Event;
+	import flash.text.TextFieldAutoSize;
 	
 	import org.osflash.thunderbolt.Logger;
 	import org.vancura.graphics.Drawing;
@@ -21,12 +26,7 @@ package editor_panel.waveform {
 	import org.vancura.graphics.QSprite;
 	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
-	import org.vancura.util.removeChildren;
-	
-	import flash.display.BitmapData;
-	import flash.display.BlendMode;
-	import flash.events.Event;
-	import flash.text.TextFieldAutoSize;	
+	import org.vancura.util.removeChildren;	
 
 	
 	
@@ -54,9 +54,9 @@ package editor_panel.waveform {
 		private var _preloadInfoLabelTF:QTextField;
 		private var _waveformID:String;
 		private var _waveformWidth:uint;
-		private var _isWaveformDownloaded:Boolean;
 		private var _milliseconds:uint;
 		private var _type:String;
+		private var _bitmap:BitmapData;
 
 		
 		
@@ -113,6 +113,8 @@ package editor_panel.waveform {
 			removeChildren(_waveformSpr, _waveformBackBM, _waveformFrontBM, _waveformFrontMaskSpr, _waveformRecordSpr);
 			removeChildren(_preloadInfoSpr, _preloadInfoBackBM, _preloadInfoLabelTF);
 			removeChildren(this, _backSpr, _waveformSpr, _waveformMaskSpr, _preloadInfoSpr);
+			
+			_bitmap.dispose();
 		}
 
 		
@@ -152,16 +154,6 @@ package editor_panel.waveform {
 
 		
 		
-		/**
-		 * Get waveform downloaded flag.
-		 * @return Waveform downloaded flag
-		 */
-		public function get isWaveformDownloaded():Boolean {
-			return _isWaveformDownloaded;
-		}
-		
-		
-		
 		public function set recordPosition(value:uint):void {
 			_waveformSpr.alpha = 1;
 			_waveformRecordSpr.width = Math.round(value / 100);
@@ -174,27 +166,40 @@ package editor_panel.waveform {
 		 * @param event Event data
 		 */
 		private function _onWaveformDone(event:Event):void {
-			var bd:BitmapData = App.bulkLoader.getBitmapData(_waveformID, true);
-			
-			_waveformBackBM.bitmapData = bd;
-			_waveformFrontBM.bitmapData = bd;
-			_waveformWidth = _milliseconds / 100;
-			_waveformBackBM.width = _waveformWidth;
-			_waveformFrontBM.width = _waveformWidth;
-			_isWaveformDownloaded = true;
-			Logger.debug(sprintf('Waveform %s loaded, width=%d', _waveformID, _waveformWidth));
-			
-			// fadein waveform
-			Tweener.addTween(_waveformSpr, {time:Settings.FADEIN_TIME, alpha:1, transition:'easeOutSine'});
-			
+			if(_bitmap) throw new Error("Bitmap already loaded for waveform " + _waveformID);
+			_bitmap = App.bulkLoader.getBitmapData(_waveformID, true).clone();
+
 			// draw preloader mask
-			Drawing.drawRect(_waveformFrontMaskSpr, 0, 0, _waveformWidth, 49, 0xFF0000, .3);
-			_waveformFrontMaskSpr.x = _waveformWidth * -1;
+			Drawing.drawRect(_waveformFrontMaskSpr, 0, 0, 422, 49, 0xFF0000, .3);
+			//_waveformFrontMaskSpr.x = -422;
 			
-			// dispatch event
-			dispatchEvent(new WaveformEvent(WaveformEvent.WAVEFORM_DOWNLOADED, true));
+			Logger.debug(sprintf('Waveform %s loaded, width=%d', _waveformID, _waveformWidth));
+			_drawWaveform();	
 		}
 
+
+		
+		public function stretch(maxLength:uint):void {
+			_waveformWidth = _milliseconds * 422 / maxLength;
+
+			// If already loaded, ease out transition with fading
+			if (_bitmap && _waveformSpr.alpha > 0) {
+				Tweener.addTween(_waveformSpr, {time:Settings.FADEOUT_TIME, alpha:0, transition:'easeOutSine', onComplete:_drawWaveform});
+			}
+		}
+		
+		private function _drawWaveform():void {				
+			_waveformBackBM.bitmapData = _bitmap;
+			_waveformFrontBM.bitmapData = _bitmap;
+
+			if(!_waveformWidth) _waveformWidth = 422;
+			_waveformBackBM.width = _waveformWidth;
+			_waveformFrontBM.width = _waveformWidth;
+
+			// fadein waveform
+			Tweener.addTween(_waveformSpr, {time:Settings.FADEIN_TIME, alpha:1, transition:'easeOutSine'});
+		}
+		
 		
 		
 		public function set progress(p:Number):void {
@@ -206,7 +211,7 @@ package editor_panel.waveform {
 			// animation
 			Tweener.removeTweens(_waveformFrontMaskSpr);
 			Tweener.addTween(_waveformFrontMaskSpr, {x:px, time:Settings.FADEIN_TIME});
-			
+						
 			if(p >= 1) {
 				// remove preloader info
 				Tweener.removeTweens(_preloadInfoSpr);
