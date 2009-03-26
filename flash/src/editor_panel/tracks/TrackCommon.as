@@ -49,7 +49,7 @@ package editor_panel.tracks {
 		protected var $sampler:Sampler;
 		protected var $waveform:Waveform;
 
-		protected var $backBM:QBitmap;
+		// protected var $backBM:QBitmap; no background
 		protected var $titleTF:QTextField;
 		protected var $specsTagsTF:QTextField;
 
@@ -96,10 +96,10 @@ package editor_panel.tracks {
 				filters:($trackType == STANDARD_TRACK) ? Filters.standardContainerContentTitle : Filters.recordContainerContentTitle,
 				sharpness:-25, thickness:-50});
 			
-			$avatarThumb = new Thumbnail({x:12, y:6});
-			$instrumentThumb = new Thumbnail({x:47, y:6});
+			$avatarThumb = new Thumbnail({x:32, y:6});
+			$instrumentThumb = new Thumbnail({x:67, y:6});
 			
-			$selectInstrument = new QSprite({x:50, y:15});
+			$selectInstrument = new QSprite({x:70, y:15});
 			var selectText:QTextField = new QTextField({alpha:1, width:80, height:40, text:"Select",
 				defaultTextFormat:Formats.standardContainerTitle, filters:Filters.recordContainerContentTitle,
 				sharpness:-25, thickness:-50});

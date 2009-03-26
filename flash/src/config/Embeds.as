@@ -75,6 +75,18 @@ package config {
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonSelectInstrument')]
 			public static var iconSelectInstrument:Class;
 		
+		// Volume slider
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonSliderVolume')]
+			public static var buttonSliderVolume:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundSliderVolume')]
+			public static var backgroundSliderVolume:Class;
+
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundVolumeActive')]
+			public static var backgroundVolumeActive:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundVolumeMuted')]
+			public static var backgroundVolumeMuted:Class;
+
+
 		///////////////////////////// OLD assets
 		// panels
 		[Embed(source='../../lib/assets/main_assets.swf', symbol='PanelBackDarkBD')] public static var panelDarkBackBD:Class;

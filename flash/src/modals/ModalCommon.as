@@ -6,12 +6,12 @@ package modals {
 	import config.Embeds;
 	import config.Settings;
 	
+	import flash.geom.Rectangle;
+	
 	import org.bytearray.display.ScaleBitmap;
 	import org.vancura.graphics.Drawing;
 	import org.vancura.graphics.QSprite;
-	import org.vancura.util.addChildren;
-	
-	import flash.geom.Rectangle;	
+	import org.vancura.util.addChildren;	
 
 	
 	
@@ -28,8 +28,11 @@ package modals {
 		
 		
 		protected static const $FADE_TIME:Number = .3;
+		protected static const $OFFSET_TOP:int = -10;
+		
 		protected var $isVisible:Boolean;
 		protected var $contentSpr:QSprite;
+		
 		private var _containerSpr:QSprite;
 		private var _faderSpr:QSprite;
 		private var _backSBM:ScaleBitmap;
@@ -85,9 +88,9 @@ package modals {
 			$contentSpr.cacheAsBitmap = true;
 			$isVisible = true;
 			
-			// fadein animation
+			// fadein animation, y is vertical shift.
 			Tweener.addTween(this, {time:$FADE_TIME, alpha:1, transition:'easeOutSine'});
-			Tweener.addTween($contentSpr, {time:$FADE_TIME * 2, y:60, rounded:true, transition:'easeOutSine', onComplete:function():void {
+			Tweener.addTween($contentSpr, {time:$FADE_TIME * 2, y:$OFFSET_TOP, rounded:true, transition:'easeOutSine', onComplete:function():void {
 				$contentSpr.cacheAsBitmap = false;
 			}});
 			

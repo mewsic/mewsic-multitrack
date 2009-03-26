@@ -19,7 +19,10 @@ package config {
 		public static const TAB_CHANGE_TIME:Number = .25;
 		public static const PANEL_EDITOR_LAUNCH_DELAY:Number = .1;
 		public static const CONNECTION_LAUNCH_DELAY:Number = 2.8;
+		
 		public static const FADEIN_TIME:Number = .3;
+		public static const FADEOUT_TIME:Number = .3;
+		
 		public static const DEFAULT_CONNECTION_TIMEOUT:Number = 20;
 		public static const PREVENT_CACHING:Boolean = false;
 		public static const IGNORE_FMS_CALLS:Boolean = false; // :D

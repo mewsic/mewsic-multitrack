@@ -5,27 +5,21 @@ package editor_panel.tracks {
 	
 	import config.Embeds;
 	import config.Filters;
-	import config.Formats;
 	import config.Settings;
 	
 	import controls.Button;
-	import controls.Knob;
-	import controls.KnobEvent;
 	import controls.Slider;
 	import controls.SliderEvent;
-	import controls.Thumbnail;
-	
-	import remoting.data.TrackData;
 	
 	import de.popforge.utils.sprintf;
 	
-	import org.osflash.thunderbolt.Logger;
-	import org.vancura.graphics.QTextField;
-	import org.vancura.util.addChildren;
-	import org.vancura.util.removeChildren;
-	
 	import flash.events.Event;
-	import flash.events.MouseEvent;	
+	import flash.events.MouseEvent;
+	
+	import org.osflash.thunderbolt.Logger;
+	import org.vancura.graphics.QBitmap;
+	import org.vancura.util.addChildren;
+	import org.vancura.util.removeChildren;	
 
 	
 	
@@ -41,14 +35,20 @@ package editor_panel.tracks {
 
 		
 		
-		private var _killBtn:Button;
+/*		private var _muteOnBtn:Button;
 		private var _muteOffBtn:Button;
-		private var _muteOnBtn:Button;
-		private var _saveBtn:Button;
+
 		private var _soloOffBtn:Button;
 		private var _soloOnBtn:Button;
+
+		private var _saveBtn:Button; */		
+		private var _killBtn:Button;
+		
 		private var _volumeSlider:Slider;
-		private var _knob:Knob;
+		private var _volumeActive:QBitmap;
+		private var _volumeMuted:QBitmap;
+		
+		// private var _balanceKnob:Knob; XXX RE-ENABLE ME
 		
 		
 		
@@ -60,30 +60,41 @@ package editor_panel.tracks {
 			super(trackID, TrackCommon.STANDARD_TRACK);
 
 			// add components
-			_soloOffBtn = new Button({x:398, y:5, skin:new Embeds.buttonContainerToolbarLTBD(), icon:new Embeds.glyphSoloSmallBD(), textOutFilters:Filters.buttonBeigeLabel, textOverFilters:Filters.buttonBeigeLabel, textPressFilters:Filters.buttonBeigeLabel}, Button.TYPE_NOSCALE_BUTTON);
+/*			_soloOffBtn = new Button({x:398, y:5, skin:new Embeds.buttonContainerToolbarLTBD(), icon:new Embeds.glyphSoloSmallBD(), textOutFilters:Filters.buttonBeigeLabel, textOverFilters:Filters.buttonBeigeLabel, textPressFilters:Filters.buttonBeigeLabel}, Button.TYPE_NOSCALE_BUTTON);
 			_muteOffBtn = new Button({x:423, y:5, skin:new Embeds.buttonContainerToolbarRTBD(), icon:new Embeds.glyphMuteSmallBD(), textOutFilters:Filters.buttonBeigeLabel, textOverFilters:Filters.buttonBeigeLabel, textPressFilters:Filters.buttonBeigeLabel}, Button.TYPE_NOSCALE_BUTTON);
 			_soloOnBtn = new Button({x:398, y:5, skin:new Embeds.buttonContainerToolbarLTActiveBD(), icon:new Embeds.glyphSoloSmallBD(), textOutFilters:Filters.buttonActiveLabel, textOverFilters:Filters.buttonActiveLabel, textPressFilters:Filters.buttonActiveLabel}, Button.TYPE_NOSCALE_BUTTON);
 			_muteOnBtn = new Button({x:423, y:5, skin:new Embeds.buttonContainerToolbarRTActiveBD(), icon:new Embeds.glyphMuteSmallBD(), textOutFilters:Filters.buttonActiveLabel, textOverFilters:Filters.buttonActiveLabel, textPressFilters:Filters.buttonActiveLabel}, Button.TYPE_NOSCALE_BUTTON);
-			_saveBtn = new Button({x:398, y:25, skin:new Embeds.buttonContainerToolbarLBBD(), icon:new Embeds.glyphSaveSmallBD(), textOutFilters:Filters.buttonBeigeLabel, textOverFilters:Filters.buttonBeigeLabel, textPressFilters:Filters.buttonBeigeLabel}, Button.TYPE_NOSCALE_BUTTON);
-			_killBtn = new Button({x:423, y:25, skin:new Embeds.buttonContainerToolbarRBBD(), icon:new Embeds.glyphKillSmallBD(), textOutFilters:Filters.buttonBeigeLabel, textOverFilters:Filters.buttonBeigeLabel, textPressFilters:Filters.buttonBeigeLabel}, Button.TYPE_NOSCALE_BUTTON);
-			_volumeSlider = new Slider({x:350, backSkin:new Embeds.sliderStandardContainerVolumeBD(), thumbSkin:new Embeds.standardContainerVolumeThumbBD(), marginBegin:5, marginEnd:5, wheelRatio:.015}, Slider.DIRECTION_VERTICAL);
-			_knob = new Knob({x:458, y:1, backSkin:new Embeds.buttonContainerPanKnobBD(), pointerSpr:new Embeds.buttonContainerPanKnobPointerSpr(), rangeBegin:-118, rangeEnd:118});
+
+			_saveBtn = new Button({x:398, y:25, skin:new Embeds.buttonContainerToolbarLBBD(), icon:new Embeds.glyphSaveSmallBD(), textOutFilters:Filters.buttonBeigeLabel, textOverFilters:Filters.buttonBeigeLabel, textPressFilters:Filters.buttonBeigeLabel}, Button.TYPE_NOSCALE_BUTTON);*/
+
+			_killBtn = new Button({x:423, y:25, skin:new Embeds.buttonContainerToolbarRBBD(), icon:new Embeds.glyphKillSmallBD(),
+				 textOutFilters:Filters.buttonBeigeLabel, textOverFilters:Filters.buttonBeigeLabel, textPressFilters:Filters.buttonBeigeLabel},
+				 Button.TYPE_NOSCALE_BUTTON);
+
+			_volumeSlider = new Slider({x:10, backSkin:new Embeds.backgroundSliderVolume(), thumbSkin:new Embeds.buttonSliderVolume(),
+				marginBegin:5, marginEnd:5, wheelRatio:.015},
+				Slider.DIRECTION_VERTICAL);
+				
+			_volumeActive = new QBitmap({x:18, embed:new Embeds.backgroundVolumeActive()});
+			_volumeMuted = new QBitmap({x:18, embed:new Embeds.backgroundVolumeMuted()});
+
+//			_balanceKnob = new Knob({x:458, y:1, backSkin:new Embeds.buttonContainerPanKnobBD(), pointerSpr:new Embeds.buttonContainerPanKnobPointerSpr(), rangeBegin:-118, rangeEnd:118});
 
 			// add to display list
-			addChildren(this, _soloOffBtn, _soloOnBtn, _muteOffBtn, _muteOnBtn, _saveBtn, _killBtn, _volumeSlider, _knob);
+			addChildren(this, _killBtn, _volumeSlider, _volumeActive, _volumeMuted);
 			
 			// add handlers
 			$addHandlers();
 			
 			// add event listeners
-			_soloOffBtn.addEventListener(MouseEvent.CLICK, _onSoloClick, false, 0, true);
+	/*		_soloOffBtn.addEventListener(MouseEvent.CLICK, _onSoloClick, false, 0, true);
 			_muteOffBtn.addEventListener(MouseEvent.CLICK, _onMuteClick, false, 0, true);
 			_soloOnBtn.addEventListener(MouseEvent.CLICK, _onSoloClick, false, 0, true);
 			_muteOnBtn.addEventListener(MouseEvent.CLICK, _onMuteClick, false, 0, true);
-			_saveBtn.addEventListener(MouseEvent.CLICK, _onSaveClick, false, 0, true);
+			_saveBtn.addEventListener(MouseEvent.CLICK, _onSaveClick, false, 0, true);*/
 			_killBtn.addEventListener(MouseEvent.CLICK, _onKillClick, false, 0, true);
 			_volumeSlider.addEventListener(SliderEvent.REFRESH, _onVolumeSliderRefresh, false, 0, true);
-			_knob.addEventListener(KnobEvent.REFRESH, _onKnobRefresh, false, 0, true);
+//			_balanceKnob.addEventListener(KnobEvent.REFRESH, _onKnobRefresh, false, 0, true);
 			super.addEventListener(TrackEvent.REFRESH, _onRefresh, false, 0, true);
 			
 			// set states and refresh
@@ -91,10 +102,10 @@ package editor_panel.tracks {
 			_onRefresh();
 			
 			// show save button only for logged user
-			if(!App.connection.coreUserLoginStatus) {
+/*			if(!App.connection.coreUserLoginStatus) {
 				_saveBtn.alpha = .4;
 				_saveBtn.areEventsEnabled = false;
-			}
+			}*/
 		}
 
 		
@@ -104,26 +115,28 @@ package editor_panel.tracks {
 		 */
 		override public function destroy():void {
 			// remove event listeners
-			_soloOffBtn.removeEventListener(MouseEvent.CLICK, _onSoloClick);
+/*			_soloOffBtn.removeEventListener(MouseEvent.CLICK, _onSoloClick);
 			_muteOffBtn.removeEventListener(MouseEvent.CLICK, _onMuteClick);
 			_soloOnBtn.removeEventListener(MouseEvent.CLICK, _onSoloClick);
 			_muteOnBtn.removeEventListener(MouseEvent.CLICK, _onMuteClick);
-			_saveBtn.removeEventListener(MouseEvent.CLICK, _onSaveClick);
+			_saveBtn.removeEventListener(MouseEvent.CLICK, _onSaveClick);*/
 			_killBtn.removeEventListener(MouseEvent.CLICK, _onKillClick);
-			_knob.removeEventListener(KnobEvent.REFRESH, _onKnobRefresh);
 			_volumeSlider.removeEventListener(SliderEvent.REFRESH, _onVolumeSliderRefresh);
+//			_balanceKnob.removeEventListener(KnobEvent.REFRESH, _onKnobRefresh);
+
 			super.removeEventListener(TrackEvent.REFRESH, _onRefresh);
 
 			// remove from display list
-			removeChildren(this, _soloOffBtn, _soloOnBtn, _muteOffBtn, _muteOnBtn, _saveBtn, _killBtn, _volumeSlider, _knob);
+			removeChildren(this, _killBtn, _volumeSlider);
 
 			// destroy components
-			_soloOffBtn.destroy();
+/*			_soloOffBtn.destroy();
 			_muteOffBtn.destroy();
-			_saveBtn.destroy();
+			_saveBtn.destroy();*/
 			_killBtn.destroy();
-			_knob.destroy();
 			_volumeSlider.destroy();
+
+//			_balanceKnob.destroy();
 			
 			super.destroy();
 		}
@@ -131,8 +144,9 @@ package editor_panel.tracks {
 		
 		
 		override public function refresh():void {
-			_knob.angle = 118 * $trackData.trackBalance;
+//			_balanceKnob.angle = 118 * $trackData.trackBalance;
 			_volumeSlider.thumbPos = $trackData.trackVolume;
+			
 			
 			super.refresh();
 		}
@@ -155,8 +169,8 @@ package editor_panel.tracks {
 			_killBtn.alpha = .4;
 			_killBtn.areEventsEnabled = false;
 			
-			_saveBtn.alpha = .4;
-			_saveBtn.areEventsEnabled = false;
+/*			_saveBtn.alpha = .4;
+			_saveBtn.areEventsEnabled = false;*/
 			
 			super.play();
 		}
@@ -167,11 +181,11 @@ package editor_panel.tracks {
 			_killBtn.alpha = 1;
 			_killBtn.areEventsEnabled = true;
 			
-			// show save button only for logged user
+/*			// show save button only for logged user
 			if(App.connection.coreUserLoginStatus) {
 				_saveBtn.alpha = 1;
 				_saveBtn.areEventsEnabled = true;
-			}
+			}*/
 			
 			super.stop();
 		}
@@ -182,8 +196,8 @@ package editor_panel.tracks {
 			_killBtn.alpha = .4;
 			_killBtn.areEventsEnabled = false;
 			
-			_saveBtn.alpha = .4;
-			_saveBtn.areEventsEnabled = false;
+/*			_saveBtn.alpha = .4;
+			_saveBtn.areEventsEnabled = false; */
 			
 			super.resume();
 		}
@@ -195,16 +209,16 @@ package editor_panel.tracks {
 			_killBtn.areEventsEnabled = true;
 			
 			// show save button only for logged user
-			if(App.connection.coreUserLoginStatus) {
+/*			if(App.connection.coreUserLoginStatus) {
 				_saveBtn.alpha = 1;
 				_saveBtn.areEventsEnabled = true;
-			}
+			}*/
 			
 			super.pause();
 		}
 
 		
-		
+/*		
 		public function toggleMute():void {
 			_onMuteClick();
 		}
@@ -213,19 +227,19 @@ package editor_panel.tracks {
 		
 		public function toggleSolo():void {
 			_onSoloClick();
-		}
+		}*/
 		
 		
-		
+		// UNUSED API
 		public function alterVolume(step:Number):void {
 			_volumeSlider.thumbPos += step;
 		}
 
 		
 		
-		public function alterBalance(step:Number):void {
-			_knob.angle += step * 200;
-		}
+/*		public function alterBalance(step:Number):void {
+			_balanceKnob.angle += step * 200;
+		}*/
 
 		
 		
@@ -258,11 +272,11 @@ package editor_panel.tracks {
 		 * Save button click event handler.
 		 * @param event Event data
 		 */
-		private function _onSaveClick(event:MouseEvent):void {
+/*		private function _onSaveClick(event:MouseEvent):void {
 			Logger.debug(sprintf('Save track (trackID=%u, trackTitle=%s)', $trackData.trackID, $trackData.trackTitle));
 			App.downloadTrackModal.downloadURL = App.connection.serverPath + App.connection.configService.trackDownloadRequestURL.replace(/{:track_id}/g, $trackData.trackID);
 			App.downloadTrackModal.show();
-		}
+		}*/
 
 		
 		
@@ -270,7 +284,7 @@ package editor_panel.tracks {
 		 * Mute button click event handler.
 		 * @param event Event data
 		 */
-		private function _onMuteClick(event:MouseEvent = null):void {
+/*		private function _onMuteClick(event:MouseEvent = null):void {
 			if($isMuted) {
 				Logger.debug(sprintf('Unmute track (trackID=%u, trackTitle=%s)', $trackData.trackID, $trackData.trackTitle));
 				$isMuted = false;
@@ -282,7 +296,7 @@ package editor_panel.tracks {
 				dispatchEvent(new TrackEvent(TrackEvent.MUTE_ON));
 			}
 			_onRefresh();
-		}
+		}*/
 
 		
 		
@@ -290,7 +304,7 @@ package editor_panel.tracks {
 		 * Solo button click event handler.
 		 * @param event Event data
 		 */
-		private function _onSoloClick(event:MouseEvent = null):void {
+/*		private function _onSoloClick(event:MouseEvent = null):void {
 			if($isSolo) {
 				Logger.debug(sprintf('Unsolo track (trackID=%u, trackTitle=%s)', $trackData.trackID, $trackData.trackTitle));
 				$isSolo = false;
@@ -302,27 +316,27 @@ package editor_panel.tracks {
 				dispatchEvent(new TrackEvent(TrackEvent.SOLO_ON));
 			}
 			_onRefresh();
-		}
+		}*/
 
 		
 		
 		private function _onRefresh(event:Event = null):void {
-			_muteOffBtn.visible = !$isMuted;
+/*			_muteOffBtn.visible = !$isMuted;
 			_muteOnBtn.visible = $isMuted;
 			_soloOffBtn.visible = !$isSolo;
-			_soloOnBtn.visible = $isSolo;
+			_soloOnBtn.visible = $isSolo;*/
 		}
 
 		
 		
-		private function _onKnobRefresh(event:KnobEvent):void {
+/*		private function _onKnobRefresh(event:KnobEvent):void {
 			var p:Number = -1 / (118 / event.thumbAngle);
 			
 			$sampler.balance = p;
 			$trackData.trackBalance = p;
 			
 			dispatchEvent(new TrackEvent(TrackEvent.BALANCE_CHANGE, false, false, {balance:p}));
-		}
+		}*/
 
 		
 		
@@ -331,6 +345,18 @@ package editor_panel.tracks {
 				var v:Number = 1 - event.thumbPos;
 				$sampler.volume = v;
 				$trackData.trackVolume = v;
+				
+				var fadeIn:Object = {time:0.1, alpha:1, transition:'easeOutSine'};
+				var fadeOut:Object = {time:0.1, alpha:0, transition:'easeOutSine'};
+
+				// iteration 1 - no fadein/out
+				// _volumeActive.visible = v > 0;
+				// _volumeMuted.visible = v == 0;
+
+				// iteration 2 - fadein/out
+				Tweener.addTween(_volumeActive, v > 0 ? fadeIn : fadeOut);
+				Tweener.addTween(_volumeMuted, v == 0 ? fadeIn : fadeOut);	
+
 				dispatchEvent(new TrackEvent(TrackEvent.VOLUME_CHANGE, false, false, {volume:v}));
 			}
 			catch(err:Error) {
