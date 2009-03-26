@@ -63,6 +63,17 @@ package config {
 		// top panel
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundTopGrey')]
 			public static var backgroundTopGrey:Class;
+			
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundTrack')]
+			public static var backgroundTrack:Class;
+			
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundRecordTrack')]
+			public static var backgroundRecordTrack:Class;
+			
+			
+		// Icons
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonSelectInstrument')]
+			public static var iconSelectInstrument:Class;
 		
 		///////////////////////////// OLD assets
 		// panels

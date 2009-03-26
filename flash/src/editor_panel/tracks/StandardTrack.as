@@ -49,8 +49,7 @@ package editor_panel.tracks {
 		private var _soloOnBtn:Button;
 		private var _volumeSlider:Slider;
 		private var _knob:Knob;
-		private var _instrumentThumbnail:Thumbnail;
-
+		
 		
 		
 		/**
@@ -69,10 +68,9 @@ package editor_panel.tracks {
 			_killBtn = new Button({x:423, y:25, skin:new Embeds.buttonContainerToolbarRBBD(), icon:new Embeds.glyphKillSmallBD(), textOutFilters:Filters.buttonBeigeLabel, textOverFilters:Filters.buttonBeigeLabel, textPressFilters:Filters.buttonBeigeLabel}, Button.TYPE_NOSCALE_BUTTON);
 			_volumeSlider = new Slider({x:350, backSkin:new Embeds.sliderStandardContainerVolumeBD(), thumbSkin:new Embeds.standardContainerVolumeThumbBD(), marginBegin:5, marginEnd:5, wheelRatio:.015}, Slider.DIRECTION_VERTICAL);
 			_knob = new Knob({x:458, y:1, backSkin:new Embeds.buttonContainerPanKnobBD(), pointerSpr:new Embeds.buttonContainerPanKnobPointerSpr(), rangeBegin:-118, rangeEnd:118});
-			_instrumentThumbnail = new Thumbnail({x:47, y:6});
 
 			// add to display list
-			addChildren(this, _soloOffBtn, _soloOnBtn, _muteOffBtn, _muteOnBtn, _saveBtn, _killBtn, _volumeSlider, _knob, _instrumentThumbnail);
+			addChildren(this, _soloOffBtn, _soloOnBtn, _muteOffBtn, _muteOnBtn, _saveBtn, _killBtn, _volumeSlider, _knob);
 			
 			// add handlers
 			$addHandlers();
@@ -117,7 +115,7 @@ package editor_panel.tracks {
 			super.removeEventListener(TrackEvent.REFRESH, _onRefresh);
 
 			// remove from display list
-			removeChildren(this, _soloOffBtn, _soloOnBtn, _muteOffBtn, _muteOnBtn, _saveBtn, _killBtn, _volumeSlider, _knob, _instrumentThumbnail);
+			removeChildren(this, _soloOffBtn, _soloOnBtn, _muteOffBtn, _muteOnBtn, _saveBtn, _killBtn, _volumeSlider, _knob);
 
 			// destroy components
 			_soloOffBtn.destroy();
@@ -126,7 +124,6 @@ package editor_panel.tracks {
 			_killBtn.destroy();
 			_knob.destroy();
 			_volumeSlider.destroy();
-			_instrumentThumbnail.destroy();
 			
 			super.destroy();
 		}
@@ -144,11 +141,6 @@ package editor_panel.tracks {
 		
 		override public function load():void {
 			super.load();
-			
-			// get instrument description and icon
-			var instrumentIconURL:String = App.connection.instrumentsService.byID($trackData.trackInstrumentID).instrumentIconURL;
-
-			_instrumentThumbnail.load(App.connection.serverPath + instrumentIconURL);
 			
 			refresh();
 			

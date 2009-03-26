@@ -20,6 +20,7 @@ package editor_panel.tracks {
 	
 	import org.osflash.thunderbolt.Logger;
 	import org.vancura.graphics.QBitmap;
+	import org.vancura.graphics.QSprite;
 	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
 	import org.vancura.util.removeChildren;
@@ -44,17 +45,26 @@ package editor_panel.tracks {
 		
 		public static const RECORD_TRACK:String = 'recordTrack';
 		public static const STANDARD_TRACK:String = 'standardTrack';
+
 		protected var $sampler:Sampler;
 		protected var $waveform:Waveform;
+
 		protected var $backBM:QBitmap;
 		protected var $titleTF:QTextField;
 		protected var $specsTagsTF:QTextField;
+
 		protected var $avatarThumb:Thumbnail;
+		protected var $instrumentThumb:Thumbnail;
+		protected var $selectInstrument:QSprite;
+		
 		protected var $trackData:TrackData;
 		protected var $trackType:String;
+		
 		protected var $isMuted:Boolean;
 		protected var $isSolo:Boolean;
+		
 		protected var $trackID:uint;
+		
 		private var _isEnabled:Boolean = true;
 		private var _userService:UserService;
 
@@ -75,13 +85,32 @@ package editor_panel.tracks {
 			else $trackType = t;
 			
 			// add components
-			$backBM = new QBitmap({embed:($trackType == STANDARD_TRACK) ? new Embeds.standardContainerBackBD() : new Embeds.recordContainerBackBD()});
-			$titleTF = new QTextField({alpha:0, x:154, width:116, height:52, defaultTextFormat:($trackType == STANDARD_TRACK) ? Formats.standardContainerTitle : Formats.recordContainerTitle, filters:($trackType == STANDARD_TRACK) ? Filters.standardContainerContentTitle : Filters.recordContainerContentTitle, sharpness:-25, thickness:-50});
-			$specsTagsTF = new QTextField({alpha:0, x:154, width:116, height:52, defaultTextFormat:($trackType == STANDARD_TRACK) ? Formats.standardContainerSpecsContent : Formats.recordContainerSpecsContent, filters:($trackType == STANDARD_TRACK) ? Filters.standardContainerContentTitle : Filters.recordContainerContentTitle, sharpness:-25, thickness:-50});
+			//$backBM = new QBitmap({embed:($trackType == STANDARD_TRACK) ? new Embeds.standardContainerBackBD() : new Embeds.recordContainerBackBD()});
+			$titleTF = new QTextField({alpha:0, x:154, width:116, height:52,
+				defaultTextFormat:($trackType == STANDARD_TRACK) ? Formats.standardContainerTitle : Formats.recordContainerTitle,
+				filters:($trackType == STANDARD_TRACK) ? Filters.standardContainerContentTitle : Filters.recordContainerContentTitle,
+				sharpness:-25, thickness:-50});
+	
+			$specsTagsTF = new QTextField({alpha:0, x:154, width:116, height:52,
+				defaultTextFormat:($trackType == STANDARD_TRACK) ? Formats.standardContainerSpecsContent : Formats.recordContainerSpecsContent,
+				filters:($trackType == STANDARD_TRACK) ? Filters.standardContainerContentTitle : Filters.recordContainerContentTitle,
+				sharpness:-25, thickness:-50});
+			
 			$avatarThumb = new Thumbnail({x:12, y:6});
+			$instrumentThumb = new Thumbnail({x:47, y:6});
+			
+			$selectInstrument = new QSprite({x:50, y:15});
+			var selectText:QTextField = new QTextField({alpha:1, width:80, height:40, text:"Select",
+				defaultTextFormat:Formats.standardContainerTitle, filters:Filters.recordContainerContentTitle,
+				sharpness:-25, thickness:-50});
+	
+			var selectIcon:QBitmap = new QBitmap({embed: new Embeds.iconSelectInstrument()});
+			
+			addChildren($selectInstrument, selectText, selectIcon);
+			$selectInstrument.visible = false;
 
 			// add to display list
-			addChildren(this, $backBM, $avatarThumb, $titleTF, $specsTagsTF);
+			addChildren(this, /*$backBM,*/ $avatarThumb, $instrumentThumb, $selectInstrument, $titleTF, $specsTagsTF);
 			
 			// set user service
 			_userService = new UserService();
@@ -101,7 +130,8 @@ package editor_panel.tracks {
 			// destroy components
 			try {
 				$avatarThumb.destroy();
-				removeChildren(this, $backBM, $avatarThumb, $titleTF, $specsTagsTF);
+				$instrumentThumb.destroy();
+				removeChildren(this, /*$backBM,*/ $avatarThumb, $instrumentThumb, $titleTF, $specsTagsTF);
 			}
 			catch(err3:Error) {
 				Logger.warn(sprintf('Error removing graphics for %s:\n%s', toString(), err3.message));
@@ -180,6 +210,17 @@ package editor_panel.tracks {
 			}
 			catch(err:Error) { 
 				Logger.error(sprintf('Could not get user data:\n%s', err.message)); 
+			}
+			
+			// get instrument description and icon
+			if($trackData.trackInstrumentID) {
+				var instrumentIconURL:String = App.connection.instrumentsService.byID($trackData.trackInstrumentID).instrumentIconURL;
+				$instrumentThumb.load(App.connection.serverPath + instrumentIconURL);
+				$instrumentThumb.visible = true;
+				$selectInstrument.visible = false;				
+			} else {
+				$instrumentThumb.visible = false;
+				$selectInstrument.visible = true;
 			}
 		}
 
