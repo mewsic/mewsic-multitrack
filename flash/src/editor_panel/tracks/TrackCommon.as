@@ -276,16 +276,6 @@ package editor_panel.tracks {
 
 		
 		
-		/**
-		 * Scroll waveform.
-		 * @param px Position (in px)
-		 */
-		public function scrollTo(px:int):void {
-			$waveform.scrollTo(px);
-		}
-
-		
-		
 		public function get isSolo():Boolean {
 			return $isSolo;
 		}
@@ -360,7 +350,7 @@ package editor_panel.tracks {
 		protected function $addHandlers():void {
 			// create components
 			$sampler = new Sampler($trackType);
-			$waveform = new Waveform($trackType, {x:520});
+			$waveform = new Waveform($trackType, {x:Settings.TRACKCONTROLS_WIDTH});
 			
 			// add to display list
 			addChild($waveform);

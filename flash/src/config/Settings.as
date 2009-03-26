@@ -14,6 +14,10 @@ package config {
 		
 		
 		public static const STAGE_WIDTH:uint = 978;
+		public static const WAVEFORM_WIDTH:uint = 432;
+		public static const TRACKCONTROLS_WIDTH:uint = 250; 
+		
+		
 		public static const START_STAGE_HEIGHT:uint = 40;
 		public static const STAGE_HEIGHT_CHANGE_TIME:Number = .6;
 		public static const TAB_CHANGE_TIME:Number = .25;

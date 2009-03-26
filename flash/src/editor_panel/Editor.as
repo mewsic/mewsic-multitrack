@@ -21,7 +21,7 @@ package editor_panel {
 	
 	import editor_panel.containers.ContainerCommon;
 	import editor_panel.containers.ContainerEvent;
-	import editor_panel.ruler.Playhead;
+	import editor_panel.Playhead;
 	import editor_panel.sampler.SamplerEvent;
 	import editor_panel.tracks.RecordTrack;
 	import editor_panel.tracks.TrackCommon;
@@ -157,7 +157,7 @@ package editor_panel {
 			_playheadMaskSpr = new MorphSprite({y:_OFF_PLAYHEAD, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'});
 
 			// add modules
-			_playhead = new Playhead({x:521, y:_OFF_PLAYHEAD, mask:_playheadMaskSpr});
+			_playhead = new Playhead({x:Settings.TRACKCONTROLS_WIDTH, y:_OFF_PLAYHEAD, mask:_playheadMaskSpr});
 			_beatClicker = new BeatClicker();
 
 			// add parts
@@ -869,11 +869,11 @@ package editor_panel {
 
 		
 		public function msecToStageX(m:Number):uint {
-			return m / milliseconds * Waveform.MAX_WIDTH;
+			return m / milliseconds * Settings.WAVEFORM_WIDTH;
 		}
 		
 		public function stageXToMsec(x:int):uint {
-			return x * milliseconds / Waveform.MAX_WIDTH; 
+			return x * milliseconds / Settings.WAVEFORM_WIDTH;
 		}
 		
 		public function get playheadPosition():Number {
@@ -894,10 +894,6 @@ package editor_panel {
 			return msecToStageX(msec);
 		}
 		
-		public function get playheadStageWidth():Number {
-			return Waveform.MAX_WIDTH;
-		}
-		
 		/**
 		 * Playhead refresh event handler.
 		 * Called every ENTER_FRAME to refresh playhead.
@@ -906,7 +902,7 @@ package editor_panel {
 		 */
 		private function _onPlayheadRefresh(event:Event):void {
 			// Shift relative to waveform width, and add left margin of right panel
-			var x:int = playheadPosition + 521;
+			var x:int = playheadPosition + Settings.TRACKCONTROLS_WIDTH;
 			
 			if(_playhead.x != x) {
 				// position changed  <-- All good coders smoke.

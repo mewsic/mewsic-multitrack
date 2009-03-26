@@ -1,10 +1,11 @@
-package editor_panel.ruler {
+package editor_panel {
 	import application.App;
 	
 	import caurina.transitions.Tweener;
 	
 	import config.Embeds;
 	import config.Formats;
+	import config.Settings;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -143,21 +144,23 @@ package editor_panel.ruler {
 		private function _onDragMove(event:Event):void {
 			if(_isDragging) {
 				// we are dragging
-				var offset:int = event.currentTarget.mouseX - _dragMouseOffs - App.editor.playheadPosition - 521 - 6;
-				var current:int = App.editor.playheadPosition;
+				var offset:int = event.currentTarget.mouseX - _dragMouseOffs -
+					 App.editor.playheadPosition - Settings.TRACKCONTROLS_WIDTH - 7;
+
+				var current:int = -App.editor.playheadPosition;
 				
 				var ts:int = new Date().getTime()/1000;
 
 				// count limits
 				if(offset < current)
 					offset = current;
-				if(offset > App.editor.playheadStageWidth + current)
-					offset = App.editor.playheadStageWidth + current;
+				if(offset > Settings.WAVEFORM_WIDTH + current)
+					offset = Settings.WAVEFORM_WIDTH + current;
 				
 				
 				// move playhead
 				_dragContainerSpr.x = offset;
-				_dragValueTF.text = App.getTimeCode(App.editor.stageXToMsec(offset + current));
+				_dragValueTF.text = App.getTimeCode(App.editor.stageXToMsec(offset - current));
 				_lastDragPos = offset;
 				
 				// make sure it's visible

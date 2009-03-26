@@ -76,8 +76,8 @@ package editor_panel.containers {
 
 			// add graphics
 			_trackSpr = new QSprite();
-			_viewportBackBM = new QBitmap({x:520, height:1200, embed:new Embeds.viewportBackBD()}); // Track lane background
-			_viewportGradsBM = new QBitmap({x:520, height:1200, embed:new Embeds.viewportGradsBD()}); // Track lane gradient
+			_viewportBackBM = new QBitmap({x:Settings.TRACKCONTROLS_WIDTH, height:1200, embed:new Embeds.viewportBackBD()}); // Track lane background
+			_viewportGradsBM = new QBitmap({x:Settings.TRACKCONTROLS_WIDTH, height:1200, embed:new Embeds.viewportGradsBD()}); // Track lane gradient
 
 			// set visual properties
 			$morphTime = Settings.STAGE_HEIGHT_CHANGE_TIME;
@@ -595,23 +595,6 @@ package editor_panel.containers {
 			var c:uint = 0;
 			for each(var t:TrackCommon in _trackList) if(t.isEnabled) c = Math.max(c, t.position);
 			return c;
-		}
-
-		
-		
-		/**
-		 * Scroll to.
-		 * @param px Scroll position
-		 */
-		public function scrollTo(px:int):void {
-			for each(var t:TrackCommon in _trackList) {
-				try { 
-					if(t.isEnabled) t.scrollTo(px); 
-				}
-				catch(err:Error) {
-					Logger.warn(sprintf('Problem trying to set scrolling position of %s:\n%s', t.toString(), err.message));
-				}
-			}
 		}
 
 		
