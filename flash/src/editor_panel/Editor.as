@@ -6,9 +6,9 @@ package editor_panel {
 	import caurina.transitions.Tweener;
 	
 	import config.Embeds;
-	import config.Settings;
-	import config.Formats;
 	import config.Filters;
+	import config.Formats;
+	import config.Settings;
 	
 	import controls.Button;
 	import controls.MorphSprite;
@@ -22,13 +22,11 @@ package editor_panel {
 	import editor_panel.containers.ContainerCommon;
 	import editor_panel.containers.ContainerEvent;
 	import editor_panel.ruler.Playhead;
-	import editor_panel.ruler.Ruler;
 	import editor_panel.sampler.SamplerEvent;
 	import editor_panel.tracks.RecordTrack;
 	import editor_panel.tracks.TrackCommon;
 	import editor_panel.tracks.TrackEvent;
 	
-	import flash.display.Bitmap;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.media.SoundMixer;
@@ -76,6 +74,9 @@ package editor_panel {
 		private static const _STATE_PAUSED:uint    = 0x3;
 		private static const _STATE_WAIT_REC:uint  = 0x4;
 		private static const _STATE_RECORDING:uint = 0x5;
+		
+		private static const _OFF_PLAYHEAD:uint = 103;
+		private static const _OFF_STAGE:uint = 129;
 		
 		private var _state:uint;
 		
@@ -155,17 +156,17 @@ package editor_panel {
 		public function launch():void {
 			// add masks
 			_containersMaskSpr = new MorphSprite({y:85, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'});
-			_playheadMaskSpr = new MorphSprite({y:53, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'});
+			_playheadMaskSpr = new MorphSprite({y:_OFF_PLAYHEAD, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'});
 
 			// add modules
-			_playhead = new Playhead({x:521, y:53, mask:_playheadMaskSpr});
+			_playhead = new Playhead({x:521, y:_OFF_PLAYHEAD, mask:_playheadMaskSpr});
 			_scroller = new Scroller({y:204, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'});
 			_beatClicker = new BeatClicker();
 
 			// add parts
-			_headerSpr = new MorphSprite();
-			_containersContentSpr = new MorphSprite({y:129, mask:_containersMaskSpr});
-			_footerSpr = new MorphSprite({y:224, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'});
+			_headerSpr = new MorphSprite(); // Header container			
+			_containersContentSpr = new MorphSprite({y:_OFF_STAGE, mask:_containersMaskSpr}); // tracks container
+			_footerSpr = new MorphSprite({y:224, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'}); // footer container
 
 			// add top panel background
 			_topDivBM = new QBitmap({y:5, embed:new Embeds.backgroundTopGrey()});
@@ -226,7 +227,7 @@ package editor_panel {
 			// add containers
 			_standardContainer = new ContainerCommon(TrackCommon.STANDARD_TRACK);
 			_recordContainer = new ContainerCommon(TrackCommon.RECORD_TRACK);
-			_recordContainer.y = 60;
+
 			Drawing.drawRect(_containersMaskSpr, 0, 0, Settings.STAGE_WIDTH, 121);
 			Drawing.drawRect(_playheadMaskSpr, 0, 0, Settings.STAGE_WIDTH, 170);
 
@@ -755,12 +756,16 @@ package editor_panel {
 		 */
 		private function _onContainerContentHeightChange(event:ContainerEvent):void {
 			_recordContainer.morph({y:_standardContainer.height});
+			
 			_scroller.morph({y:_standardContainer.height + _recordContainer.height + _containersContentSpr.y});
+			
 			_footerSpr.morph({y:_standardContainer.height + _recordContainer.height + _containersContentSpr.y + 20});
-			_containersMaskSpr.morph({height:_standardContainer.height + _recordContainer.height + 1});
-			_playheadMaskSpr.morph({height:_standardContainer.height + _recordContainer.height + 50});
+			
+			_containersMaskSpr.morph({height:_standardContainer.height + _recordContainer.height + 40});
+			
+			_playheadMaskSpr.morph({height:_standardContainer.height + _recordContainer.height + 40});
 
-			$animateHeightChange(_standardContainer.height + _recordContainer.height + _containersContentSpr.y + 119);
+			$animateHeightChange(_standardContainer.height + _recordContainer.height + _containersContentSpr.y + 40); // fixed 40px bottom margin
 		}
 
 		

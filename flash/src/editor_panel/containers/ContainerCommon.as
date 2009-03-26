@@ -4,39 +4,37 @@ package editor_panel.containers {
 	
 	import caurina.transitions.Tweener;
 	
+	import com.gskinner.utils.Rnd;
+	
 	import config.Embeds;
 	import config.Settings;
 	
 	import controls.MorphSprite;
+	
+	import de.popforge.utils.sprintf;
 	
 	import editor_panel.tracks.RecordTrack;
 	import editor_panel.tracks.StandardTrack;
 	import editor_panel.tracks.TrackCommon;
 	import editor_panel.tracks.TrackEvent;
 	
+	import flash.events.Event;
+	
 	import modals.MessageModal;
-	
-	import remoting.data.SongData;
-	import remoting.data.TrackData;
-	import remoting.data.UserData;
-	import remoting.dynamic_services.SongFetchService;
-	import remoting.dynamic_services.SongLoadService;
-	import remoting.dynamic_services.SongUnloadService;
-	import remoting.dynamic_services.TrackFetchService;
-	import remoting.events.RemotingEvent;
-	import remoting.events.SongFetchEvent;
-	import remoting.events.TrackFetchEvent;
-	
-	import de.popforge.utils.sprintf;
-	
-	import com.gskinner.utils.Rnd;
 	
 	import org.osflash.thunderbolt.Logger;
 	import org.vancura.graphics.QBitmap;
 	import org.vancura.graphics.QSprite;
 	import org.vancura.util.addChildren;
 	
-	import flash.events.Event;	
+	import remoting.data.TrackData;
+	import remoting.dynamic_services.SongFetchService;
+	import remoting.dynamic_services.SongLoadService;
+	import remoting.dynamic_services.SongUnloadService;
+	import remoting.dynamic_services.TrackFetchService;
+	import remoting.events.RemotingEvent;
+	import remoting.events.SongFetchEvent;
+	import remoting.events.TrackFetchEvent;	
 
 	
 	
@@ -48,7 +46,10 @@ package editor_panel.containers {
 	 */
 	public class ContainerCommon extends MorphSprite {
 
-		
+
+		private static const TRACK_HEIGHT:uint = 52;
+		private static const TRACK_MARGIN:uint = 3;
+		private static const HEADER_HEIGHT:uint = 0;
 		
 		private var _trackSpr:QSprite;
 		private var _viewportBackBM:QBitmap;
@@ -77,8 +78,8 @@ package editor_panel.containers {
 
 			// add graphics
 			_trackSpr = new QSprite();
-			_viewportBackBM = new QBitmap({x:520, height:1200, embed:new Embeds.viewportBackBD()});
-			_viewportGradsBM = new QBitmap({x:520, height:1200, embed:new Embeds.viewportGradsBD()});
+			_viewportBackBM = new QBitmap({x:520, height:1200, embed:new Embeds.viewportBackBD()}); // Track lane background
+			_viewportGradsBM = new QBitmap({x:520, height:1200, embed:new Embeds.viewportGradsBD()}); // Track lane gradient
 
 			// set visual properties
 			$morphTime = Settings.STAGE_HEIGHT_CHANGE_TIME;
@@ -254,7 +255,7 @@ package editor_panel.containers {
 			}
 
 			// set visual properties
-			t.y = 46 + _trackList.length * 52;
+			t.y = ContainerCommon.HEADER_HEIGHT + _trackList.length * ContainerCommon.TRACK_HEIGHT;
 			t.alpha = 0;
 			
 			// add to the lists
@@ -283,9 +284,7 @@ package editor_panel.containers {
 		 * @throws Error if could not add record track
 		 */
 		public function createRecordTrack():RecordTrack {
-			if(_type == TrackCommon.RECORD_TRACK) {
-				var t:RecordTrack;
-				
+			if(_type == TrackCommon.RECORD_TRACK) {				
 				Logger.info('Adding record track');
 				
 				// create track data
@@ -307,10 +306,11 @@ package editor_panel.containers {
 				createTrack(td.trackID);
 				
 				// update core song
+				var t:RecordTrack;
 				var i:uint = App.connection.coreSongData.songTracks.push(td);
 				for each(var p:RecordTrack in _trackList) if(p.trackID == td.trackID) {
 					t = p;
-					p.trackData = App.connection.coreSongData.songTracks[i - 1];
+					p.trackData = td;// App.connection.coreSongData.songTracks[i - 1];
 					p.load();
 				}
 				
@@ -394,7 +394,7 @@ package editor_panel.containers {
 			var idx:uint = 0;
 			for each(var s:TrackCommon in _trackList) {
 				if(s.isEnabled) {
-					var my:uint = 46 + idx * 52;
+					var my:uint = ContainerCommon.HEADER_HEIGHT + idx * ContainerCommon.TRACK_HEIGHT;
 					Tweener.addTween(s, {y:my, time:$morphTime, rounded:true, transition:'easeInOutQuad'});
 					idx++;
 				}
@@ -561,7 +561,7 @@ package editor_panel.containers {
 		 * @return Height
 		 */
 		override public function get height():Number {
-			return _contentHeight + 14;
+			return _contentHeight;
 		}
 
 		
@@ -611,11 +611,11 @@ package editor_panel.containers {
 		 * Recount height.
 		 */
 		private function _recountHeight():void {
-			var h:Number = 46;
+			var h:Number = ContainerCommon.HEADER_HEIGHT;
 
 			for each(var t:TrackCommon in _trackList) {
 				try {
-					if(t.isEnabled) if(t) h += 52;
+					if(t.isEnabled) h += ContainerCommon.TRACK_HEIGHT + ContainerCommon.TRACK_MARGIN;
 				}
 				catch(err:Error) {
 					Logger.warn(sprintf('Problem trying to recount height of %s:\n%s', t.toString(), err.message));
