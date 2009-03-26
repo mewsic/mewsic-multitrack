@@ -86,6 +86,9 @@ package config {
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundVolumeMuted')]
 			public static var backgroundVolumeMuted:Class;
 
+		// VU Meter
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='VuMeter')]
+			public static var vuMeter:Class;
 
 		///////////////////////////// OLD assets
 		// panels

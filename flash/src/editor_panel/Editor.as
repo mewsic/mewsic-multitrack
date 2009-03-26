@@ -166,7 +166,7 @@ package editor_panel {
 			// add parts
 			_headerSpr = new MorphSprite(); // Header container			
 			_containersContentSpr = new MorphSprite({y:_OFF_STAGE, mask:_containersMaskSpr}); // tracks container
-			_footerSpr = new MorphSprite({y:224, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'}); // footer container
+			_footerSpr = new MorphSprite({y:124, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'}); // footer container
 
 			// add top panel background
 			_topDivBM = new QBitmap({y:5, embed:new Embeds.backgroundTopGrey()});
@@ -220,9 +220,9 @@ package editor_panel {
 			//_globalVolumeToolbar.addChildRight(_globalVolumeSlider);
 
 			// add global vu meter toolbar
-			_globalVUToolbar = new Toolbar({visible:_isVUMeterEnabled, x:130, y:12, width:255, height:32});
-			_globalVUMeter = new VUMeter({x:8, y:8, skin:new Embeds.vuMeterHorizontalBD(), leds:30});
-			_globalVUToolbar.addChild(_globalVUMeter);
+			_globalVUToolbar = new Toolbar({visible:_isVUMeterEnabled, x:460, y:0, width:55, height:35});
+			_globalVUMeter = new VUMeter({x:2, y:2, stereo:true, spacingV:-1, spacingH: 13, skin:new Embeds.vuMeter(), leds:7}, VUMeter.DIRECTION_VERTICAL);
+			_globalVUToolbar.addChildRight(_globalVUMeter);
 
 			// add containers
 			_standardContainer = new ContainerCommon(TrackCommon.STANDARD_TRACK);
@@ -759,7 +759,7 @@ package editor_panel {
 			
 			_scroller.morph({y:_standardContainer.height + _recordContainer.height + _containersContentSpr.y});
 			
-			_footerSpr.morph({y:_standardContainer.height + _recordContainer.height + _containersContentSpr.y + 20});
+			_footerSpr.morph({y:_standardContainer.height + _recordContainer.height + _containersContentSpr.y});
 			
 			_containersMaskSpr.morph({height:_standardContainer.height + _recordContainer.height + 40});
 			

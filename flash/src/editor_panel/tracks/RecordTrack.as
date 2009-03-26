@@ -70,7 +70,7 @@ package editor_panel.tracks {
 			super(trackID, TrackCommon.RECORD_TRACK);
 
 			// add components
-			_vuMeter = new VUMeter({x:430, y:2, leds:9, spacingH:9, spacingV:1, skin:new Embeds.vuMeterContainerVerticalBD()}, VUMeter.DIRECTION_VERTICAL);
+			_vuMeter = new VUMeter({x:9, y:2, leds:10, spacingV:0, stereo:false, skin:new Embeds.vuMeter()}, VUMeter.DIRECTION_VERTICAL);
 			_volumeSlider = new Slider({x:350, backSkin:new Embeds.sliderRecordContainerVolumeBD(), thumbSkin:new Embeds.recordContainerVolumeThumbBD, marginBegin:5, marginEnd:5, wheelRatio:.015}, Slider.DIRECTION_VERTICAL);
 			_recordBtn = new Button({x:472, y:12, width:36, height:21, skin:new Embeds.buttonRedBD, icon:new Embeds.glyphRecordBD(), textOutFilters:Filters.buttonRedLabel, textOverFilters:Filters.buttonRedLabel, textPressFilters:Filters.buttonRedLabel, textOutOffsY:-1, textOverOffsY:-1, textPressOffsY:0});
 			_stopBtn = new Button({visible:false, x:472, y:12, width:36, height:21, skin:new Embeds.buttonRedBD, icon:new Embeds.glyphStop2BD(), textOutFilters:Filters.buttonRedLabel, textOverFilters:Filters.buttonRedLabel, textPressFilters:Filters.buttonRedLabel, textOutOffsY:-1, textOverOffsY:-1, textPressOffsY:0});
@@ -244,7 +244,7 @@ package editor_panel.tracks {
 		
 		
 		private function _onEnterFrame(event:Event):void {
-			_vuMeter.bothLevels = App.connection.streamService.recordLevel;
+			_vuMeter.level = App.connection.streamService.recordLevel;
 		}
 
 		
