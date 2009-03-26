@@ -3,13 +3,11 @@ package controls {
 	
 	import de.popforge.utils.sprintf;
 	
-	import org.vancura.graphics.Bitmapping;
-	import org.vancura.graphics.QSprite;
-	import org.vancura.util.addChildren;
-	import org.vancura.util.removeChildren;
-	
 	import flash.display.Bitmap;
-	import flash.display.BitmapData;	
+	import flash.display.BitmapData;
+	
+	import org.vancura.graphics.Bitmapping;
+	import org.vancura.graphics.QSprite;	
 
 	
 	
@@ -37,6 +35,7 @@ package controls {
 		public static var defSpacingH:Number = DefaultControlSettings.DEF_VUMETER_SPACING_H;
 		public static var defSpacingV:Number = DefaultControlSettings.DEF_VUMETER_SPACING_V;
 		public static var defSkin:BitmapData = null;
+		public static var defStereo:Boolean = true;
 		protected var $ledSet1Spr:QSprite;
 		protected var $ledSet2Spr:QSprite;
 		protected var $leds:uint;
@@ -48,6 +47,7 @@ package controls {
 		protected var $dir:String;
 		protected var $spacingH:Number;
 		protected var $spacingV:Number;
+		protected var $stereo:Boolean;
 
 		
 		
@@ -83,6 +83,7 @@ package controls {
 
 			// set initial values
 			$leds = (c.leds != undefined) ? c.leds : defLeds;
+			$stereo = (c.stereo != undefined) ? c.stereo : defStereo;
 			$morphTime = (c.morphTime != undefined) ? c.morphTime : defMorphTime;
 			$isChangeWidthEnabled = false;
 			$isChangeHeightEnabled = false;
@@ -91,7 +92,7 @@ package controls {
 
 			// add set sprites
 			$ledSet1Spr = new QSprite();
-			$ledSet2Spr = new QSprite();
+			if($stereo) $ledSet2Spr = new QSprite();
 
 			// set initial values
 			$spacingH = (c.spacingH != undefined) ? c.spacingH : defSpacingH;
@@ -99,7 +100,7 @@ package controls {
 
 			// fill rows
 			_fillSet($ledSet1Spr, $ledSet1List);
-			_fillSet($ledSet2Spr, $ledSet2List);
+			if($stereo) _fillSet($ledSet2Spr, $ledSet2List);
 
 			// set visual properties
 			this.x = (c.x != undefined) ? c.x : 0;
@@ -108,14 +109,19 @@ package controls {
 			this.alpha = (c.alpha != undefined) ? c.alpha : 1;
 			this.mask = (c.mask != undefined) ? c.mask : null;
 
-			if($dir == DIRECTION_HORIZONTAL) $ledSet2Spr.y = $templateHeight + $spacingV;
-			else $ledSet2Spr.x = $spacingH;
+			if($stereo) {
+				if($dir == DIRECTION_HORIZONTAL)
+					$ledSet2Spr.y = $templateHeight + $spacingV;
+				else
+					$ledSet2Spr.x = $spacingH;
+			}
 
 			// blink all leds
 			intro();
 
 			// add to display list
-			addChildren(this, $ledSet1Spr, $ledSet2Spr);
+			this.addChild($ledSet1Spr);
+			if ($stereo) this.addChild($ledSet2Spr);
 		}
 
 		
@@ -124,11 +130,12 @@ package controls {
 			// remove leds
 			for(var i:uint = 0;i < $leds; i++) {
 				$ledSet1Spr.removeChild($ledSet1List[i]);
-				$ledSet2Spr.removeChild($ledSet2List[i]);
+				if ($stereo) $ledSet2Spr.removeChild($ledSet2List[i]);
 			}
 
 			// remove from display list
-			removeChildren(this, $ledSet1Spr, $ledSet2Spr);
+			this.removeChild($ledSet1Spr);
+			if ($stereo) this.removeChild($ledSet2Spr);
 		}
 
 		
@@ -139,7 +146,7 @@ package controls {
 				o.id = i;
 				Tweener.addTween(o, {delay:1 + i * .02, onComplete:function():void {
 					blinkLed(SET_1, this.id);
-					blinkLed(SET_2, this.id);
+					if($stereo) blinkLed(SET_2, this.id);
 				}});
 			}
 		}
@@ -177,7 +184,8 @@ package controls {
 			return l;
 		}
 
-		
+
+
 		
 		public function set leftLevel(value:Number):void {
 			$mark($ledSet1List, $getLedIdx(value));
@@ -186,15 +194,16 @@ package controls {
 		
 		
 		public function set rightLevel(value:Number):void {
-			$mark($ledSet2List, $getLedIdx(value));
+			if ($stereo) $mark($ledSet2List, $getLedIdx(value));
 		}
 
 		
 		
-		public function set bothLevels(value:Number):void {
+		public function set level(value:Number):void {
 			var l:int = $getLedIdx(value);
-			$mark($ledSet1List, l);
-			$mark($ledSet2List, l);
+			
+			this.leftLevel = value;
+			this.rightLevel = value
 		}
 
 		
