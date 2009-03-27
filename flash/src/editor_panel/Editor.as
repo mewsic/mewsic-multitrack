@@ -75,7 +75,7 @@ package editor_panel {
 		private static const _STATE_WAIT_REC:uint  = 0x4;
 		private static const _STATE_RECORDING:uint = 0x5;
 		
-		private static const _OFF_PLAYHEAD:uint = 103;
+		private static const _OFF_PLAYHEAD:uint = 112;
 		private static const _OFF_STAGE:uint = 129;
 		
 		private var _state:uint;
@@ -151,7 +151,7 @@ package editor_panel {
 			_playheadMaskSpr = new MorphSprite({y:_OFF_PLAYHEAD, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'});
 
 			// add modules
-			_playhead = new Playhead({x:Settings.TRACKCONTROLS_WIDTH, y:_OFF_PLAYHEAD, mask:_playheadMaskSpr});
+			_playhead = new Playhead({x:Settings.TRACKCONTROLS_WIDTH, y:_OFF_PLAYHEAD + 5, mask:_playheadMaskSpr});
 			//_beatClicker = new BeatClicker();
 
 			// add parts
@@ -220,7 +220,7 @@ package editor_panel {
 			_recordContainer = new ContainerCommon(TrackCommon.RECORD_TRACK);
 
 			Drawing.drawRect(_containersMaskSpr, 0, 0, Settings.STAGE_WIDTH, 121);
-			Drawing.drawRect(_playheadMaskSpr, 0, 0, Settings.STAGE_WIDTH, 170);
+			Drawing.drawRect(_playheadMaskSpr, 0, 0, Settings.STAGE_WIDTH, 10);
 
 			// align some toolbars right
 			//_topToolbar.x = $canvasSpr.width - _topToolbar.width - 14;
@@ -686,7 +686,7 @@ package editor_panel {
 			
 			_containersMaskSpr.morph({height:_standardContainer.height + _recordContainer.height + 40});
 			
-			_playheadMaskSpr.morph({height:_standardContainer.height + _recordContainer.height + 40});
+			_playheadMaskSpr.morph({height:_standardContainer.height + _recordContainer.height + 10});
 
 			$animateHeightChange(_standardContainer.height + _recordContainer.height + _containersContentSpr.y + 40); // fixed 40px bottom margin
 		}

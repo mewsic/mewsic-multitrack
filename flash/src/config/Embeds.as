@@ -73,6 +73,8 @@ package config {
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='SeparatorTrack')]
 			public static var separatorTrack:Class;			
 			
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonTrackDelete')]
+			public static var buttonKillTrack:Class;
 			
 		// Icons
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonSelectInstrument')]
@@ -92,10 +94,14 @@ package config {
 		// VU Meter
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='VuMeter')]
 			public static var vuMeter:Class;
+
+		// Playhead
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='Playhead')]
+			public static var playHead:Class;
+					
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='PlayheadDrag')]
+			public static var playHeadDrag:Class;
 			
-			
-		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonTrackDelete')]
-			public static var buttonKillTrack:Class;
 				
 
 		///////////////////////////// OLD assets

@@ -52,9 +52,13 @@ package editor_panel {
 			// add components
 			_activeContainerSpr = new QSprite();
 			_dragContainerSpr = new QSprite({visible:false});
-			_activeBackBM = new QBitmap({x:-23, embed:new Embeds.rulerPlayheadBackBD()});
-			_dragBackBM = new QBitmap({x:-23, embed:new Embeds.rulerPlayheadDragBD()});
-			_activeValueTF = new QTextField({x:-23, y:3, width:47, defaultTextFormat:Formats.rulerPlayhead, text:'0:00', mouseEnabled:false, autoSize:TextFieldAutoSize.LEFT});			_dragValueTF = new QTextField({alpha:.9, x:-23, y:3, width:47, defaultTextFormat:Formats.rulerPlayhead, text:'0:00', mouseEnabled:false, autoSize:TextFieldAutoSize.LEFT});
+			_activeBackBM = new QBitmap({x:-23, embed:new Embeds.playHead()});
+			_dragBackBM = new QBitmap({x:-23, embed:new Embeds.playHeadDrag()});
+
+			_activeValueTF = new QTextField({x:-28, y:0, width:47, mouseEnabled:false,
+				defaultTextFormat:Formats.rulerPlayhead, text:'0:00', autoSize:TextFieldAutoSize.LEFT});
+			_dragValueTF = new QTextField({alpha:.9, x:-28, y:0, width:47, mouseEnabled:false,
+				defaultTextFormat:Formats.rulerPlayhead, text:'0:00', autoSize:TextFieldAutoSize.LEFT});
 			
 			// set visual properties
 			this.useHandCursor = true;
