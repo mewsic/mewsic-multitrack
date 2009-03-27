@@ -274,7 +274,6 @@ package editor_panel {
 			_recordContainer.addEventListener(SamplerEvent.SAMPLE_ERROR, _onTrackSampleError, false, 0, true);
 
 			_recordContainer.addEventListener(TrackEvent.RECORD_START, _onRecordStart, false, 0, true);
-			_recordContainer.addEventListener(TrackEvent.RECORD_STOP, _onRecordStop, false, 0, true);
 
 			// add controller toolbar buttons event listeners
 			_controllerPlayBtn.addEventListener(MouseEvent.CLICK, _onPlayButtonClick, false, 0, true);
@@ -615,10 +614,9 @@ package editor_panel {
 		
 		
 		public function get currentPosition():uint {
-			if(_recordContainer.trackCount > 0) {
-				// recording first track FIXME!
-				if(_state == _STATE_PLAYING) return _recordContainer.position;
-				return 0;
+			if(_standardContainer.trackCount == 0 && _state == _STATE_RECORDING) {
+				// Recording first track
+				return _recordContainer.position;
 			} else {
 				// standard track
 				return _standardContainer.position;
@@ -812,12 +810,14 @@ package editor_panel {
 		private function _onTrackPlaybackComplete(event:SamplerEvent):void {
 			_completedTracksCounter++;
 			if(_state == _STATE_RECORDING) {
-				if(_completedTracksCounter == allTrackCount - 1) {
+				//if(_completedTracksCounter == allTrackCount - 1) {
 					Logger.info('Song recording completed.');
 					_completedTracksCounter = 0;
 
-					_recordTrack.stopRecording(event);					
-				}
+					_recordTrack.stopRecording(event);
+					stop();					
+				//}
+				
 			} else {
 				if(_completedTracksCounter == allTrackCount) {
 					Logger.info('Song playback completed.');
@@ -831,8 +831,27 @@ package editor_panel {
 			_refreshVisual();	
 		}
 
+
 		
-		
+		private function _onRecordStart(event:TrackEvent):void {
+			if(allTrackCount == 1) {
+				Logger.info('Starting recording (first track recorded, so no record length limit).');
+				_recordLimit = 0;
+			} else {
+				Logger.info(sprintf('Starting recording (record length limit = %s).', App.getTimeCode(_milliseconds)));
+				_recordLimit = _milliseconds;
+			}
+			
+			_state = _STATE_RECORDING;
+			
+			// Great work, Vaclav.
+			// -vjt, 24/03/2009
+			rewind();
+			play();
+		}
+
+
+
 		/**
 		 * Track sample error event handler.
 		 * This usually means 404 for sample MP3.
@@ -906,39 +925,5 @@ package editor_panel {
 		private function _onGlobalVolumeRefresh(event:SliderEvent):void {
 			SoundMixer.soundTransform = new SoundTransform(event.thumbPos);
 		}
-
-		
-		
-		private function _onRecordStart(event:TrackEvent):void {
-			if(allTrackCount == 1) {
-				Logger.info('Starting recording (first track recorded, so no record length limit).');
-				_recordLimit = 0;
-			} else {
-				Logger.info(sprintf('Starting recording (record length limit = %s).', App.getTimeCode(_milliseconds)));
-				_recordLimit = _milliseconds;
-			}
-			
-			_state = _STATE_RECORDING;
-			
-			// Great work, Vaclav.
-			// -vjt, 24/03/2009
-			rewind();
-			play();
-		}
-
-		
-		
-		private function _onRecordStop(event:TrackEvent):void {
-			_state = _STATE_STOPPED;
-			stop();
-			
-			_refreshVisual();
-			
-			// start encoding the track and reset the "add new track" tab 
-			// App.saveTrackModal.show();
-		}
-
-		
-		
 	}
 }

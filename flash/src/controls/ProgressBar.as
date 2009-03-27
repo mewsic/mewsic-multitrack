@@ -7,6 +7,7 @@ package controls
 	import org.bytearray.display.ScaleBitmap;
 	import org.vancura.graphics.QSprite;
 	import org.vancura.util.addChildren;
+	import org.vancura.util.removeChildren;
 
 	public class ProgressBar extends QSprite
 	{
@@ -32,14 +33,18 @@ package controls
 			addChildren(this, $uploadBackSBM, $uploadProgressSBM);
 		}
 		
+		public function destroy():void {
+			removeChildren(this, $uploadBackSBM, $uploadProgressSBM);
+		}
+		
 		public function set progress(value:uint):void {
 			$uploadProgressSBM.width = value;
 
-			Tweener.removeTweens($uploadProgressSBM);
+			//Tweener.removeTweens($uploadProgressSBM);
 			Tweener.addTween($uploadProgressSBM, {width:value, rounded:true, time:.25});  
 		}
 	
-		public function set barWidth(value:uint):void {
+		override public function set width(value:Number):void {
 			$uploadBackSBM.width = value;
 		}	
 	}

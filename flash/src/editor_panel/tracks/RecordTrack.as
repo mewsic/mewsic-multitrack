@@ -69,11 +69,11 @@ package editor_panel.tracks {
 			_visualTickSpr = new QSprite({alpha:0, visible:false, blendMode:BlendMode.HARDLIGHT});
 			Drawing.drawRect(_visualTickSpr, 0, 0, Settings.TRACKCONTROLS_WIDTH, Settings.TRACK_HEIGHT, 0xff0000, .9);
 			
-			_recordProgress = new ProgressBar({x:Settings.TRACKCONTROLS_WIDTH, y:10,
+			_recordProgress = new ProgressBar({x:Settings.TRACKCONTROLS_WIDTH, y:27,
 				background:new Embeds.recordProgressBack(), progress:new Embeds.recordProgress(),
 				grid:new Rectangle(9, 0, 22, 14)})
 			_recordProgress.visible = true;
-			_recordProgress.barWidth = Settings.WAVEFORM_WIDTH;
+			_recordProgress.width = Settings.WAVEFORM_WIDTH;
 
 			// refresh texts
 			refresh();
@@ -97,6 +97,7 @@ package editor_panel.tracks {
 			
 			// destroy components
 			_vuMeter.destroy();
+			_recordProgress.destroy();
 			
 			// remove precount timer
 			_removePrecountTimer();
@@ -194,9 +195,7 @@ package editor_panel.tracks {
 			if(_isRecording) {
 				Logger.debug('Stop recording.');
 				App.connection.streamService.stop();
-				_isRecording = false;
-				
-				dispatchEvent(new TrackEvent(TrackEvent.RECORD_STOP, true));
+				_isRecording = false;				
 			}
 			else if(_isPrecounting) {
 				Logger.debug('Stop precounting.');

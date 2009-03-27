@@ -271,7 +271,7 @@ package modals {
 			//_uploadBackSBM.x = _uploadProgressSBM.x = 
 			_progressBar.x = _filenameTF.x + _filenameTF.textWidth + 10;
 			//_uploadBackSBM.width = _progressWidth;
-			_progressBar.barWidth = 610 - _progressBar.x;   
+			_progressBar.width = 610 - _progressBar.x;   
 			//_uploadBackSBM.visible = _uploadProgressSBM.visible = true;
 			_progressBar.visible = true;
 			_titleTF.text = 'Uploading track';
