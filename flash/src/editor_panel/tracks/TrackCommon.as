@@ -112,7 +112,7 @@ package editor_panel.tracks {
 			addChildren($selectInstrument, selectText, selectIcon);
 			$selectInstrument.visible = false;
 
-			$killBtn = new Button({x:Settings.WAVEFORM_WIDTH - 15, y:5, skin:new Embeds.buttonKillTrack()}, Button.TYPE_NOSCALE_BUTTON);
+			$killBtn = new Button({x:Settings.WAVEFORM_WIDTH - 18, y:5, skin:new Embeds.buttonKillTrack()}, Button.TYPE_NOSCALE_BUTTON);
 			
 			$separator = new QBitmap({x:0, y:Settings.TRACK_HEIGHT - 2, embed:new Embeds.separatorTrack()});
 			

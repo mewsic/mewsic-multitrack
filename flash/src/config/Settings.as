@@ -13,7 +13,7 @@ package config {
 
 		
 		
-		public static const STAGE_WIDTH:uint = 978;
+		public static const STAGE_WIDTH:uint = 690;
 		
 		public static const WAVEFORM_WIDTH:uint = 432;
 		public static const TRACKCONTROLS_WIDTH:uint = 250;
