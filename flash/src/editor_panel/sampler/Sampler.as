@@ -97,7 +97,7 @@ package editor_panel.sampler {
 		 * Play sample.
 		 */
 		public function play():void {
-			_sampleChannel = _sampleSound.play(0);
+			_sampleChannel = _sampleSound.play(_pausedSamplePos);
 			_sampleChannel.soundTransform = _currentSoundTransform;
 			_isSamplePlaying = true;
 			_isSamplePaused = false;
@@ -351,6 +351,7 @@ package editor_panel.sampler {
 		private function _onSoundComplete(event:Event):void {
 			Logger.info(sprintf('Sample %s complete', _sampleID));
 			_isSamplePlaying = false;
+			_pausedSamplePos = 0;
 			_sampleChannel.removeEventListener(Event.SOUND_COMPLETE, _onSoundComplete);
 			dispatchEvent(new SamplerEvent(SamplerEvent.PLAYBACK_COMPLETE, true));
 		}
