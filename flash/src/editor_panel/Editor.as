@@ -464,11 +464,11 @@ package editor_panel {
 		 * @param event Event data
 		 */
 		private function _onUploadButtonClick(event:MouseEvent = null):void {
-			if(!App.connection.coreUserLoginStatus) {
-				// user is not logged in, don't allow him to display My List
-				App.messageModal.show({title:'Upload track', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
-				return;
-			}
+			//if(!App.connection.coreUserLoginStatus) {
+			//	// user is not logged in, don't allow him to display My List
+			//	App.messageModal.show({title:'Upload track', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
+			//	return;
+			//}
 			App.uploadTrackModal.show();
 			
 			// dispatch
