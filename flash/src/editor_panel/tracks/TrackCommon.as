@@ -56,7 +56,11 @@ package editor_panel.tracks {
 
 		protected var $avatarThumb:Thumbnail;
 		protected var $instrumentThumb:Thumbnail;
-		protected var $selectInstrument:QSprite;
+		private var _changeInstrumentButton:Button;
+
+		private var _selectInstrument:QSprite;
+		private var _selectInstrumentTF:QTextField;
+		private var _selectInstrumentButton:Button; 
 		
 		protected var $killBtn:Button;
 		protected var $separator:QBitmap;
@@ -99,26 +103,31 @@ package editor_panel.tracks {
 				filters:($trackType == STANDARD_TRACK) ? Filters.standardContainerContentTitle : Filters.recordContainerContentTitle,
 				sharpness:-25, thickness:-50});
 			
-			$avatarThumb = new Thumbnail({x:32, y:6});
-			$instrumentThumb = new Thumbnail({x:67, y:6});
+			$avatarThumb = new Thumbnail({x:32, y:3, showFrame:true});
+
+			$instrumentThumb = new Thumbnail({x:90, y:3});
+			_changeInstrumentButton = new Button({x:130, y:42, skin:new Embeds.iconSelectInstrument()}, Button.TYPE_NOSCALE_BUTTON);
+			_changeInstrumentButton.visible = false;
+
 			
-			$selectInstrument = new QSprite({x:70, y:15});
-			var selectText:QTextField = new QTextField({alpha:1, width:80, height:40, text:"Select",
+			_selectInstrument = new QSprite({x:97, y:20});
+			_selectInstrument.visible = false;
+
+			_selectInstrumentTF = new QTextField({alpha:1, width:80, height:40, text:"Select",
 				defaultTextFormat:Formats.standardContainerTitle, filters:Filters.recordContainerContentTitle,
 				sharpness:-25, thickness:-50});
 	
-			var selectIcon:QBitmap = new QBitmap({embed: new Embeds.iconSelectInstrument()});
+			_selectInstrumentButton = new Button({x:10, y:20, skin:new Embeds.iconSelectInstrument()}, Button.TYPE_NOSCALE_BUTTON); // XXX TEMPORARY
 			
-			addChildren($selectInstrument, selectText, selectIcon);
-			$selectInstrument.visible = false;
 
 			$killBtn = new Button({x:Settings.WAVEFORM_WIDTH - 18, y:5, skin:new Embeds.buttonKillTrack()}, Button.TYPE_NOSCALE_BUTTON);
-			
+
 			$separator = new QBitmap({x:0, y:Settings.TRACK_HEIGHT - 2, embed:new Embeds.separatorTrack()});
 			
 
 			// add to display list
-			addChildren(this, $separator, $avatarThumb, $instrumentThumb, $selectInstrument, $titleTF, $specsTagsTF);
+			addChildren(_selectInstrument, _selectInstrumentTF, _selectInstrumentButton);
+			addChildren(this, $separator, $avatarThumb, $instrumentThumb, _changeInstrumentButton, _selectInstrument, $titleTF, $specsTagsTF);
 			
 			// set user service
 			_userService = new UserService();
@@ -140,7 +149,8 @@ package editor_panel.tracks {
 				$avatarThumb.destroy();
 				$instrumentThumb.destroy();
 
-				removeChildren(this, $avatarThumb, $instrumentThumb, $selectInstrument, $titleTF, $specsTagsTF);
+				removeChildren(this, $avatarThumb, $instrumentThumb, _changeInstrumentButton, _selectInstrument, $titleTF, $specsTagsTF);
+				removeChildren(_selectInstrument, _selectInstrumentTF, _selectInstrumentButton);
 				removeChildren($waveform, $killBtn);
 			}
 			catch(err3:Error) {
@@ -232,10 +242,12 @@ package editor_panel.tracks {
 				var instrumentIconURL:String = App.connection.instrumentsService.byID($trackData.trackInstrumentID).instrumentIconURL;
 				$instrumentThumb.load(App.connection.serverPath + instrumentIconURL);
 				$instrumentThumb.visible = true;
-				$selectInstrument.visible = false;				
+				_changeInstrumentButton.visible = true;
+				_selectInstrument.visible = false;			
 			} else {
 				$instrumentThumb.visible = false;
-				$selectInstrument.visible = true;
+				_changeInstrumentButton.visible = false;
+				_selectInstrument.visible = true;
 			}
 		}
 

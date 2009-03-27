@@ -8,6 +8,8 @@ package controls {
 	import config.Settings;
 	
 	import de.popforge.utils.sprintf;
+
+	import flash.events.MouseEvent;
 	
 	import com.gskinner.utils.Rnd;
 	
@@ -51,13 +53,24 @@ package controls {
 			super(c);
 			
 			// add graphics
-			_frameBM = new QBitmap({embed:new Embeds.thumbnailFrameBD()});
-			_progressBM = new QBitmap({visible:false, embed:new Embeds.thumbnailProgressBD()});
-			_errorBM = new QBitmap({visible:false, embed:new Embeds.thumbnailErrorBD()});
+			_frameBM = new QBitmap({embed:new Embeds.thumbnailFrame()});
+			_progressBM = new QBitmap({visible:false, embed:new Embeds.thumbnailLoading()});
+			_errorBM = new QBitmap({visible:false, embed:new Embeds.thumbnailError()});
 			_contentBM = new QBitmap({visible:false, x:3, y:3});
+			_frameBM.alpha = 0;
+
+			if(c.showFrame != undefined) {
+				this.addEventListener(MouseEvent.MOUSE_OVER, function():void {
+					Tweener.addTween(_frameBM, {alpha:1, time:Settings.FADEIN_TIME, transition:'easeOutSine'});
+				});
+			
+				this.addEventListener(MouseEvent.MOUSE_OUT, function():void {
+					Tweener.addTween(_frameBM, {alpha:0, time:Settings.FADEOUT_TIME, transition:'easeOutSine'});
+				});
+			}
 
 			// add to display list
-			addChildren(this, _progressBM, _errorBM, _contentBM, _frameBM);
+			addChildren(this, _frameBM, _progressBM, _errorBM, _contentBM);
 			
 			// add BulkLoader
 			var id:String = sprintf('thumbnail.%u.%u', uint(new Date()), Rnd.integer(1000, 9999)); 
@@ -136,8 +149,8 @@ package controls {
 			_contentBM.alpha = 0;
 			_contentBM.visible = true;
 			_contentBM.bitmapData = _loader.getBitmapData(_contentID, true);
-			_contentBM.width = 30;
-			_contentBM.height = 30;
+			_contentBM.width = 50;
+			_contentBM.height = 50;
 			_contentBM.smoothing = true;
 
 			// fade in animation			

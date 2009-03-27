@@ -53,12 +53,12 @@ package editor_panel.tracks {
 			super(trackID, TrackCommon.STANDARD_TRACK);
 
 			// add components
-			_volumeSlider = new Slider({x:10, y:4, backSkin:new Embeds.backgroundSliderVolume(), thumbSkin:new Embeds.buttonSliderVolume(),
+			_volumeSlider = new Slider({x:4, y:4, backSkin:new Embeds.backgroundSliderVolume(), thumbSkin:new Embeds.buttonSliderVolume(),
 				marginBegin:5, marginEnd:5, wheelRatio:.015},
 				Slider.DIRECTION_VERTICAL);
 				
-			_volumeActive = new QBitmap({x:18, embed:new Embeds.backgroundVolumeActive()});
-			_volumeMuted = new QBitmap({x:18, embed:new Embeds.backgroundVolumeMuted()});
+			_volumeActive = new QBitmap({x:12, embed:new Embeds.backgroundVolumeActive()});
+			_volumeMuted = new QBitmap({x:12, embed:new Embeds.backgroundVolumeMuted()});
 
 			_background = new QBitmap({x:Settings.TRACKCONTROLS_WIDTH - 1, height:Settings.TRACK_HEIGHT - 1, y:1, embed:new Embeds.backgroundTrack()}); // Track lane background
 			_background.alpha = 0;

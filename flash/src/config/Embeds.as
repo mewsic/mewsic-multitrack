@@ -102,7 +102,14 @@ package config {
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='PlayheadDrag')]
 			public static var playHeadDrag:Class;
 			
-				
+		// thumbnails
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ThumbnailFrame')]
+			public static var thumbnailFrame:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ThumbnailLoading')]
+			public static var thumbnailLoading:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ThumbnailError')]
+			public static var thumbnailError:Class;
+	
 
 		///////////////////////////// OLD assets
 		// panels
