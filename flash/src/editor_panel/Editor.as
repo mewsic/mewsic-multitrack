@@ -21,18 +21,15 @@ package editor_panel {
 	
 	import editor_panel.containers.ContainerCommon;
 	import editor_panel.containers.ContainerEvent;
-	import editor_panel.Playhead;
 	import editor_panel.sampler.SamplerEvent;
 	import editor_panel.tracks.RecordTrack;
 	import editor_panel.tracks.TrackCommon;
 	import editor_panel.tracks.TrackEvent;
-	import editor_panel.waveform.Waveform;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.media.SoundMixer;
 	import flash.media.SoundTransform;
-	import flash.system.Capabilities;
 	import flash.utils.ByteArray;
 	
 	import modals.MessageModal;
@@ -43,8 +40,8 @@ package editor_panel {
 	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
 	
-	import remoting.data.TrackData;
 	import remoting.events.UserEvent;	
+	import remoting.data.TrackData;
 
 	
 	
@@ -90,8 +87,10 @@ package editor_panel {
 		// Controller toolbar
 		private var _controllerToolbar:Toolbar;
 		private var _controllerPlayBtn:Button;
+		private var _controllerPauseBtn:Button;
 		private var _controllerPlayTF:QTextField;
 		private var _controllerRecordBtn:Button;
+		private var _controllerRecordStopBtn:Button;
 		private var _controllerRecordTF:QTextField;
 		private var _controllerSearchBtn:Button;
 		private var _controllerSearchTF:QTextField;
@@ -120,7 +119,7 @@ package editor_panel {
 		//private var _beatClicker:BeatClicker;
 
 		private var _vuMeterBytes:ByteArray;
-		private var _isVUMeterEnabled:Boolean;
+		//private var _isVUMeterEnabled:Boolean;
 
 		private var _recordLimit:uint;
 		private var _isStreamDown:Boolean;
@@ -133,7 +132,7 @@ package editor_panel {
 		public function Editor() {
 			$panelID = 'panelEditor';
 			_vuMeterBytes = new ByteArray();
-			_isVUMeterEnabled = (Capabilities.version.indexOf('MAC') == -1);
+			//_isVUMeterEnabled = (Capabilities.version.indexOf('MAC') == -1);
 			
 			super();
 			
@@ -167,6 +166,9 @@ package editor_panel {
 
 			_controllerPlayBtn = new Button({width:78, height:49, iconOffset:10,
 				skin:new Embeds.buttonPlayLarge(), icon:new Embeds.glyphPlayLarge()});
+			_controllerPauseBtn = new Button({x:5, y:4, width:78, height:49, iconOffset:10,
+				skin:new Embeds.buttonPlayLarge(), icon:new Embeds.glyphPauseLarge()})
+			_controllerPauseBtn.visible = false;
 				
 			_controllerPlayTF = new QTextField({x:0, y:10, height:40, width:85,
 				defaultTextFormat:Formats.controllerText, filters:Filters.controllerText,
@@ -175,6 +177,10 @@ package editor_panel {
 
 			_controllerRecordBtn = new Button({width:78, height:49, iconOffset:8,
 				skin:new Embeds.buttonRecordLarge(), icon:new Embeds.glyphRecordLarge()});
+			_controllerRecordStopBtn = new Button({x:174, y:4, width:78, height:49, iconOffset:8,
+				skin:new Embeds.buttonRecordLarge(), icon:new Embeds.glyphStopLarge()});
+			_controllerRecordStopBtn.visible = false;
+
 				
 			_controllerRecordTF = new QTextField({x:0, y:5, height:50, width:85,
 				defaultTextFormat:Formats.controllerText, filters:Filters.controllerText,
@@ -197,11 +203,16 @@ package editor_panel {
 				sharpness:-25, thickness:-50, text:'Upload your instrument'}); 
 
 			_controllerToolbar.addChildRight(_controllerPlayBtn);
+			_controllerToolbar.addChild(_controllerPauseBtn);
 			_controllerToolbar.addChildRight(_controllerPlayTF);
+			
 			_controllerToolbar.addChildRight(_controllerRecordBtn);
+			_controllerToolbar.addChild(_controllerRecordStopBtn);
 			_controllerToolbar.addChildRight(_controllerRecordTF);
+
 			_controllerToolbar.addChildRight(_controllerSearchBtn);
 			_controllerToolbar.addChildRight(_controllerSearchTF);
+
 			_controllerToolbar.addChildRight(_controllerUploadBtn);
 			_controllerToolbar.addChildRight(_controllerUploadTF);
 
@@ -211,7 +222,7 @@ package editor_panel {
 			//_globalVolumeToolbar.addChildRight(_globalVolumeSlider);
 
 			// add global vu meter toolbar
-			_globalVUToolbar = new Toolbar({visible:_isVUMeterEnabled, x:650, y:0, width:35, height:35});
+			_globalVUToolbar = new Toolbar({visible:true,/*_isVUMeterEnabled,*/ x:650, y:0, width:35, height:35});
 			_globalVUMeter = new VUMeter({stereo:true, spacingV:-1, spacingH: 13, skin:new Embeds.vuMeter(), leds:7}, VUMeter.DIRECTION_VERTICAL);
 			_globalVUToolbar.addChildRight(_globalVUMeter);
 
@@ -267,8 +278,10 @@ package editor_panel {
 
 			// add controller toolbar buttons event listeners
 			_controllerPlayBtn.addEventListener(MouseEvent.CLICK, _onPlayButtonClick, false, 0, true);
-			_controllerSearchBtn.addEventListener(MouseEvent.CLICK, _onSearchButtonClick, false, 0, true);
+			_controllerPauseBtn.addEventListener(MouseEvent.CLICK, _onPauseButtonClick, false, 0, true);
 			_controllerRecordBtn.addEventListener(MouseEvent.CLICK, _onRecordButtonClick, false, 0, true);
+			_controllerRecordStopBtn.addEventListener(MouseEvent.CLICK, _onRecordStopButtonClick, false, 0, true);
+			_controllerSearchBtn.addEventListener(MouseEvent.CLICK, _onSearchButtonClick, false, 0, true);
 			_controllerUploadBtn.addEventListener(MouseEvent.CLICK, _onUploadButtonClick, false, 0, true);
 
 			// add playhead event listeners
@@ -352,26 +365,26 @@ package editor_panel {
 				return;
 			}
 			
-			switch(_state) {
-				case _STATE_STOPPED:
-					_state = _STATE_PLAYING;
-					play();
-					break;
-					
-				case _STATE_PLAYING:
-					_state = _STATE_PAUSED;
-					pause();
-					break;
-					
-				case _STATE_PAUSED:
-					_state = _STATE_PLAYING;
-					resume();
-					break;
-					
-				default:
-					Logger.warn('Machine error: should be in STOP, PLAY or PAUSE state, current: ' + _state);
-					return;
+			if(_state == _STATE_STOPPED) play()
+			else if(_state == _STATE_PAUSED) resume()
+			else {
+				Logger.warn('Machine error: should be in STOP, PLAY or PAUSE state, current: ' + _state);
+				return;
 			}
+
+			_state = _STATE_PLAYING;
+			_refreshVisual();	
+		}
+		
+		private function _onPauseButtonClick(event:MouseEvent = null):void {
+			if(_state == _STATE_PLAYING) {
+				pause();
+				_state = _STATE_PAUSED;
+
+				_refreshVisual();
+			} else {
+				Logger.warn('Machine error: should be in PLAY state');
+			}		
 		}
 
 		/**
@@ -386,40 +399,42 @@ package editor_panel {
 			//	App.messageModal.show({title:'Record track', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
 			//	return;
 			//}
-						
-			switch (_state) {
-				case _STATE_STOPPED:
-					// initialize microphone, when it is ready, the UserEvent.ALLOWED_MIKE
-					// event is dispatched
-					try {
-						App.connection.streamService.prepare();
-						App.connection.streamService.addEventListener(UserEvent.ALLOWED_MIKE, _onMicrophoneAllowed, false, 0, true);
-						App.connection.streamService.addEventListener(UserEvent.DENIED_MIKE, _onMicrophoneDenied, false, 0, true);
-	
-						if(_recordTrack == null)
-							_recordTrack = _recordContainer.createRecordTrack();
-
-					}
-					catch(err1:Error) {
-						// something is blatantly wrong
-						App.messageModal.show({title:'Record track', description:err1.message, buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
-						return;
-					}
-
-					_state = _STATE_WAIT_REC;
-					break;
 					
-				case _STATE_RECORDING:
-					_state = _STATE_STOPPED;
-					_recordTrack.stopRecording();
-					stop();
-					
-					break;
+			if(_state == _STATE_STOPPED) {	
+				// initialize microphone, when it is ready, the UserEvent.ALLOWED_MIKE
+				// event is dispatched
+				try {
+					App.connection.streamService.prepare();
+					App.connection.streamService.addEventListener(UserEvent.ALLOWED_MIKE, _onMicrophoneAllowed, false, 0, true);
+					App.connection.streamService.addEventListener(UserEvent.DENIED_MIKE, _onMicrophoneDenied, false, 0, true);
+
+					if(_recordTrack == null)
+						_recordTrack = _recordContainer.createRecordTrack();
+
+				}
+				catch(err1:Error) {
+					// something is blatantly wrong
+					App.messageModal.show({title:'Record track', description:err1.message, buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
+					return;
+				}
+
+				_state = _STATE_WAIT_REC;
+			} else {
+				Logger.warn("Machine error: should be in STOP state");
+			}
+			
+			_refreshVisual();
+		}
+		
+		private function _onRecordStopButtonClick(event:MouseEvent):void {
+			if(_state == _STATE_RECORDING) {
+				_state = _STATE_STOPPED;
+				_recordTrack.stopRecording();
+				stop();
+			} else {
+				Logger.warn("Machine error: should be in REC state");
 			}
 
-			//dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
-
-			// refresh visual
 			_refreshVisual();
 		}
 		
@@ -630,29 +645,40 @@ package editor_panel {
 			_recountSongLength();
 			
 			Logger.debug(sprintf('Current song length is %f ms', _milliseconds));
-			
+
 			// set buttons states
 			switch(_state) {
 				case _STATE_STOPPED:
 					// Set play active only if there's already a track loaded, enable all other buttons
+					_controllerPlayBtn.visible = true;
+					_controllerPauseBtn.visible = false;
+
+					_controllerRecordBtn.visible = true;
+					_controllerRecordStopBtn.visible = false;
+
 					_setButtonActive(_controllerPlayBtn, allTrackCount > 0);
 					_setButtonActive(_controllerRecordBtn, !App.connection.streamService.microphoneDenied);
 					_enableButton(_controllerSearchBtn);
 					_enableButton(_controllerUploadBtn);
+
 					
 					break;
 					
 				case _STATE_PLAYING:
-					// Set pause glyph on play button, disable record and upload button
-					// _setPauseGlyph()
+					// Show pause button, disable record and upload button
+					_controllerPlayBtn.visible = false;
+					_controllerPauseBtn.visible = true;
+
 					_disableButton(_controllerRecordBtn);
 					_enableButton(_controllerSearchBtn);
-					_enableButton(_controllerUploadBtn);
-					
+					_enableButton(_controllerUploadBtn);					
+
 					break;
 					
 				case _STATE_PAUSED:
-					// _setPayGlyph()
+					_controllerPlayBtn.visible = true;
+					_controllerPauseBtn.visible = false;
+
 					_enableButton(_controllerRecordBtn);
 					_enableButton(_controllerSearchBtn);
 					_enableButton(_controllerUploadBtn);
@@ -660,7 +686,9 @@ package editor_panel {
 					break;
 				
 				case _STATE_RECORDING:
-					// _setStopGlyph()
+					_controllerRecordBtn.visible = false;
+					_controllerRecordStopBtn.visible = true;
+
 					_disableButton(_controllerPlayBtn);
 					_disableButton(_controllerSearchBtn);
 					_disableButton(_controllerUploadBtn);
@@ -788,18 +816,19 @@ package editor_panel {
 					Logger.info('Song recording completed.');
 					_completedTracksCounter = 0;
 
-					_recordTrack.stopRecording(event);
+					_recordTrack.stopRecording(event);					
 				}
 			} else {
 				if(_completedTracksCounter == allTrackCount) {
 					Logger.info('Song playback completed.');
 					_completedTracksCounter = 0;
 			
-					_state = _STATE_STOPPED;
 					stop();
 				}
 			}
-			
+
+			_state = _STATE_STOPPED;
+			_refreshVisual();	
 		}
 
 		
@@ -865,11 +894,11 @@ package editor_panel {
 				_playhead.label = App.getTimeCode(currentPosition);
 			}
 						
-			if(_isVUMeterEnabled) {
+//			if(_isVUMeterEnabled) {
 				SoundMixer.computeSpectrum(_vuMeterBytes, false, 256);
 				_globalVUMeter.leftLevel = Math.abs(_vuMeterBytes.readFloat()) * 100;
 				_globalVUMeter.rightLevel = Math.abs(_vuMeterBytes.readFloat()) * 100;
-			}
+//			}
 		}
 
 		

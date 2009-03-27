@@ -12,17 +12,21 @@ package config {
 		
 		///////////////////////////////////// NEW assets
 		/// Controller bar buttons
-		// Play
+		// Play/pause
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonPlayLarge')]
 			public static var buttonPlayLarge:Class;
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='GlyphPlay')]
 			public static var glyphPlayLarge:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='GlyphPauseLarge')]
+			public static var glyphPauseLarge:Class;
 		
 		// Record
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonRecordLarge')]
 			public static var buttonRecordLarge:Class;
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='GlyphRecLarge')]
 			public static var glyphRecordLarge:Class;
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='GlyphStopLarge')]
+			public static var glyphStopLarge:Class;
 			
 		// Search
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonSearchLarge')]
