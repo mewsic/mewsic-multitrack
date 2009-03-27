@@ -6,6 +6,7 @@ package editor_panel.tracks {
 	import config.Embeds;
 	import config.Filters;
 	import config.Formats;
+	import config.Settings;
 	
 	import controls.Button;
 	import controls.Slider;
@@ -47,16 +48,11 @@ package editor_panel.tracks {
 		
 		
 		private var _vuMeter:VUMeter;
-		private var _recordBtn:Button;
-		private var _stopBtn:Button;
-		private var _volumeSlider:Slider;
 		private var _isRecording:Boolean;
 		private var _precountTimer:Timer;
 		private var _precountSound:Sound;
 		private var _isPrecounting:Boolean;
-		private var _recordOverlayBM:QBitmap;
 		private var _recordOverlaySpr:QSprite;
-		private var _statusTF:QTextField;
 		private var _startTime:uint;
 		private var _syncedRecordTimeout:uint;
 
@@ -71,31 +67,19 @@ package editor_panel.tracks {
 
 			// add components
 			_vuMeter = new VUMeter({x:9, y:2, leds:10, spacingV:0, stereo:false, skin:new Embeds.vuMeter()}, VUMeter.DIRECTION_VERTICAL);
-			_volumeSlider = new Slider({x:350, backSkin:new Embeds.sliderRecordContainerVolumeBD(), thumbSkin:new Embeds.recordContainerVolumeThumbBD, marginBegin:5, marginEnd:5, wheelRatio:.015}, Slider.DIRECTION_VERTICAL);
-			_recordBtn = new Button({x:472, y:12, width:36, height:21, skin:new Embeds.buttonRedBD, icon:new Embeds.glyphRecordBD(), textOutFilters:Filters.buttonRedLabel, textOverFilters:Filters.buttonRedLabel, textPressFilters:Filters.buttonRedLabel, textOutOffsY:-1, textOverOffsY:-1, textPressOffsY:0});
-			_stopBtn = new Button({visible:false, x:472, y:12, width:36, height:21, skin:new Embeds.buttonRedBD, icon:new Embeds.glyphStop2BD(), textOutFilters:Filters.buttonRedLabel, textOverFilters:Filters.buttonRedLabel, textPressFilters:Filters.buttonRedLabel, textOutOffsY:-1, textOverOffsY:-1, textPressOffsY:0});
 			_recordOverlaySpr = new QSprite({alpha:0, visible:false, blendMode:BlendMode.HARDLIGHT});
-			_recordOverlayBM = new QBitmap({embed:new Embeds.recordContainerRecordBD()});
-			_statusTF = new QTextField({x:50, y:9, width:90, height:32, defaultTextFormat:Formats.recordTrackStatus});
 
 			// refresh texts
 			refresh();
 
 			// add to display list
-			addChildren(_recordOverlaySpr, _recordOverlayBM);
-			addChildren(this, _vuMeter, _volumeSlider, _recordBtn, _recordOverlaySpr, _stopBtn, _statusTF);
+			addChildren(this, _vuMeter, _recordOverlaySpr);
 
 			// add sampler
 			$addHandlers();
 			
 			// add event listeners
-			_volumeSlider.addEventListener(SliderEvent.REFRESH, _onVolumeSliderRefresh, false, 0, true);
-			_recordBtn.addEventListener(MouseEvent.CLICK, startRecording, false, 0, true);
-			_stopBtn.addEventListener(MouseEvent.CLICK, stopRecording, false, 0, true);
 			this.addEventListener(Event.ENTER_FRAME, _onEnterFrame, false, 0, true);
-			
-			// set states and refresh
-			_volumeSlider.thumbPos = 1 - .9;
 		}
 
 		
@@ -105,19 +89,13 @@ package editor_panel.tracks {
 		 */
 		override public function destroy():void {
 			// remove event listeners
-			_volumeSlider.removeEventListener(SliderEvent.REFRESH, _onVolumeSliderRefresh);
-			_recordBtn.removeEventListener(MouseEvent.CLICK, startRecording);
-			_stopBtn.removeEventListener(MouseEvent.CLICK, stopRecording);
 			this.removeEventListener(Event.ENTER_FRAME, _onEnterFrame);
 			
 			// remove from display list
-			removeChildren(_recordOverlaySpr, _recordOverlayBM);
-			removeChildren(this, _vuMeter, _volumeSlider, _recordBtn, _recordOverlaySpr, _stopBtn, _statusTF);
+			removeChildren(this, _vuMeter, _recordOverlaySpr);
 			
 			// destroy components
-			_volumeSlider.destroy();
 			_vuMeter.destroy();
-			_recordBtn.destroy();
 			
 			// remove precount timer
 			_removePrecountTimer();
@@ -132,9 +110,9 @@ package editor_panel.tracks {
 		 * @return Current sample position in ms
 		 */
 		override public function get position():uint {
-			var p:uint = uint(new Date()) - _startTime;
-			$waveform.recordPosition = p;
-			return(p);
+			var pos:uint = _startTime ?  uint(new Date()) - _startTime : 0;
+			$waveform.recordPosition = App.editor.msecToStageX(pos); // UGLY, a getter should not have side effects!
+			return(pos);
 		}
 		
 		
@@ -187,16 +165,12 @@ package editor_panel.tracks {
 		 * @param event Event data
 		 */		
 		public function startRecording(event:Event = null):void {
-			var precountDelay:uint = 60000 / App.BPM / 2;
+			var precountDelay:uint = 60000 / Settings.BPM / 2;
 			var syncDelay:int = precountDelay * 7;
 			
-			Logger.debug(sprintf('Start precounting (%u BPM, record=%u)', App.BPM, precountDelay));
+			Logger.debug(sprintf('Start precounting (%u BPM, record=%u)', Settings.BPM, precountDelay));
 			
-			_stopBtn.visible = true;
-			_recordBtn.visible = false;
 			_isPrecounting = true;
-			_statusTF.textColor = 0xFFFFFF;
-			_statusTF.text = 'GET\nREADY';
 			
 			_addPrecountTimer(); 
 			
@@ -229,11 +203,8 @@ package editor_panel.tracks {
 				_isPrecounting = false;
 			}
 			
-			_stopBtn.visible = false;
-			_recordBtn.visible = true;
-			_statusTF.textColor = 0x485C66;
-			_statusTF.text = 'ENCODING\nTRACK';
-			
+			_startTime = 0;
+
 			Tweener.removeTweens(_recordOverlaySpr);
 			_recordOverlaySpr.alpha = 0;
 			_recordOverlaySpr.visible = false;
@@ -246,21 +217,7 @@ package editor_panel.tracks {
 		private function _onEnterFrame(event:Event):void {
 			_vuMeter.level = App.connection.streamService.recordLevel;
 		}
-
 		
-		
-		private function _onVolumeSliderRefresh(event:SliderEvent):void {
-			try {
-				var v:Number = 1 - event.thumbPos;
-				$sampler.volume = v;
-				$trackData.trackVolume = v;
-				dispatchEvent(new TrackEvent(TrackEvent.VOLUME_CHANGE, false, false, {volume:v}));
-			}
-			catch(err:Error) {
-				// sampler may be not initialized
-			}
-		}
-
 		
 		
 		private function _onPrecountTimer(event:TimerEvent):void {
@@ -287,8 +244,6 @@ package editor_panel.tracks {
 			clearTimeout(_syncedRecordTimeout);
 			
 			_isRecording = true;
-			_statusTF.textColor = 0xFFFFFF;
-			_statusTF.text = 'RECORDING\nTRACK';
 			
 			Tweener.removeTweens(_recordOverlaySpr);
 			_recordOverlaySpr.alpha = .25;

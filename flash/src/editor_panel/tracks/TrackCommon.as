@@ -8,6 +8,7 @@ package editor_panel.tracks {
 	import config.Formats;
 	import config.Settings;
 	
+	import controls.Button;
 	import controls.Thumbnail;
 	
 	import de.popforge.utils.sprintf;
@@ -56,6 +57,8 @@ package editor_panel.tracks {
 		protected var $avatarThumb:Thumbnail;
 		protected var $instrumentThumb:Thumbnail;
 		protected var $selectInstrument:QSprite;
+		
+		protected var $killBtn:Button;
 		
 		protected var $trackData:TrackData;
 		protected var $trackType:String;
@@ -109,6 +112,8 @@ package editor_panel.tracks {
 			addChildren($selectInstrument, selectText, selectIcon);
 			$selectInstrument.visible = false;
 
+			$killBtn = new Button({x:Settings.WAVEFORM_WIDTH - 10, y:5, skin:new Embeds.buttonKillTrack()}, Button.TYPE_NOSCALE_BUTTON);
+
 			// add to display list
 			addChildren(this, /*$backBM,*/ $avatarThumb, $instrumentThumb, $selectInstrument, $titleTF, $specsTagsTF);
 			
@@ -131,7 +136,9 @@ package editor_panel.tracks {
 			try {
 				$avatarThumb.destroy();
 				$instrumentThumb.destroy();
-				removeChildren(this, /*$backBM,*/ $avatarThumb, $instrumentThumb, $titleTF, $specsTagsTF);
+
+				removeChildren(this, $avatarThumb, $instrumentThumb, $selectInstrument, $titleTF, $specsTagsTF);
+				removeChildren($waveform, $killBtn);
 			}
 			catch(err3:Error) {
 				Logger.warn(sprintf('Error removing graphics for %s:\n%s', toString(), err3.message));
@@ -354,7 +361,8 @@ package editor_panel.tracks {
 			
 			// add to display list
 			addChild($waveform);
-			
+			addChildren($waveform, $killBtn);
+
 			// add event listeners
 			$sampler.addEventListener(SamplerEvent.SAMPLE_PROGRESS, _onSamplerProgress, false, 0, true);
 			$sampler.addEventListener(SamplerEvent.SAMPLE_DOWNLOADED, _onSamplerDownloaded, false, 0, true);

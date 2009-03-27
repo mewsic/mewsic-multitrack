@@ -15,8 +15,13 @@ package config {
 		
 		public static const STAGE_WIDTH:uint = 978;
 		public static const WAVEFORM_WIDTH:uint = 432;
-		public static const TRACKCONTROLS_WIDTH:uint = 250; 
+		public static const TRACKCONTROLS_WIDTH:uint = 250;
 		
+		public static const TRACK_HEIGHT:uint = 52;
+		public static const TRACK_MARGIN:uint = 3;
+		public static const TRACK_CONTAINER_HEADER_HEIGHT:uint = 0;
+
+		public static const BPM:uint = 60;
 		
 		public static const START_STAGE_HEIGHT:uint = 40;
 		public static const STAGE_HEIGHT_CHANGE_TIME:Number = .6;

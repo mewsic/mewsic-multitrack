@@ -111,6 +111,11 @@ package editor_panel.sampler {
 		 * Stop sample.
 		 */
 		public function stop():void {
+			if(!(_isSamplePlaying && _isSamplePaused)) {
+				Logger.debug(sprintf("Sample %s is not playing", _sampleID));
+				return;
+			}
+ 
 			_sampleChannel.removeEventListener(Event.SOUND_COMPLETE, _onSoundComplete);
 			_sampleChannel.stop();
 			_isSamplePlaying = false;

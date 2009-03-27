@@ -55,8 +55,6 @@ package application {
 		
 		
 		private static const _ERROR_STAGE_HEIGHT:Number = 400;
-
-		public static const BPM:uint = 120;
 		
 		public static var bulkLoader:BulkLoader;
 		public static var connection:Connection;

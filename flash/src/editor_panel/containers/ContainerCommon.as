@@ -45,13 +45,7 @@ package editor_panel.containers {
 	public class ContainerCommon extends MorphSprite {
 
 
-		private static const TRACK_HEIGHT:uint = 52;
-		private static const TRACK_MARGIN:uint = 3;
-		private static const HEADER_HEIGHT:uint = 0;
-		
 		private var _trackSpr:QSprite;
-		private var _viewportBackBM:QBitmap;
-		private var _viewportGradsBM:QBitmap;
 		private var _trackList:Array = new Array();
 		private var _contentHeight:Number = 0;
 		private var _type:String;
@@ -76,8 +70,6 @@ package editor_panel.containers {
 
 			// add graphics
 			_trackSpr = new QSprite();
-			_viewportBackBM = new QBitmap({x:Settings.TRACKCONTROLS_WIDTH, height:1200, embed:new Embeds.viewportBackBD()}); // Track lane background
-			_viewportGradsBM = new QBitmap({x:Settings.TRACKCONTROLS_WIDTH, height:1200, embed:new Embeds.viewportGradsBD()}); // Track lane gradient
 
 			// set visual properties
 			$morphTime = Settings.STAGE_HEIGHT_CHANGE_TIME;
@@ -91,7 +83,7 @@ package editor_panel.containers {
 
 			// intro animation
 			Tweener.addTween(this, {delay:.05, onComplete:function():void {
-				addChildren(this, _viewportBackBM, _viewportGradsBM, _trackSpr);
+				addChildren(this, _trackSpr);
 				_recountHeight();
 			}});
 		}
@@ -254,7 +246,7 @@ package editor_panel.containers {
 			}
 
 			// set visual properties
-			t.y = ContainerCommon.HEADER_HEIGHT + _trackList.length * ContainerCommon.TRACK_HEIGHT;
+			t.y = Settings.TRACK_CONTAINER_HEADER_HEIGHT + _trackList.length * Settings.TRACK_HEIGHT;
 			t.alpha = 0;
 			
 			// add to the lists
@@ -393,7 +385,7 @@ package editor_panel.containers {
 			var idx:uint = 0;
 			for each(var s:TrackCommon in _trackList) {
 				if(s.isEnabled) {
-					var my:uint = ContainerCommon.HEADER_HEIGHT + idx * ContainerCommon.TRACK_HEIGHT;
+					var my:uint = Settings.TRACK_CONTAINER_HEADER_HEIGHT + idx * Settings.TRACK_HEIGHT;
 					Tweener.addTween(s, {y:my, time:$morphTime, rounded:true, transition:'easeInOutQuad'});
 					idx++;
 				}
@@ -603,11 +595,11 @@ package editor_panel.containers {
 		 * Recount height.
 		 */
 		private function _recountHeight():void {
-			var h:Number = ContainerCommon.HEADER_HEIGHT;
+			var h:Number = Settings.TRACK_CONTAINER_HEADER_HEIGHT;
 
 			for each(var t:TrackCommon in _trackList) {
 				try {
-					if(t.isEnabled) h += ContainerCommon.TRACK_HEIGHT + ContainerCommon.TRACK_MARGIN;
+					if(t.isEnabled) h += Settings.TRACK_HEIGHT + Settings.TRACK_MARGIN;
 				}
 				catch(err:Error) {
 					Logger.warn(sprintf('Problem trying to recount height of %s:\n%s', t.toString(), err.message));

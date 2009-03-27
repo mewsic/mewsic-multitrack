@@ -112,18 +112,12 @@ package editor_panel {
 		private var _standardContainer:ContainerCommon;
 		private var _recordContainer:ContainerCommon;
 
-		private var _width:uint;
 		private var _milliseconds:uint;
 
 		private var _completedTracksCounter:uint;
 		private var _recordTrack:RecordTrack;
 
-		private var _beatClicker:BeatClicker;
-
-		private var _lastViewportBang:int;
-		private var _isStillSeekBtnPressed:Boolean;
-		private var _stillSeekTimeout:uint;
-		private var _stillSeekInterval:uint;
+		//private var _beatClicker:BeatClicker;
 
 		private var _vuMeterBytes:ByteArray;
 		private var _isVUMeterEnabled:Boolean;
@@ -158,7 +152,7 @@ package editor_panel {
 
 			// add modules
 			_playhead = new Playhead({x:Settings.TRACKCONTROLS_WIDTH, y:_OFF_PLAYHEAD, mask:_playheadMaskSpr});
-			_beatClicker = new BeatClicker();
+			//_beatClicker = new BeatClicker();
 
 			// add parts
 			_headerSpr = new MorphSprite(); // Header container			
@@ -375,7 +369,7 @@ package editor_panel {
 					break;
 					
 				default:
-					Logger.warn('Machine error: should be in STOP, PLAY or PAUSE state');
+					Logger.warn('Machine error: should be in STOP, PLAY or PAUSE state, current: ' + _state);
 					return;
 			}
 		}
@@ -417,6 +411,7 @@ package editor_panel {
 					
 				case _STATE_RECORDING:
 					_state = _STATE_STOPPED;
+					_recordTrack.stopRecording();
 					stop();
 					
 					break;
@@ -495,7 +490,7 @@ package editor_panel {
 			Logger.info('Play!');
 
 			_standardContainer.play();
-			_beatClicker.play(); // XXX REMOVE ME
+//			_beatClicker.play(); // XXX REMOVE ME
 		}
 
 		
@@ -507,8 +502,8 @@ package editor_panel {
 			Logger.info('Stop playback.');
 	
 			_standardContainer.stop();
-			_recordContainer.stop();
-			_beatClicker.stop(); // XXX
+			//_recordContainer.stop();
+//			_beatClicker.stop(); // XXX
 		}
 
 		
@@ -520,7 +515,7 @@ package editor_panel {
 			Logger.info('Pause playback.');
 
 			_standardContainer.pause();
-			_beatClicker.pause();
+//			_beatClicker.pause();
 		}
 
 		
@@ -531,7 +526,7 @@ package editor_panel {
 		public function resume(event:Event = null):void {
 			Logger.info('Resume playback.');
 			_standardContainer.resume();
-			_beatClicker.resume();
+//			_beatClicker.resume();
 		}
 
 		
@@ -546,7 +541,7 @@ package editor_panel {
 			if(p > _milliseconds) p = 0;
 			
 			_standardContainer.seek(p);
-			_beatClicker.seek(p);
+//			_beatClicker.seek(p);
 		}
 
 		
@@ -559,7 +554,7 @@ package editor_panel {
 			var p:uint = currentPosition + _SEEK_STEP;
 			if(p > _milliseconds) p = _milliseconds;
 			_standardContainer.seek(p);
-			_beatClicker.seek(p);
+//			_beatClicker.seek(p);
 		}
 
 		
@@ -571,7 +566,7 @@ package editor_panel {
 			Logger.info(sprintf('Seek playback (%u ms).', value));
 			
 			_standardContainer.seek(value);
-			_beatClicker.seek(value);
+//			_beatClicker.seek(value);
 			
 			// refresh visual
 			_refreshVisual();			
@@ -586,53 +581,8 @@ package editor_panel {
 			_disableButton(_controllerRecordBtn);
 		}
 
-		
-		
-		public function alterMasterVolume(step:Number):void {
-			_globalVolumeSlider.thumbPos += step;
-		}
 
 		
-		
-		public function alterPosition(step:Number):void {
-			var p:uint = currentPosition + step * 1000;
-			if(p < 0) p = 0;
-			if(p > _milliseconds) p = 0;
-			
-			_standardContainer.seek(p);
-			_beatClicker.seek(p);
-			
-			// refresh visual
-			_refreshVisual();
-		}
-
-		
-
-		/*		
-		public function createAndRecord():void {
-			if(_isRecording) return;
-			if(_isPlaying) stop();
-			if(_recordTrack == null) _onRecordTrackBtnClick();
-			else _recordTrack.startRecording(); 
-		}
-		*/
-
-		
-		
-		/*		
-		public function export():void {
-			if(allTrackCount > 0 && !_isPlaying && !_isRecording) _onExportSongBtnClick();
-		}
-
-		
-		
-		public function save():void {
-			if(allTrackCount > 0 && !_isPlaying && !_isRecording) _onSaveSongBtnClick();
-		}
-		*/
-
-
-
 		/**
 		 * Get count of all tracks.
 		 * @return All tracks count
@@ -651,7 +601,7 @@ package editor_panel {
 		
 		public function get currentPosition():uint {
 			if(_recordContainer.trackCount > 0) {
-				// recording first track
+				// recording first track FIXME!
 				if(_state == _STATE_PLAYING) return _recordContainer.position;
 				return 0;
 			} else {
@@ -679,7 +629,6 @@ package editor_panel {
 			// recound song length from core song data
 			_recountSongLength();
 			
-			Logger.debug(sprintf('Current maximal waveform width is %d px', _width));
 			Logger.debug(sprintf('Current song length is %f ms', _milliseconds));
 			
 			// set buttons states
@@ -779,7 +728,6 @@ package editor_panel {
 					_milliseconds = Math.max(_milliseconds, td.trackMilliseconds);
 				}
 			}
-			_width = _milliseconds / 100;
 		}
 
 		
@@ -839,17 +787,19 @@ package editor_panel {
 				if(_completedTracksCounter == allTrackCount - 1) {
 					Logger.info('Song recording completed.');
 					_completedTracksCounter = 0;
-					_state = _STATE_STOPPED;
-					stop();
+
+					_recordTrack.stopRecording(event);
 				}
 			} else {
 				if(_completedTracksCounter == allTrackCount) {
 					Logger.info('Song playback completed.');
 					_completedTracksCounter = 0;
+			
 					_state = _STATE_STOPPED;
 					stop();
 				}
 			}
+			
 		}
 
 		
@@ -884,7 +834,7 @@ package editor_panel {
 				msec = _recordTrack.position;
 				
 				// recount song length from core song data
-				_recountSongLength();				
+				_recountSongLength();
 			} else {
 				// playback mode
 				msec = currentPosition;
@@ -961,51 +911,5 @@ package editor_panel {
 
 		
 		
-		/*
-		
-		private function _onRewindDown(event:MouseEvent):void {
-			if(!_isStillSeekBtnPressed) {
-				_isStillSeekBtnPressed = true;
-				_stillSeekTimeout = setTimeout(function():void {
-					_stillSeekInterval = setInterval(function():void {
-						seek(currentPosition - _STILL_SEEK_STEP);
-					}, _STILL_SEEK_INTERVAL);
-				}, _STILL_SEEK_TIMEOUT);
-			}
-		}
-
-		
-		
-		private function _onForwardDown(event:MouseEvent):void {
-			if(!_isStillSeekBtnPressed) {
-				_isStillSeekBtnPressed = true;
-				_stillSeekTimeout = setTimeout(function():void {
-					_stillSeekInterval = setInterval(function():void {
-						seek(currentPosition + _STILL_SEEK_STEP);
-					}, _STILL_SEEK_INTERVAL);
-				}, _STILL_SEEK_TIMEOUT);
-			}
-		}
-
-		
-		
-		private function _onRewindUp(event:MouseEvent):void {
-			if(_isStillSeekBtnPressed) {
-				_isStillSeekBtnPressed = false;
-				clearTimeout(_stillSeekTimeout);
-				clearInterval(_stillSeekInterval);
-			}
-		}
-
-		
-		
-		private function _onForwardUp(event:MouseEvent):void {
-			if(_isStillSeekBtnPressed) {
-				_isStillSeekBtnPressed = false;
-				clearTimeout(_stillSeekTimeout);
-				clearInterval(_stillSeekInterval);
-			}
-		}
-		*/
 	}
 }

@@ -89,6 +89,11 @@ package config {
 		// VU Meter
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='VuMeter')]
 			public static var vuMeter:Class;
+			
+			
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonTrackDelete')]
+			public static var buttonKillTrack:Class;
+				
 
 		///////////////////////////// OLD assets
 		// panels

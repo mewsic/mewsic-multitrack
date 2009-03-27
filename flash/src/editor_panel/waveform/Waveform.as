@@ -42,9 +42,8 @@ package editor_panel.waveform {
 
 				
 		
-		private var _backSpr:QSprite;
 		private var _waveformBackBM:QBitmap;
-		private var _waveformFrontMaskSpr:QSprite;
+		private var _waveformLoadingSpr:QSprite;
 		private var _waveformFrontBM:QBitmap;
 		private var _waveformSpr:QSprite;
 		private var _waveformMaskSpr:QSprite;
@@ -71,16 +70,15 @@ package editor_panel.waveform {
 			
 			var id:String = sprintf('waveform.%u.%u', uint(new Date()), Rnd.integer(1000, 9999));			
 			_waveformID = sprintf('%s.waveform', id);
-			
-			// add background
-			_backSpr = new QSprite({alpha:.3});
-			
+
 			// add waveform
 			_waveformMaskSpr = new QSprite();
 			_waveformSpr = new QSprite({alpha:0, mask:_waveformMaskSpr});
-			_waveformFrontMaskSpr = new QSprite({x:-2880});
+			_waveformLoadingSpr = new QSprite({x:-2880});
+			
 			_waveformBackBM = new QBitmap({blendMode:BlendMode.MULTIPLY, y:-1, alpha:.1});
-			_waveformFrontBM = new QBitmap({blendMode:BlendMode.MULTIPLY, y:-1, mask:_waveformFrontMaskSpr, alpha:.5});
+			_waveformFrontBM = new QBitmap({blendMode:BlendMode.MULTIPLY, y:-1, mask:_waveformLoadingSpr, alpha:.5});
+			
 			_waveformRecordSpr = new QSprite({visible:(_type == TrackCommon.RECORD_TRACK)});
 			
 			// add preloader info
@@ -89,15 +87,13 @@ package editor_panel.waveform {
 			_preloadInfoLabelTF = new QTextField({defaultTextFormat:Formats.viewportPreloadInfoLabel, text:'0 %', width:25, autoSize:TextFieldAutoSize.LEFT});
 
 			// drawing
-			Drawing.drawRect(_backSpr, 0, 0, 447, 24, 0xFFFFFF);
-			Drawing.drawRect(_backSpr, 0, 25, 447, 24, 0xFFFFFF);
 			Drawing.drawRect(_waveformMaskSpr, 0, 0, 447, 49);
 			Drawing.drawRect(_waveformRecordSpr, 0, 0, 1, 49, 0xB90616);
 
 			// add to display list
-			addChildren(_waveformSpr, _waveformBackBM, _waveformFrontBM, _waveformFrontMaskSpr, _waveformRecordSpr);
+			addChildren(_waveformSpr, _waveformBackBM, _waveformFrontBM, _waveformLoadingSpr, _waveformRecordSpr);
 			addChildren(_preloadInfoSpr, _preloadInfoBackBM, _preloadInfoLabelTF);
-			addChildren(this, _backSpr, _waveformSpr, _waveformMaskSpr, _preloadInfoSpr);
+			addChildren(this, _waveformSpr, _waveformMaskSpr, _preloadInfoSpr);
 			
 			// fade in preload info
 			Tweener.addTween(_preloadInfoSpr, {delay:Settings.FADEIN_TIME, time:Settings.FADEIN_TIME, alpha:1, transition:'easeOutSine'});
@@ -110,9 +106,9 @@ package editor_panel.waveform {
 		 */
 		public function destroy():void {
 			// remove from display list
-			removeChildren(_waveformSpr, _waveformBackBM, _waveformFrontBM, _waveformFrontMaskSpr, _waveformRecordSpr);
+			removeChildren(_waveformSpr, _waveformBackBM, _waveformFrontBM, /*_waveformFrontMaskSpr,*/ _waveformRecordSpr);
 			removeChildren(_preloadInfoSpr, _preloadInfoBackBM, _preloadInfoLabelTF);
-			removeChildren(this, _backSpr, _waveformSpr, _waveformMaskSpr, _preloadInfoSpr);
+			removeChildren(this, _waveformSpr, _waveformMaskSpr, _preloadInfoSpr);
 			
 			_bitmap.dispose();
 		}
@@ -156,7 +152,7 @@ package editor_panel.waveform {
 		
 		public function set recordPosition(value:uint):void {
 			_waveformSpr.alpha = 1;
-			_waveformRecordSpr.width = Math.round(value / 100);
+			_waveformRecordSpr.width = value;
 		}
 
 		
@@ -170,7 +166,7 @@ package editor_panel.waveform {
 			_bitmap = App.bulkLoader.getBitmapData(_waveformID, true).clone();
 
 			// draw preloader mask
-			Drawing.drawRect(_waveformFrontMaskSpr, 0, 0, Settings.WAVEFORM_WIDTH, 49, 0xFF0000, .3);
+			Drawing.drawRect(_waveformLoadingSpr, 0, 0, Settings.WAVEFORM_WIDTH, 49, 0xFF0000, .3);
 			
 			Logger.debug(sprintf('Waveform %s loaded, width=%d', _waveformID, _waveformWidth));
 			_drawWaveform();	
@@ -208,8 +204,8 @@ package editor_panel.waveform {
 			_preloadInfoLabelTF.text = sprintf('%u %%', p * 100);
 			
 			// animation
-			Tweener.removeTweens(_waveformFrontMaskSpr);
-			Tweener.addTween(_waveformFrontMaskSpr, {x:px, time:Settings.FADEIN_TIME});
+			Tweener.removeTweens(_waveformLoadingSpr);
+			Tweener.addTween(_waveformLoadingSpr, {x:px, time:Settings.FADEIN_TIME});
 						
 			if(p >= 1) {
 				// remove preloader info
