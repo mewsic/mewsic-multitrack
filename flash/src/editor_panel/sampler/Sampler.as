@@ -41,7 +41,6 @@ package editor_panel.sampler {
 		private var _isMuted:Boolean;
 		private var _unmutedVolume:Number;
 		private var _milliseconds:uint;
-		private var _type:String;
 
 		
 		
@@ -49,8 +48,7 @@ package editor_panel.sampler {
 		 * Constructor.
 		 * @param o MorphSprite config Object
 		 */
-		public function Sampler(t:String) {
-			_type = t;
+		public function Sampler() {
 			
 			var id:String = sprintf('sampler.%u.%u', uint(new Date()), Rnd.integer(1000, 9999));			
 			_sampleID = sprintf('%s.sample', id);

@@ -4,20 +4,16 @@ package editor_panel.tracks {
 	import caurina.transitions.Tweener;
 	
 	import config.Embeds;
-	import config.Filters;
-	import config.Formats;
 	import config.Settings;
 	
-	import controls.Button;
-	import controls.Slider;
-	import controls.SliderEvent;
+	import controls.ProgressBar;
 	import controls.VUMeter;
 	
 	import de.popforge.utils.sprintf;
 	
 	import flash.display.BlendMode;
+	import flash.geom.Rectangle;
 	import flash.events.Event;
-	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.media.Sound;
 	import flash.utils.Timer;
@@ -27,9 +23,8 @@ package editor_panel.tracks {
 	import modals.MessageModal;
 	
 	import org.osflash.thunderbolt.Logger;
-	import org.vancura.graphics.QBitmap;
+	import org.vancura.graphics.Drawing;
 	import org.vancura.graphics.QSprite;
-	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
 	import org.vancura.util.removeChildren;	
 
@@ -48,11 +43,15 @@ package editor_panel.tracks {
 		
 		
 		private var _vuMeter:VUMeter;
+		private var _vuMeterEnabled:Boolean;
+		
+		private var _recordProgress:ProgressBar;
+		private var _visualTickSpr:QSprite;
+
 		private var _isRecording:Boolean;
 		private var _precountTimer:Timer;
 		private var _precountSound:Sound;
 		private var _isPrecounting:Boolean;
-		private var _recordOverlaySpr:QSprite;
 		private var _startTime:uint;
 		private var _syncedRecordTimeout:uint;
 
@@ -63,23 +62,26 @@ package editor_panel.tracks {
 		 * @param trackID Track ID
 		 */
 		public function RecordTrack(trackID:uint) {
-			super(trackID, TrackCommon.RECORD_TRACK);
+			super(trackID, {killBtnSkin:new Embeds.buttonKillTrack()}); // XXX FIX ASSET
 
 			// add components
 			_vuMeter = new VUMeter({x:9, y:2, leds:10, spacingV:0, stereo:false, skin:new Embeds.vuMeter()}, VUMeter.DIRECTION_VERTICAL);
-			_recordOverlaySpr = new QSprite({alpha:0, visible:false, blendMode:BlendMode.HARDLIGHT});
+			_visualTickSpr = new QSprite({alpha:0, visible:false, blendMode:BlendMode.HARDLIGHT});
+			Drawing.drawRect(_visualTickSpr, 0, 0, Settings.TRACKCONTROLS_WIDTH, Settings.TRACK_HEIGHT, 0xff0000, .9);
+			
+			_recordProgress = new ProgressBar({x:Settings.TRACKCONTROLS_WIDTH, y:10,
+				background:new Embeds.recordProgressBack(), progress:new Embeds.recordProgress(),
+				grid:new Rectangle(9, 0, 22, 14)})
+			_recordProgress.visible = true;
+			_recordProgress.barWidth = Settings.WAVEFORM_WIDTH;
 
 			// refresh texts
 			refresh();
 
 			// add to display list
-			addChildren(this, _vuMeter, _recordOverlaySpr);
+			addChildren(this, _vuMeter, _visualTickSpr, _recordProgress);
 
-			// add sampler
-			$addHandlers();
-			
-			// add event listeners
-			this.addEventListener(Event.ENTER_FRAME, _onEnterFrame, false, 0, true);
+			enableVuMeter();			
 		}
 
 		
@@ -88,11 +90,10 @@ package editor_panel.tracks {
 		 * Destructor.
 		 */
 		override public function destroy():void {
-			// remove event listeners
-			this.removeEventListener(Event.ENTER_FRAME, _onEnterFrame);
+			disableVuMeter();
 			
 			// remove from display list
-			removeChildren(this, _vuMeter, _recordOverlaySpr);
+			removeChildren(this, _vuMeter, _visualTickSpr, _recordProgress);
 			
 			// destroy components
 			_vuMeter.destroy();
@@ -111,7 +112,7 @@ package editor_panel.tracks {
 		 */
 		override public function get position():uint {
 			var pos:uint = _startTime ?  uint(new Date()) - _startTime : 0;
-			$waveform.recordPosition = App.editor.msecToStageX(pos); // UGLY, a getter should not have side effects!
+			_recordProgress.progress = App.editor.msecToStageX(pos);
 			return(pos);
 		}
 		
@@ -153,9 +154,9 @@ package editor_panel.tracks {
 		 */
 		private function _recordOverlayTick():void {
 			if(_precountTimer.currentCount < 7) _precountSound.play();
-			_recordOverlaySpr.alpha = .25;
-			_recordOverlaySpr.visible = true;
-			Tweener.addTween(_recordOverlaySpr, {alpha:0, time:0.5, transition:'easeOutSine'});
+			_visualTickSpr.alpha = .5;
+			_visualTickSpr.visible = true;
+			Tweener.addTween(_visualTickSpr, {alpha:0, time:0.5, transition:'easeOutSine'});
 		}
 
 		
@@ -205,13 +206,31 @@ package editor_panel.tracks {
 			
 			_startTime = 0;
 
-			Tweener.removeTweens(_recordOverlaySpr);
-			_recordOverlaySpr.alpha = 0;
-			_recordOverlaySpr.visible = false;
+			Tweener.removeTweens(_visualTickSpr);
+			_visualTickSpr.alpha = 0;
+			_visualTickSpr.visible = false;
 			
 			_removePrecountTimer();
 		}
 
+
+
+		public function enableVuMeter():void {
+			if(!_vuMeterEnabled) {
+				this.addEventListener(Event.ENTER_FRAME, _onEnterFrame, false, 0, true);
+				_vuMeterEnabled = true;
+			}
+		}
+		
+		
+		
+		public function disableVuMeter():void {
+			if(_vuMeterEnabled) {
+				this.removeEventListener(Event.ENTER_FRAME, _onEnterFrame);
+				_vuMeterEnabled = false;
+			}
+		}
+		
 		
 		
 		private function _onEnterFrame(event:Event):void {
@@ -245,8 +264,8 @@ package editor_panel.tracks {
 			
 			_isRecording = true;
 			
-			Tweener.removeTweens(_recordOverlaySpr);
-			_recordOverlaySpr.alpha = .25;
+			Tweener.removeTweens(_visualTickSpr);
+			_visualTickSpr.alpha = .25;
 			
 			_startTime = uint(new Date());
 				

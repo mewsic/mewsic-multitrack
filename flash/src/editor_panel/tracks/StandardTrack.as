@@ -4,12 +4,14 @@ package editor_panel.tracks {
 	import caurina.transitions.Tweener;
 	
 	import config.Embeds;
-	import config.Filters;
 	import config.Settings;
 	
-	import controls.Button;
 	import controls.Slider;
 	import controls.SliderEvent;
+	
+	import editor_panel.sampler.Sampler;
+	import editor_panel.sampler.SamplerEvent;
+	import editor_panel.waveform.Waveform;
 	
 	import de.popforge.utils.sprintf;
 	
@@ -34,7 +36,9 @@ package editor_panel.tracks {
 	public class StandardTrack extends TrackCommon {
 
 		
-		
+		private var _sampler:Sampler;
+		private var _waveform:Waveform;
+
 		private var _volumeSlider:Slider;
 		private var _volumeActive:QBitmap;
 		private var _volumeMuted:QBitmap;
@@ -50,7 +54,16 @@ package editor_panel.tracks {
 		 * @param trackID Track ID
 		 */
 		public function StandardTrack(trackID:uint) {
-			super(trackID, TrackCommon.STANDARD_TRACK);
+			super(trackID, {killBtnSkin:new Embeds.buttonKillTrack()});
+
+			// create components
+			_sampler = new Sampler();
+			_waveform = new Waveform({x:Settings.TRACKCONTROLS_WIDTH});
+
+			// add event listeners
+			_sampler.addEventListener(SamplerEvent.SAMPLE_PROGRESS, _onSamplerProgress, false, 0, true);
+			_sampler.addEventListener(SamplerEvent.SAMPLE_DOWNLOADED, _onSamplerDownloaded, false, 0, true);
+			_sampler.addEventListener(SamplerEvent.PLAYBACK_COMPLETE, _onSamplerPlaybackComplete, false, 0, true);
 
 			// add components
 			_volumeSlider = new Slider({x:4, y:4, backSkin:new Embeds.backgroundSliderVolume(), thumbSkin:new Embeds.buttonSliderVolume(),
@@ -66,17 +79,15 @@ package editor_panel.tracks {
 //			_balanceKnob = new Knob({x:458, y:1, backSkin:new Embeds.buttonContainerPanKnobBD(), pointerSpr:new Embeds.buttonContainerPanKnobPointerSpr(), rangeBegin:-118, rangeEnd:118});
 
 			// add to display list
-			addChildren(this, _background, _volumeSlider, _volumeActive, _volumeMuted);
+			addChildren(_waveform, $killBtn);
+			addChildren(this, _background, _volumeSlider, _volumeActive, _volumeMuted, _waveform);
 			
-			// add handlers
-			$addHandlers();
-
 			// add event listeners
 			$killBtn.addEventListener(MouseEvent.CLICK, _onKillClick, false, 0, true);
 
-			$waveform.addEventListener(MouseEvent.MOUSE_OVER, function():void {
+			_waveform.addEventListener(MouseEvent.MOUSE_OVER, function():void {
 				Tweener.addTween(_background, {alpha:1, time:Settings.FADEIN_TIME, transition:'easeOutSine'}); });
-			$waveform.addEventListener(MouseEvent.MOUSE_OUT, function():void {
+			_waveform.addEventListener(MouseEvent.MOUSE_OUT, function():void {
 				Tweener.addTween(_background, {alpha:0, time:Settings.FADEOUT_TIME, transition:'easeOutSine'}); });
 			
 			_volumeSlider.addEventListener(SliderEvent.REFRESH, _onVolumeSliderRefresh, false, 0, true);
@@ -95,6 +106,9 @@ package editor_panel.tracks {
 		 */
 		override public function destroy():void {
 			// remove event listeners
+			_sampler.removeEventListener(SamplerEvent.SAMPLE_PROGRESS, _onSamplerProgress);
+			_sampler.removeEventListener(SamplerEvent.PLAYBACK_COMPLETE, _onSamplerPlaybackComplete);
+				
 			$killBtn.removeEventListener(MouseEvent.CLICK, _onKillClick);
 			
 			_volumeSlider.removeEventListener(SliderEvent.REFRESH, _onVolumeSliderRefresh);
@@ -103,11 +117,12 @@ package editor_panel.tracks {
 			super.removeEventListener(TrackEvent.REFRESH, _onRefresh);
 
 			// remove from display list
-			removeChildren(this, _background, _volumeSlider, _volumeActive, _volumeMuted);
+			removeChildren(_waveform, $killBtn);
+			removeChildren(this, _background, _volumeSlider, _volumeActive, _volumeMuted, _waveform);
 
 			// destroy components
-			$killBtn.destroy();
-
+			_sampler.destroy();
+			_waveform.destroy();
 			_volumeSlider.destroy();
 
 //			_balanceKnob.destroy();
@@ -120,9 +135,19 @@ package editor_panel.tracks {
 		override public function refresh():void {
 //			_balanceKnob.angle = 118 * $trackData.trackBalance;
 			_volumeSlider.thumbPos = $trackData.trackVolume;
-			
+
+			// refresh volume & balance
+			_sampler.volume = $trackData.trackVolume;
+			_sampler.balance = $trackData.trackBalance;
+
 			
 			super.refresh();
+		}
+
+
+
+		override public function rescale(msec:uint):void {
+			_waveform.stretch(msec);
 		}
 
 		
@@ -133,8 +158,8 @@ package editor_panel.tracks {
 			refresh();
 			
 			// load sampler and waveform
-			$sampler.load(App.connection.serverPath + $trackData.trackSampleURL, $trackData.trackMilliseconds);
-			$waveform.load(App.connection.serverPath + $trackData.trackWaveformURL, $trackData.trackMilliseconds);
+			_sampler.load(App.connection.serverPath + $trackData.trackSampleURL, $trackData.trackMilliseconds);
+			_waveform.load(App.connection.serverPath + $trackData.trackWaveformURL, $trackData.trackMilliseconds);
 		}
 		
 		
@@ -143,7 +168,7 @@ package editor_panel.tracks {
 			$killBtn.alpha = .4;
 			$killBtn.areEventsEnabled = false;
 			
-			super.play();
+			_sampler.play();
 		}
 
 		
@@ -151,32 +176,47 @@ package editor_panel.tracks {
 		override public function stop():void {
 			$killBtn.alpha = 1;
 			$killBtn.areEventsEnabled = true;
-			
-			super.stop();
-		}
-		
-		
-		
-		override public function resume():void {
-			$killBtn.alpha = .4;
-			$killBtn.areEventsEnabled = false;
-			
-			super.resume();
-		}
 
+			_sampler.stop();			
+		}
+		
 		
 		
 		override public function pause():void {
 			$killBtn.alpha = 1;
 			$killBtn.areEventsEnabled = true;
 			
-			super.pause();
+			_sampler.pause();
 		}
 
 		
-		public function set volume(value:Number):void {
+		override public function resume():void {
+			$killBtn.alpha = .4;
+			$killBtn.areEventsEnabled = false;
+			
+			_sampler.resume();
+		}
+
+
+
+		override public function seek(position:Number):void {
+			_sampler.seek(position);
+		}
+		
+		
+		override public function get position():uint {
+			return _sampler.position;
+		}
+		
+		override public function get volume():Number {
+			return _sampler.volume;
+		}
+		
+		
+		
+		override public function set volume(value:Number):void {
 			try {
-				$sampler.volume = value;
+				_sampler.volume = value;
 			}
 			catch(err:Error) {
 				// sampler may be not initialized
@@ -187,6 +227,36 @@ package editor_panel.tracks {
 		}
 		
 		
+		public function get isSolo():Boolean {
+			return $isSolo;
+		}
+
+		
+		
+		public function get isMuted():Boolean {
+			return $isMuted;
+		}
+
+		
+		
+		public function set isSolo(value:Boolean):void {
+			$isSolo = value;
+			$isMuted = false;
+			_sampler.isMuted = isMuted;
+			dispatchEvent(new TrackEvent(TrackEvent.REFRESH));
+		}
+
+		
+		
+		public function set isMuted(value:Boolean):void {
+			$isMuted = value;
+			$isSolo = false;
+			_sampler.isMuted = isMuted;
+			dispatchEvent(new TrackEvent(TrackEvent.REFRESH));
+		}
+
+		
+		
 		
 		/**
 		 * Kill button click event handler.
@@ -195,6 +265,31 @@ package editor_panel.tracks {
 		private function _onKillClick(event:MouseEvent):void {
 			Logger.debug(sprintf('Kill track (trackID=%u, trackTitle=%s)', $trackData.trackID, $trackData.trackTitle));
 			dispatchEvent(new TrackEvent(TrackEvent.KILL));
+		}
+
+		/**
+		 * Sample download progress
+		 */
+		private function _onSamplerProgress(event:SamplerEvent):void {
+			_waveform.progress = event.data.progress;
+		}
+		
+		
+		
+		/**
+		 * Sample download completed
+		 */
+		private function _onSamplerDownloaded(event:SamplerEvent):void {
+			_waveform.progress = 1;
+		}
+		
+		
+		
+		/**
+		 * Sample playback completed
+		 */
+		private function _onSamplerPlaybackComplete(event:SamplerEvent):void {
+			dispatchEvent(event);
 		}
 
 		
@@ -222,7 +317,7 @@ package editor_panel.tracks {
 		private function _onVolumeSliderRefresh(event:SliderEvent):void {
 			try {
 				var v:Number = 1 - event.thumbPos;
-				$sampler.volume = v;
+				_sampler.volume = v;
 				$trackData.trackVolume = v;
 				
 				var fadeIn:Object = {time:0.1, alpha:1, transition:'easeOutSine'};

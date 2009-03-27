@@ -113,6 +113,14 @@ package config {
 			public static var thumbnailLoading:Class;
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ThumbnailError')]
 			public static var thumbnailError:Class;
+			
+			
+		// Progress bars
+		[Embed(source='../../lib/assets/main_assets.swf', symbol='ModalUploadBackBD')]
+			public static var recordProgressBack:Class;
+		[Embed(source='../../lib/assets/main_assets.swf', symbol='ModalUploadProgressBD')]
+			public static var recordProgress:Class;
+
 	
 
 		///////////////////////////// OLD assets

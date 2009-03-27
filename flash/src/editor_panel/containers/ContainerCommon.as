@@ -257,10 +257,6 @@ package editor_panel.containers {
 			
 			// add event listeners
 			t.addEventListener(TrackEvent.KILL, _onTrackKill, false, 0, true);
-			t.addEventListener(TrackEvent.MUTE_OFF, _onTrackMuteOff, false, 0, true);
-			t.addEventListener(TrackEvent.MUTE_ON, _onTrackMuteOn, false, 0, true);
-			t.addEventListener(TrackEvent.SOLO_OFF, _onTrackSoloOff, false, 0, true);
-			t.addEventListener(TrackEvent.SOLO_ON, _onTrackSoloOn, false, 0, true);
 			
 			// animate
 			Tweener.addTween(t, {alpha:1, time:Settings.STAGE_HEIGHT_CHANGE_TIME * 1.5, delay:Settings.STAGE_HEIGHT_CHANGE_TIME * .5});
@@ -344,10 +340,6 @@ package editor_panel.containers {
 					try {
 						j = i;
 						t.removeEventListener(TrackEvent.KILL, _onTrackKill);
-						t.removeEventListener(TrackEvent.MUTE_OFF, _onTrackMuteOff);
-						t.removeEventListener(TrackEvent.MUTE_ON, _onTrackMuteOn);
-						t.removeEventListener(TrackEvent.SOLO_OFF, _onTrackSoloOff);
-						t.removeEventListener(TrackEvent.SOLO_ON, _onTrackSoloOn);
 						t.destroy();
 					}
 					catch(err1:Error) {
@@ -428,7 +420,7 @@ package editor_panel.containers {
 			}
 			
 			for each(t in _trackList) {
-				t.stretchWaveform(max);
+				t.rescale(max);
 			}
 		}
 
@@ -665,7 +657,7 @@ package editor_panel.containers {
 				if(p.trackID == event.trackData.trackID) {
 					// it's found, update it
 					// set track data
-					p.trackData = App.connection.coreSongData.songTracks[App.connection.coreSongData.songTracks.length - 1];
+					p.trackData = event.trackData; //App.connection.coreSongData.songTracks[App.connection.coreSongData.songTracks.length - 1];
 					
 					// load sample and waveform
 					p.load();
@@ -721,69 +713,7 @@ package editor_panel.containers {
 			killTrack(t.trackID);
 			_refreshWaveforms();
 		}
-
 		
-		
-		/**
-		 * Track mute off event handler.
-		 * Unused right now.
-		 * @param event Event data
-		 */
-		private function _onTrackMuteOff(event:TrackEvent):void {
-			for each(var t:TrackCommon in _trackList) {
-				if(t.isEnabled) {
-					if(t == event.target) {
-						t.isMuted = false;
-					}
-				}
-			}
-		}
-
-		
-		
-		/**
-		 * Track mute on event handler.
-		 * @param event Event data
-		 */
-		private function _onTrackMuteOn(event:TrackEvent):void {
-			for each(var t:TrackCommon in _trackList) {
-				if(t.isEnabled) {
-					if(!t.isMuted) t.isSolo = false;
-					if(t == event.target) t.isMuted = true;
-				}
-			}
-		}
-
-		
-		
-		/**
-		 * Track solo off event handler.
-		 * Unused right now
-		 * @param event Event data
-		 */
-		private function _onTrackSoloOff(event:TrackEvent):void {
-			for each(var t:TrackCommon in _trackList) {
-				if(t.isEnabled) {
-					t.isSolo = false;
-				}
-			}
-		}
-
-		
-		
-		/**
-		 * Track solo on event handler.
-		 * @param event Event data
-		 */
-		private function _onTrackSoloOn(event:TrackEvent):void {
-			for each(var t:TrackCommon in _trackList) {
-				if(t.isEnabled) {
-					t.isSolo = (t == event.target);
-					if(t != event.target) t.isMuted = true;
-				}
-			}
-		}
-
 		
 		
 		/**

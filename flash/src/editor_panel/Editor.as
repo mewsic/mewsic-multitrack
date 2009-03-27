@@ -714,7 +714,7 @@ package editor_panel {
 			
 			_containersMaskSpr.morph({height:_standardContainer.height + _recordContainer.height + 40});
 			
-			_playheadMaskSpr.morph({height:_standardContainer.height + _recordContainer.height + 10});
+			_playheadMaskSpr.morph({height:_standardContainer.height + 10});
 
 			$animateHeightChange(_standardContainer.height + _recordContainer.height + _containersContentSpr.y + 40); // fixed 40px bottom margin
 		}

@@ -25,6 +25,7 @@ package controls
 			$uploadBackSBM = new ScaleBitmap((c.background as Bitmap).bitmapData);
 			$uploadProgressSBM = new ScaleBitmap((c.progress as Bitmap).bitmapData);
 			
+			$uploadBackSBM.width = c.width || 250;
 			$uploadBackSBM.scale9Grid = $uploadProgressSBM.scale9Grid = c.grid;
 			$uploadProgressSBM.width = 1;
 			

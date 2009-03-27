@@ -13,10 +13,6 @@ package editor_panel.tracks {
 	
 	import de.popforge.utils.sprintf;
 	
-	import editor_panel.sampler.Sampler;
-	import editor_panel.sampler.SamplerEvent;
-	import editor_panel.waveform.Waveform;
-	
 	import flash.display.Sprite;
 	
 	import org.osflash.thunderbolt.Logger;
@@ -46,9 +42,6 @@ package editor_panel.tracks {
 		
 		public static const RECORD_TRACK:String = 'recordTrack';
 		public static const STANDARD_TRACK:String = 'standardTrack';
-
-		protected var $sampler:Sampler;
-		protected var $waveform:Waveform;
 
 		// protected var $backBM:QBitmap; no background
 		protected var $titleTF:QTextField;
@@ -83,24 +76,20 @@ package editor_panel.tracks {
 		 * @param t Track type (STANDARD_TRACK or RECORD_TRACK)
 		 * @param trackID Track ID
 		 */
-		public function TrackCommon(trackID:uint, t:String) {
+		public function TrackCommon(trackID:uint, c:Object = null) {
 			super();
 			
 			$trackID = trackID;
 
-			// check for valid type
-			if(t != STANDARD_TRACK && t != RECORD_TRACK) throw new TypeError('Track type has to be STANDARD_TRACK or RECORD_TRACK');
-			else $trackType = t;
-			
 			// add components
 			$titleTF = new QTextField({alpha:0, x:154, width:116, height:52,
-				defaultTextFormat:($trackType == STANDARD_TRACK) ? Formats.standardContainerTitle : Formats.recordContainerTitle,
-				filters:($trackType == STANDARD_TRACK) ? Filters.standardContainerContentTitle : Filters.recordContainerContentTitle,
+				defaultTextFormat:Formats.standardContainerTitle,
+				filters:Filters.standardContainerContentTitle,
 				sharpness:-25, thickness:-50});
 	
 			$specsTagsTF = new QTextField({alpha:0, x:154, width:116, height:52,
-				defaultTextFormat:($trackType == STANDARD_TRACK) ? Formats.standardContainerSpecsContent : Formats.recordContainerSpecsContent,
-				filters:($trackType == STANDARD_TRACK) ? Filters.standardContainerContentTitle : Filters.recordContainerContentTitle,
+				defaultTextFormat:Formats.standardContainerSpecsContent,
+				filters:Filters.standardContainerContentTitle,
 				sharpness:-25, thickness:-50});
 			
 			$avatarThumb = new Thumbnail({x:32, y:3, showFrame:true});
@@ -120,7 +109,7 @@ package editor_panel.tracks {
 			_selectInstrumentButton = new Button({x:10, y:20, skin:new Embeds.iconSelectInstrument()}, Button.TYPE_NOSCALE_BUTTON); // XXX TEMPORARY
 			
 
-			$killBtn = new Button({x:Settings.WAVEFORM_WIDTH - 18, y:5, skin:new Embeds.buttonKillTrack()}, Button.TYPE_NOSCALE_BUTTON);
+			$killBtn = new Button({x:Settings.WAVEFORM_WIDTH - 18, y:5, skin:c.killBtnSkin}, Button.TYPE_NOSCALE_BUTTON);
 
 			$separator = new QBitmap({x:0, y:Settings.TRACK_HEIGHT - 2, embed:new Embeds.separatorTrack()});
 			
@@ -148,42 +137,18 @@ package editor_panel.tracks {
 			try {
 				$avatarThumb.destroy();
 				$instrumentThumb.destroy();
-
+				$killBtn.destroy();
+				
+				// the killBtn is removed from display list  in derived classes,
+				// because it has to be a child of the waveform/progressbar object,
+				// more refactoring soon.
 				removeChildren(this, $avatarThumb, $instrumentThumb, _changeInstrumentButton, _selectInstrument, $titleTF, $specsTagsTF);
-				removeChildren(_selectInstrument, _selectInstrumentTF, _selectInstrumentButton);
-				removeChildren($waveform, $killBtn);
+				removeChildren(_selectInstrument, _selectInstrumentTF, _selectInstrumentButton);				
 			}
 			catch(err3:Error) {
 				Logger.warn(sprintf('Error removing graphics for %s:\n%s', toString(), err3.message));
 			}
-			
-			if($sampler) {
-				// remove event listeners
-				$sampler.removeEventListener(SamplerEvent.SAMPLE_PROGRESS, _onSamplerProgress);
-				$sampler.removeEventListener(SamplerEvent.PLAYBACK_COMPLETE, _onSamplerPlaybackComplete);
-				
-				// destroy
-				try {
-					$sampler.destroy();
-				}
-				catch(err1:Error) {
-					Logger.warn(sprintf('Error removing sampler for %s:\n%s', toString(), err1.message));
-				}
-			}
-			
-			if($waveform) {
-				// remove from display list
-				removeChild($waveform);
-				
-				// destroy
-				try {
-					$waveform.destroy();
-				}
-				catch(err2:Error) {
-					Logger.warn(sprintf('Error removing waveform for %s:\n%s', toString(), err2.message));
-				}
-			}
-			
+
 			_isEnabled = false;
 		}
 		
@@ -211,19 +176,11 @@ package editor_panel.tracks {
 			var bh:Number = $titleTF.textHeight + 2;
 			var by:Number = Math.round((52 - bh) / 2) - 6;
 			$titleTF.y = by;
-			$specsTagsTF.y = $titleTF.y + bh + 2;
-			
-			// refresh volume & balance
-			if($trackType == STANDARD_TRACK) {
-				$sampler.volume = $trackData.trackVolume;
-				$sampler.balance = $trackData.trackBalance;
-			}
+			$specsTagsTF.y = $titleTF.y + bh + 2;			
 		}
-
-
-
-		public function stretchWaveform(_milliseconds:uint):void {
-			$waveform.stretch(_milliseconds);
+		
+		
+		public function rescale(x:uint):void {
 		}
 		
 		
@@ -257,7 +214,7 @@ package editor_panel.tracks {
 		 * Play.
 		 */
 		public function play():void {
-			$sampler.play();
+			trace("Track play()")
 		}
 
 		
@@ -266,7 +223,7 @@ package editor_panel.tracks {
 		 * Stop.
 		 */
 		public function stop():void {
-			$sampler.stop();
+			trace("Track stop()");
 		}
 
 		
@@ -275,7 +232,7 @@ package editor_panel.tracks {
 		 * Pause.
 		 */
 		public function pause():void {
-			$sampler.pause();
+			trace("Track pause()");
 		}
 
 		
@@ -284,7 +241,7 @@ package editor_panel.tracks {
 		 * Resume.
 		 */
 		public function resume():void {
-			$sampler.resume();
+			trace("Track resume()");
 		}
 
 		
@@ -293,37 +250,7 @@ package editor_panel.tracks {
 		 * Seek.
 		 */
 		public function seek(position:Number):void {
-			$sampler.seek(position);
-		}
-
-		
-		
-		public function get isSolo():Boolean {
-			return $isSolo;
-		}
-
-		
-		
-		public function get isMuted():Boolean {
-			return $isMuted;
-		}
-
-		
-		
-		public function set isSolo(value:Boolean):void {
-			$isSolo = value;
-			$isMuted = false;
-			$sampler.isMuted = isMuted;
-			dispatchEvent(new TrackEvent(TrackEvent.REFRESH));
-		}
-
-		
-		
-		public function set isMuted(value:Boolean):void {
-			$isMuted = value;
-			$isSolo = false;
-			$sampler.isMuted = isMuted;
-			dispatchEvent(new TrackEvent(TrackEvent.REFRESH));
+			trace("Track seek("+position+")");
 		}
 		
 		
@@ -357,35 +284,6 @@ package editor_panel.tracks {
 
 		
 		
-		public function get volume():Number {
-			return $sampler.volume;
-		}
-		
-		
-		
-		public function get position():uint {
-			return $sampler.position;
-		}
-
-		
-		
-		protected function $addHandlers():void {
-			// create components
-			$sampler = new Sampler($trackType);
-			$waveform = new Waveform($trackType, {x:Settings.TRACKCONTROLS_WIDTH});
-			
-			// add to display list
-			addChild($waveform);
-			addChildren($waveform, $killBtn);
-
-			// add event listeners
-			$sampler.addEventListener(SamplerEvent.SAMPLE_PROGRESS, _onSamplerProgress, false, 0, true);
-			$sampler.addEventListener(SamplerEvent.SAMPLE_DOWNLOADED, _onSamplerDownloaded, false, 0, true);
-			$sampler.addEventListener(SamplerEvent.PLAYBACK_COMPLETE, _onSamplerPlaybackComplete, false, 0, true);
-		}
-
-		
-		
 		/**
 		 * User done event handler.
 		 * Invoked when user info for this track is loaded.
@@ -400,19 +298,28 @@ package editor_panel.tracks {
 		}
 		
 		
-		
-		private function _onSamplerProgress(event:SamplerEvent):void {
-			$waveform.progress = event.data.progress;
-		}
-		
-		private function _onSamplerDownloaded(event:SamplerEvent):void {
-			$waveform.progress = 1;
+		public function get volume():Number {
+			return 0;
 		}
 		
 		
 		
-		private function _onSamplerPlaybackComplete(event:SamplerEvent):void {
-			dispatchEvent(event);
+		public function set volume(v:Number):void {
 		}
+		
+		
+		
+		public function get position():uint {
+			return 0;
+		}
+
+		
+		
+		public function set position(v:uint):void {
+		}
+		
+		
+		
+		
 	}
 }

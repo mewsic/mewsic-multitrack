@@ -51,7 +51,6 @@ package editor_panel.waveform {
 
 		private var _bitmap:BitmapData;
 		private var _waveformMaskSpr:QSprite;
-		private var _waveformRecordSpr:QSprite;
 
 		private var _preloadInfoBackBM:QBitmap;
 		private var _preloadInfoSpr:QSprite;
@@ -60,7 +59,6 @@ package editor_panel.waveform {
 		private var _waveformID:String;
 		private var _waveformWidth:uint;
 		private var _milliseconds:uint;
-		private var _type:String;
 
 
 		
@@ -69,10 +67,9 @@ package editor_panel.waveform {
 		 * Constructor.
 		 * @param o MorphSprite config Object
 		 */
-		public function Waveform(t:String, o:Object = null) {
+		public function Waveform(o:Object = null) {
 			super(o);
 			
-			_type = t;
 			
 			var id:String = sprintf('waveform.%u.%u', uint(new Date()), Rnd.integer(1000, 9999));			
 			_waveformID = sprintf('%s.waveform', id);
@@ -87,10 +84,8 @@ package editor_panel.waveform {
 			_waveformFrontBM = new QBitmap({blendMode:BlendMode.MULTIPLY, y:2, alpha:.5});
 			_waveformBackBM = new QBitmap({blendMode:BlendMode.MULTIPLY, y:2, mask:_waveformLoadingSpr, alpha:.1});
 			
-			_waveformRecordSpr = new QSprite({visible:(_type == TrackCommon.RECORD_TRACK)});
-			
 			// add preloader info
-			_preloadInfoSpr = new QSprite({visible:(_type == TrackCommon.STANDARD_TRACK), alpha:0, x:4, y:21});
+			_preloadInfoSpr = new QSprite({visible:true, alpha:0, x:4, y:21});
 			_preloadInfoBackBM = new QBitmap({embed:new Embeds.viewportPreloadInfoBackBD});
 			_preloadInfoLabelTF = new QTextField({defaultTextFormat:Formats.viewportPreloadInfoLabel, text:'0 %',
 				width:25, autoSize:TextFieldAutoSize.LEFT});
@@ -98,10 +93,9 @@ package editor_panel.waveform {
 			// drawing
 			Drawing.drawRect(_waveformLensSpr, 0, 0, Settings.WAVEFORM_WIDTH, Settings.TRACK_HEIGHT - 1, 0x9ab8c6);
 			Drawing.drawRect(_waveformMaskSpr, 0, 0, Settings.WAVEFORM_WIDTH, Settings.TRACK_HEIGHT - 1);
-			Drawing.drawRect(_waveformRecordSpr, 0, 0, 1, 49, 0xB90616);
 
 			// add to display list
-			addChildren(_waveformSpr, _waveformBackBM, _waveformFrontBM, _waveformLensSpr, _waveformLoadingSpr, _waveformRecordSpr);
+			addChildren(_waveformSpr, _waveformBackBM, _waveformFrontBM, _waveformLensSpr, _waveformLoadingSpr);
 			addChildren(_preloadInfoSpr, _preloadInfoBackBM, _preloadInfoLabelTF);
 			addChildren(this, _waveformSpr, _waveformMaskSpr, _preloadInfoSpr);
 			
@@ -116,7 +110,7 @@ package editor_panel.waveform {
 		 */
 		public function destroy():void {
 			// remove from display list
-			removeChildren(_waveformSpr, _waveformBackBM, _waveformFrontBM, /*_waveformFrontMaskSpr,*/ _waveformRecordSpr);
+			removeChildren(_waveformSpr, _waveformBackBM, _waveformFrontBM /*, _waveformFrontMaskSpr*/);
 			removeChildren(_preloadInfoSpr, _preloadInfoBackBM, _preloadInfoLabelTF);
 			removeChildren(this, _waveformSpr, _waveformMaskSpr, _preloadInfoSpr);
 			
@@ -157,14 +151,7 @@ package editor_panel.waveform {
 		public function get waveformWidth():uint {
 			return _waveformWidth;
 		}
-
 		
-		
-		public function set recordPosition(value:uint):void {
-			_waveformSpr.alpha = 1;
-			_waveformRecordSpr.width = value;
-		}
-
 		
 		
 		/**
