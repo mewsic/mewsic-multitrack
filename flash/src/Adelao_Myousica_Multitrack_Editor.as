@@ -14,7 +14,7 @@ package {
 
 	import config.Settings;
 
-	[SWF(width='978', height='40', backgroundColor='0xF5F5F5', frameRate='60')]
+	[SWF(width='700', height='40', backgroundColor='0xF5F5F5', frameRate='60')]
 
 	[Frame(factoryClass='GlobalPreloader')]
 

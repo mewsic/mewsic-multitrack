@@ -24,7 +24,7 @@
 		}
 
 		var flashvars = {
-			serverPath: 'http://mewsic.stage.lime5.it',
+			serverPath: 'http://192.168.78.1:3000',
 			settingsXMLPath: '/multitrack.xml',
 			isLogEnabled: 'yes',
 			isServiceDumpEnabled: 'no',
@@ -33,7 +33,11 @@
 		};
 		var params = {};
 		var attributes = { name: 'multitrackObject' };
-		swfobject.embedSWF( 'flash/Adelao_Myousica_Multitrack_Editor.swf', 'flash', '978', '100%', '9.0.0', 'scripts/swfobject/express-install.swf', flashvars, params, attributes );
+		swfobject.embedSWF( 'flash/Adelao_Myousica_Multitrack_Editor.swf', 'flash', '700', '100%', '9.0.0', 'scripts/swfobject/express-install.swf', flashvars, params, attributes );
+
+		$(document).observe('dom:loaded', function() {
+			setTimeout(function() { $('flash').loadSong(917598278); }, 6000);
+		});
 			
 	// ]]></script>
 
@@ -60,13 +64,18 @@
 		#content {
 			padding: 30px 0 0;
 			margin: 0 auto;
-			width: 978px;
+			width: 900px;
+			text-align: center
 		}
 		
 		#flash {
-			width: 978px;
+			width: 700px;
 			height: 40px;
 			position: relative;
+		}
+		
+		p {
+			text-align: left;
 		}
 
 	</style>
