@@ -59,6 +59,7 @@ package editor_panel.tracks {
 		protected var $selectInstrument:QSprite;
 		
 		protected var $killBtn:Button;
+		protected var $separator:QBitmap;
 		
 		protected var $trackData:TrackData;
 		protected var $trackType:String;
@@ -88,7 +89,6 @@ package editor_panel.tracks {
 			else $trackType = t;
 			
 			// add components
-			//$backBM = new QBitmap({embed:($trackType == STANDARD_TRACK) ? new Embeds.standardContainerBackBD() : new Embeds.recordContainerBackBD()});
 			$titleTF = new QTextField({alpha:0, x:154, width:116, height:52,
 				defaultTextFormat:($trackType == STANDARD_TRACK) ? Formats.standardContainerTitle : Formats.recordContainerTitle,
 				filters:($trackType == STANDARD_TRACK) ? Filters.standardContainerContentTitle : Filters.recordContainerContentTitle,
@@ -112,10 +112,13 @@ package editor_panel.tracks {
 			addChildren($selectInstrument, selectText, selectIcon);
 			$selectInstrument.visible = false;
 
-			$killBtn = new Button({x:Settings.WAVEFORM_WIDTH - 10, y:5, skin:new Embeds.buttonKillTrack()}, Button.TYPE_NOSCALE_BUTTON);
+			$killBtn = new Button({x:Settings.WAVEFORM_WIDTH - 15, y:5, skin:new Embeds.buttonKillTrack()}, Button.TYPE_NOSCALE_BUTTON);
+			
+			$separator = new QBitmap({x:0, y:Settings.TRACK_HEIGHT - 2, embed:new Embeds.separatorTrack()});
+			
 
 			// add to display list
-			addChildren(this, /*$backBM,*/ $avatarThumb, $instrumentThumb, $selectInstrument, $titleTF, $specsTagsTF);
+			addChildren(this, $separator, $avatarThumb, $instrumentThumb, $selectInstrument, $titleTF, $specsTagsTF);
 			
 			// set user service
 			_userService = new UserService();

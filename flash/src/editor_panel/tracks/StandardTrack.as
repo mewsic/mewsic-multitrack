@@ -53,15 +53,16 @@ package editor_panel.tracks {
 			super(trackID, TrackCommon.STANDARD_TRACK);
 
 			// add components
-			_volumeSlider = new Slider({x:10, backSkin:new Embeds.backgroundSliderVolume(), thumbSkin:new Embeds.buttonSliderVolume(),
+			_volumeSlider = new Slider({x:10, y:4, backSkin:new Embeds.backgroundSliderVolume(), thumbSkin:new Embeds.buttonSliderVolume(),
 				marginBegin:5, marginEnd:5, wheelRatio:.015},
 				Slider.DIRECTION_VERTICAL);
 				
 			_volumeActive = new QBitmap({x:18, embed:new Embeds.backgroundVolumeActive()});
 			_volumeMuted = new QBitmap({x:18, embed:new Embeds.backgroundVolumeMuted()});
 
-			_background = new QBitmap({x:Settings.TRACKCONTROLS_WIDTH, height:52, embed:new Embeds.backgroundTrack()}); // Track lane background
-
+			_background = new QBitmap({x:Settings.TRACKCONTROLS_WIDTH - 1, height:Settings.TRACK_HEIGHT - 1, y:1, embed:new Embeds.backgroundTrack()}); // Track lane background
+			_background.alpha = 0;
+			
 //			_balanceKnob = new Knob({x:458, y:1, backSkin:new Embeds.buttonContainerPanKnobBD(), pointerSpr:new Embeds.buttonContainerPanKnobPointerSpr(), rangeBegin:-118, rangeEnd:118});
 
 			// add to display list
@@ -69,9 +70,14 @@ package editor_panel.tracks {
 			
 			// add handlers
 			$addHandlers();
-			
+
 			// add event listeners
 			$killBtn.addEventListener(MouseEvent.CLICK, _onKillClick, false, 0, true);
+
+			$waveform.addEventListener(MouseEvent.MOUSE_OVER, function():void {
+				Tweener.addTween(_background, {alpha:1, time:Settings.FADEIN_TIME, transition:'easeOutSine'}); });
+			$waveform.addEventListener(MouseEvent.MOUSE_OUT, function():void {
+				Tweener.addTween(_background, {alpha:0, time:Settings.FADEOUT_TIME, transition:'easeOutSine'}); });
 			
 			_volumeSlider.addEventListener(SliderEvent.REFRESH, _onVolumeSliderRefresh, false, 0, true);
 //			_balanceKnob.addEventListener(KnobEvent.REFRESH, _onKnobRefresh, false, 0, true);
@@ -97,7 +103,7 @@ package editor_panel.tracks {
 			super.removeEventListener(TrackEvent.REFRESH, _onRefresh);
 
 			// remove from display list
-			removeChildren(this, _volumeSlider, _volumeActive, _volumeMuted);
+			removeChildren(this, _background, _volumeSlider, _volumeActive, _volumeMuted);
 
 			// destroy components
 			$killBtn.destroy();

@@ -46,9 +46,10 @@ package editor_panel.containers {
 
 
 		private var _trackSpr:QSprite;
-		private var _trackList:Array = new Array();
 		private var _contentHeight:Number = 0;
+
 		private var _type:String;
+		private var _trackList:Array = new Array();
 		private var _songQueue:Array = new Array();
 		private var _trackQueue:Array = new Array();
 
@@ -69,7 +70,7 @@ package editor_panel.containers {
 			else _type = t;
 
 			// add graphics
-			_trackSpr = new QSprite();
+			_trackSpr = new QSprite({y:2});
 
 			// set visual properties
 			$morphTime = Settings.STAGE_HEIGHT_CHANGE_TIME;

@@ -211,8 +211,8 @@ package editor_panel {
 			//_globalVolumeToolbar.addChildRight(_globalVolumeSlider);
 
 			// add global vu meter toolbar
-			_globalVUToolbar = new Toolbar({visible:_isVUMeterEnabled, x:460, y:0, width:55, height:35});
-			_globalVUMeter = new VUMeter({x:2, y:2, stereo:true, spacingV:-1, spacingH: 13, skin:new Embeds.vuMeter(), leds:7}, VUMeter.DIRECTION_VERTICAL);
+			_globalVUToolbar = new Toolbar({visible:_isVUMeterEnabled, x:650, y:0, width:35, height:35});
+			_globalVUMeter = new VUMeter({stereo:true, spacingV:-1, spacingH: 13, skin:new Embeds.vuMeter(), leds:7}, VUMeter.DIRECTION_VERTICAL);
 			_globalVUToolbar.addChildRight(_globalVUMeter);
 
 			// add containers

@@ -69,6 +69,9 @@ package config {
 			
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundRecordTrack')]
 			public static var backgroundRecordTrack:Class;
+
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='SeparatorTrack')]
+			public static var separatorTrack:Class;			
 			
 			
 		// Icons
