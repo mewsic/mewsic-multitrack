@@ -42,20 +42,26 @@ package editor_panel.waveform {
 
 				
 		
-		private var _waveformBackBM:QBitmap;
+		private var _waveformLensSpr:QSprite;
 		private var _waveformLoadingSpr:QSprite;
+
 		private var _waveformFrontBM:QBitmap;
+		private var _waveformBackBM:QBitmap;
 		private var _waveformSpr:QSprite;
+
+		private var _bitmap:BitmapData;
 		private var _waveformMaskSpr:QSprite;
 		private var _waveformRecordSpr:QSprite;
+
 		private var _preloadInfoBackBM:QBitmap;
 		private var _preloadInfoSpr:QSprite;
 		private var _preloadInfoLabelTF:QTextField;
+
 		private var _waveformID:String;
 		private var _waveformWidth:uint;
 		private var _milliseconds:uint;
 		private var _type:String;
-		private var _bitmap:BitmapData;
+
 
 		
 		
@@ -74,24 +80,28 @@ package editor_panel.waveform {
 			// add waveform
 			_waveformMaskSpr = new QSprite();
 			_waveformSpr = new QSprite({alpha:0, mask:_waveformMaskSpr});
-			_waveformLoadingSpr = new QSprite({x:-2880});
+
+			_waveformLoadingSpr = new QSprite({x:-2880, y:2});
+			_waveformLensSpr = new QSprite({blendMode:BlendMode.OVERLAY, y:2, alpha:1});
 			
-			_waveformBackBM = new QBitmap({blendMode:BlendMode.MULTIPLY, y:-1, alpha:.1});
-			_waveformFrontBM = new QBitmap({blendMode:BlendMode.MULTIPLY, y:-1, mask:_waveformLoadingSpr, alpha:.5});
+			_waveformFrontBM = new QBitmap({blendMode:BlendMode.MULTIPLY, y:2, alpha:.5});
+			_waveformBackBM = new QBitmap({blendMode:BlendMode.MULTIPLY, y:2, mask:_waveformLoadingSpr, alpha:.1});
 			
 			_waveformRecordSpr = new QSprite({visible:(_type == TrackCommon.RECORD_TRACK)});
 			
 			// add preloader info
-			_preloadInfoSpr = new QSprite({visible:(_type == TrackCommon.STANDARD_TRACK), alpha:0, x:4, y:19});
+			_preloadInfoSpr = new QSprite({visible:(_type == TrackCommon.STANDARD_TRACK), alpha:0, x:4, y:21});
 			_preloadInfoBackBM = new QBitmap({embed:new Embeds.viewportPreloadInfoBackBD});
-			_preloadInfoLabelTF = new QTextField({defaultTextFormat:Formats.viewportPreloadInfoLabel, text:'0 %', width:25, autoSize:TextFieldAutoSize.LEFT});
+			_preloadInfoLabelTF = new QTextField({defaultTextFormat:Formats.viewportPreloadInfoLabel, text:'0 %',
+				width:25, autoSize:TextFieldAutoSize.LEFT});
 
 			// drawing
-			Drawing.drawRect(_waveformMaskSpr, 0, 0, 447, 49);
+			Drawing.drawRect(_waveformLensSpr, 0, 0, Settings.WAVEFORM_WIDTH, Settings.TRACK_HEIGHT - 1, 0x9ab8c6);
+			Drawing.drawRect(_waveformMaskSpr, 0, 0, Settings.WAVEFORM_WIDTH, Settings.TRACK_HEIGHT - 1);
 			Drawing.drawRect(_waveformRecordSpr, 0, 0, 1, 49, 0xB90616);
 
 			// add to display list
-			addChildren(_waveformSpr, _waveformBackBM, _waveformFrontBM, _waveformLoadingSpr, _waveformRecordSpr);
+			addChildren(_waveformSpr, _waveformBackBM, _waveformFrontBM, _waveformLensSpr, _waveformLoadingSpr, _waveformRecordSpr);
 			addChildren(_preloadInfoSpr, _preloadInfoBackBM, _preloadInfoLabelTF);
 			addChildren(this, _waveformSpr, _waveformMaskSpr, _preloadInfoSpr);
 			
