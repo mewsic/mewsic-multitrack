@@ -36,7 +36,15 @@ package controls
 		public function destroy():void {
 			removeChildren(this, $uploadBackSBM, $uploadProgressSBM);
 		}
-		
+
+
+
+		public function get progress():uint {
+			return $uploadProgressSBM.width;
+		}
+
+
+
 		public function set progress(value:uint):void {
 			$uploadProgressSBM.width = value;
 
