@@ -117,7 +117,7 @@ package editor_panel.containers {
 				var service:SongFetchService = new SongFetchService();
 				
 				// add to the song queue
-				_songQueue.push({songID:id, isLoaded:false, service:service});
+				_songQueue.push({songID:id, service:service});
 
 				// load song
 				service.url = App.connection.serverPath + App.connection.configService.songFetchRequestURL;
@@ -171,7 +171,7 @@ package editor_panel.containers {
 				var service:TrackFetchService = new TrackFetchService();
 					
 				// add to track queue to prevent dupes
-				_trackQueue.push({trackID:id, isLoaded:false, service:service});
+				_trackQueue.push({trackID:id, service:service});
 				
 				// load track
 				service.url = App.connection.serverPath + App.connection.configService.trackFetchRequestURL;
@@ -219,7 +219,7 @@ package editor_panel.containers {
 			Logger.info(sprintf('Adding track from track data (trackID=%u, balance=%.2f, volume=%.2f)', td.trackID, td.trackBalance, td.trackVolume));
 				
 			// add to track queue to prevent dupes
-			_trackQueue.push({trackID:td.trackID, isLoaded:true, balance:td.trackBalance, volume:td.trackVolume});
+			_trackQueue.push({trackID:td.trackID, balance:td.trackBalance, volume:td.trackVolume});
 				
 			// check for record or standard and create tracks
 			createTrack(td.trackID);
@@ -265,6 +265,7 @@ package editor_panel.containers {
 			
 			// add event listeners
 			t.addEventListener(TrackEvent.KILL, _onTrackKill, false, 0, true);
+			t.addEventListener(TrackEvent.REFRESH, _onTrackRefresh, false, 0, true);
 			
 			// animate
 			//Tweener.addTween(t, {alpha:1, time:Settings.STAGE_HEIGHT_CHANGE_TIME});
@@ -620,8 +621,6 @@ package editor_panel.containers {
 						}
 					}
 					
-					s.isLoaded = true;
-					
 					_refreshWaveforms();
 				}
 			}
@@ -637,7 +636,6 @@ package editor_panel.containers {
 			// set track loaded flag
 			for each(var t:Object in _trackQueue) {
 				if(t.trackID == event.trackData.trackID) {
-					t.isLoaded = true;
 					event.trackData.trackVolume = (t.volume == undefined) ? .9 : t.volume;
 					event.trackData.trackBalance = (t.balance == undefined) ? 0 : t.balance;
 				}
@@ -691,6 +689,12 @@ package editor_panel.containers {
 		private function _onTrackKill(event:TrackEvent):void {
 			var t:TrackCommon = event.target as TrackCommon;
 			killTrack(t.trackID);
+			_refreshWaveforms();
+		}
+		
+		
+		
+		private function _onTrackRefresh(event:TrackEvent):void {
 			_refreshWaveforms();
 		}
 		

@@ -15,7 +15,7 @@ package controls {
 
 		
 		
-		public static const REFRESH:String = 'onRefresh';
+		public static const REFRESH:String = 'onSliderRefresh';
 		public var thumbPos:Number;
 
 		

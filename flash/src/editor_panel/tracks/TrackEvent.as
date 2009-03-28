@@ -15,16 +15,15 @@ package editor_panel.tracks {
 
 		
 		
-		public static const KILL:String = 'onKill';
-		public static const MUTE_ON:String = 'onMuteOn';
-		public static const MUTE_OFF:String = 'onMuteOff';
-		public static const SOLO_ON:String = 'onSoloOn';
-		public static const SOLO_OFF:String = 'onSoloOff';
-		public static const REFRESH:String = 'onRefresh';
+		public static const KILL:String = 'onTrackKill';
+		public static const REFRESH:String = 'onTrackRefresh';
+		
 		public static const VOLUME_CHANGE:String = 'onVolumeChange';
 		public static const BALANCE_CHANGE:String = 'onBalanceChange';
+		
 		public static const RECORD_START:String = 'onRecordStart';
 		public static const RECORD_STOP:String = 'onRecordStop';
+		
 		public var data:Object;
 
 		

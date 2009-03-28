@@ -462,7 +462,9 @@ package editor_panel.tracks {
 			this.load();
 			
 			_trackFetchService.removeEventListener(TrackFetchEvent.REQUEST_DONE, _onTrackFetchDone);
-			_trackFetchService.removeEventListener(RemotingEvent.REQUEST_FAILED, _onTrackFetchFailed);			
+			_trackFetchService.removeEventListener(RemotingEvent.REQUEST_FAILED, _onTrackFetchFailed);
+			
+			dispatchEvent(new TrackEvent(TrackEvent.REFRESH));			
 		}
 
 
