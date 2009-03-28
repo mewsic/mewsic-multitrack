@@ -474,6 +474,57 @@ package editor_panel {
 			
 			_refreshVisual();
 		}
+
+
+
+		/**
+		 * Track playback complete event handler.
+		 * Counts all tracks and once all are done, sets the state to _STOPPED
+		 * and calls _refreshVisual()
+		 * @param event Event data
+		 */
+		private function _onTrackPlaybackComplete(event:SamplerEvent):void {
+			_completedTracksCounter++;
+			if(_state == _STATE_RECORDING) {
+				//if(_completedTracksCounter == allTrackCount - 1) {
+					Logger.info('Song recording completed.');
+					_completedTracksCounter = 0;
+					_recordTrack.stopRecording(event);
+					stop();
+					
+				//}
+				
+			} else {
+				if(_completedTracksCounter == allTrackCount) {
+					Logger.info('Song playback completed.');
+					_completedTracksCounter = 0;
+					stop();			
+				}
+			}
+
+			_state = _STATE_STOPPED;
+			_refreshVisual();
+		}
+
+
+		
+		private function _onRecordStart(event:TrackEvent):void {
+			if(allTrackCount == 1) {
+				Logger.info('Starting recording (first track recorded, so no record length limit).');
+				_recordLimit = 0;
+			} else {
+				Logger.info(sprintf('Starting recording (record length limit = %s).', App.getTimeCode(_milliseconds)));
+				_recordLimit = _milliseconds;
+			}
+			
+			_state = _STATE_RECORDING;
+			
+			// Great work, Vaclav.
+			// -vjt, 24/03/2009
+			rewind();
+			play();
+		}
+
 		
 
 		private function _onSearchButtonClick(event:MouseEvent = null):void {
@@ -498,37 +549,14 @@ package editor_panel {
 			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
-		
-		
-		/**
-		 * Save song button clicked event handler.
-		 * Display save song modal.
-		 * @param event Event data
-		 */
-		private function _onSaveSongBtnClick(event:MouseEvent = null):void {
-			if(!App.connection.coreUserLoginStatus) {
-				// user is not logged in, don't allow him to display My List
-				App.messageModal.show({title:'Save song', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
-				return;
-			}
-			App.saveSongModal.show();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
-		}
 
 
-
-				
-		
 		/**
 		 * Low-level play method, XXX: make it protected
 		 */
 		public function play(event:Event = null):void {
 			Logger.info('Play!');
-
 			_standardContainer.play();
-//			_beatClicker.play(); // XXX REMOVE ME
 		}
 
 		
@@ -538,10 +566,7 @@ package editor_panel {
 		 */
 		public function stop(event:Event = null):void {
 			Logger.info('Stop playback.');
-	
 			_standardContainer.stop();
-			//_recordContainer.stop();
-//			_beatClicker.stop(); // XXX
 		}
 
 		
@@ -551,9 +576,7 @@ package editor_panel {
 		 */
 		public function pause(event:Event = null):void {
 			Logger.info('Pause playback.');
-
 			_standardContainer.pause();
-//			_beatClicker.pause();
 		}
 
 		
@@ -564,7 +587,6 @@ package editor_panel {
 		public function resume(event:Event = null):void {
 			Logger.info('Resume playback.');
 			_standardContainer.resume();
-//			_beatClicker.resume();
 		}
 
 		
@@ -579,7 +601,6 @@ package editor_panel {
 			if(p > _milliseconds) p = 0;
 			
 			_standardContainer.seek(p);
-//			_beatClicker.seek(p);
 		}
 
 		
@@ -591,8 +612,8 @@ package editor_panel {
 			Logger.info('Forward playback.');
 			var p:uint = currentPosition + _SEEK_STEP;
 			if(p > _milliseconds) p = _milliseconds;
+
 			_standardContainer.seek(p);
-//			_beatClicker.seek(p);
 		}
 
 		
@@ -604,7 +625,6 @@ package editor_panel {
 			Logger.info(sprintf('Seek playback (%u ms).', value));
 			
 			_standardContainer.seek(value);
-//			_beatClicker.seek(value);
 			
 			// refresh visual
 			_refreshVisual();			
@@ -612,7 +632,7 @@ package editor_panel {
 
 		
 		
-		public function disableStreamFunctions():void {
+		public function disableStreamFunctions():void { /// XXX CHECKME
 			Logger.info('Disabling stream functions.');
 			
 			_isStreamDown = true;
@@ -804,76 +824,6 @@ package editor_panel {
 			_refreshVisual();
 		}
 
-		
-				
-		/**
-		 * Export song button clicked event handler.
-		 * Display export song modal.
-		 * @param event Event data
-		 *
-		private function _onExportSongBtnClick(event:MouseEvent = null):void {
-			if(!App.connection.coreUserLoginStatus) {
-				// user is not logged in, don't allow him to display My List
-				App.messageModal.show({title:'Export song', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
-				return;
-			}
-			App.exportSongModal.show();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
-		}
-		 */
-
-		
-		
-		/**
-		 * Track playback complete event handler.
-		 * Counts all tracks and once all are done, invokes stop()
-		 * @param event Event data
-		 */
-		private function _onTrackPlaybackComplete(event:SamplerEvent):void {
-			_completedTracksCounter++;
-			if(_state == _STATE_RECORDING) {
-				//if(_completedTracksCounter == allTrackCount - 1) {
-					Logger.info('Song recording completed.');
-					_completedTracksCounter = 0;
-
-					_recordTrack.stopRecording(event);
-					stop();					
-				//}
-				
-			} else {
-				if(_completedTracksCounter == allTrackCount) {
-					Logger.info('Song playback completed.');
-					_completedTracksCounter = 0;
-			
-					stop();
-				}
-			}
-
-			_state = _STATE_STOPPED;
-			_refreshVisual();	
-		}
-
-
-		
-		private function _onRecordStart(event:TrackEvent):void {
-			if(allTrackCount == 1) {
-				Logger.info('Starting recording (first track recorded, so no record length limit).');
-				_recordLimit = 0;
-			} else {
-				Logger.info(sprintf('Starting recording (record length limit = %s).', App.getTimeCode(_milliseconds)));
-				_recordLimit = _milliseconds;
-			}
-			
-			_state = _STATE_RECORDING;
-			
-			// Great work, Vaclav.
-			// -vjt, 24/03/2009
-			rewind();
-			play();
-		}
-
 
 
 		/**
@@ -890,6 +840,8 @@ package editor_panel {
 		}
 
 		
+		/// Playhead stuff
+		// 
 		public function msecToStageX(m:Number):uint {
 			return m / milliseconds * Settings.WAVEFORM_WIDTH;
 		}
@@ -937,17 +889,15 @@ package editor_panel {
 				_playhead.label = App.getTimeCode(currentPosition);
 			}
 						
-//			if(_isVUMeterEnabled) {
-				SoundMixer.computeSpectrum(_vuMeterBytes, false, 256);
-				_globalVUMeter.leftLevel = Math.abs(_vuMeterBytes.readFloat()) * 100;
-				_globalVUMeter.rightLevel = Math.abs(_vuMeterBytes.readFloat()) * 100;
-//			}
+			SoundMixer.computeSpectrum(_vuMeterBytes, false, 256);
+			_globalVUMeter.leftLevel = Math.abs(_vuMeterBytes.readFloat()) * 100;
+			_globalVUMeter.rightLevel = Math.abs(_vuMeterBytes.readFloat()) * 100;
 		}
 
 		
-		
+/*		
 		private function _onGlobalVolumeRefresh(event:SliderEvent):void {
 			SoundMixer.soundTransform = new SoundTransform(event.thumbPos);
-		}
+		}*/
 	}
 }
