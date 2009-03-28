@@ -248,7 +248,7 @@ package editor_panel.containers {
 
 			// set visual properties
 			t.y = Settings.TRACK_CONTAINER_HEADER_HEIGHT + _trackList.length * Settings.TRACK_HEIGHT;
-			t.alpha = 0;
+			//t.alpha = 0;
 			
 			// add to the lists
 			_trackSpr.addChild(t);
@@ -259,7 +259,7 @@ package editor_panel.containers {
 			t.addEventListener(TrackEvent.KILL, _onTrackKill, false, 0, true);
 			
 			// animate
-			Tweener.addTween(t, {alpha:1, time:Settings.STAGE_HEIGHT_CHANGE_TIME * 1.5, delay:Settings.STAGE_HEIGHT_CHANGE_TIME * .5});
+			//Tweener.addTween(t, {alpha:1, time:Settings.STAGE_HEIGHT_CHANGE_TIME});
 			
 			return t;
 		}
