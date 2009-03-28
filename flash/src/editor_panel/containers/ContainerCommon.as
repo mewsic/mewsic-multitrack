@@ -4,9 +4,6 @@ package editor_panel.containers {
 	
 	import caurina.transitions.Tweener;
 	
-	import com.gskinner.utils.Rnd;
-	
-	import config.Embeds;
 	import config.Settings;
 	
 	import controls.MorphSprite;
@@ -23,16 +20,17 @@ package editor_panel.containers {
 	import modals.MessageModal;
 	
 	import org.osflash.thunderbolt.Logger;
-	import org.vancura.graphics.QBitmap;
 	import org.vancura.graphics.QSprite;
 	import org.vancura.util.addChildren;
 	
 	import remoting.data.TrackData;
 	import remoting.dynamic_services.SongFetchService;
+	import remoting.dynamic_services.TrackCreateService;
 	import remoting.dynamic_services.TrackFetchService;
 	import remoting.events.RemotingEvent;
 	import remoting.events.SongFetchEvent;
-	import remoting.events.TrackFetchEvent;	
+	import remoting.events.TrackCreateEvent;
+	import remoting.events.TrackFetchEvent;
 
 	
 	
@@ -53,6 +51,7 @@ package editor_panel.containers {
 		private var _songQueue:Array = new Array();
 		private var _trackQueue:Array = new Array();
 
+		private var _trackCreateService:TrackCreateService;
 		
 		
 		/**
@@ -139,49 +138,57 @@ package editor_panel.containers {
 		 * Add standard track.
 		 * @param id Track ID
 		 */
-		public function addStandardTrack(id:uint):void {
-			if(_type == TrackCommon.STANDARD_TRACK) {
-				// check for track dupe
-				for each(var t:Object in _trackQueue) {
-					// crawl through all tracks in the queue
-					if(t.trackID == id) {
-						// track is duped,
-						// show alert window
-						App.messageModal.show({title:'Add track', description:'Track already loaded', buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
-						return;
-					}
-				}
-				
-				// track is not duped
-				// so let's continue
-				Logger.info(sprintf('Adding standard track (trackID=%u)', id));
-				
-				// create track
-				createTrack(id);
-				
-				// request track info
-				try {
-					// add track fetch service
-					var service:TrackFetchService = new TrackFetchService();
-					
-					// add to track queue to prevent dupes
-					_trackQueue.push({trackID:id, isLoaded:false, service:service});
-				
-					// load track
-					service.url = App.connection.serverPath + App.connection.configService.trackFetchRequestURL;
-					service.addEventListener(TrackFetchEvent.REQUEST_DONE, _onTrackFetchDone, false, 0, true);
-					service.addEventListener(RemotingEvent.REQUEST_FAILED, _onTrackFetchFailed, false, 0, true);
-					service.request({trackID:id});
-				}
-				catch(err:Error) {
-					// something went wrong
-					// show alert window
-					App.messageModal.show({title:'Add track', description:sprintf('Could not add track.\n%s', err.message), buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
-				}
-			}
-			else {
+		public function addStandardTrack(id:uint):StandardTrack {
+			var ret:StandardTrack = null;
+			
+			if(_type != TrackCommon.STANDARD_TRACK) {
 				App.messageModal.show({title:'Add track', description:'Could not add standard track to record track container.', buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
+				return null;
 			}
+				
+			// check for track dupe
+			for each(var t:Object in _trackQueue) {
+				// crawl through all tracks in the queue
+				if(t.trackID == id) {
+					// track is duped,
+					// show alert window
+					App.messageModal.show({title:'Add track', description:'Track already loaded',
+						buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
+					return ret;
+				}
+			}
+				
+			// track is not duped
+			// so let's continue
+			Logger.info(sprintf('Adding standard track (trackID=%u)', id));
+				
+			// create track
+			ret = createTrack(id) as StandardTrack;
+				
+			// request track info
+			try {
+				// add track fetch service
+				var service:TrackFetchService = new TrackFetchService();
+					
+				// add to track queue to prevent dupes
+				_trackQueue.push({trackID:id, isLoaded:false, service:service});
+				
+				// load track
+				service.url = App.connection.serverPath + App.connection.configService.trackFetchRequestURL;
+				service.addEventListener(TrackFetchEvent.REQUEST_DONE, _onTrackFetchDone, false, 0, true);
+				service.addEventListener(RemotingEvent.REQUEST_FAILED, _onTrackFetchFailed, false, 0, true);
+				service.request({trackID:id});
+					
+				return ret;
+			}
+			catch(err:Error) {
+				// something went wrong
+				// show alert window
+				App.messageModal.show({title:'Add track', description:sprintf('Could not add track.\n%s', err.message),
+					buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
+			}
+			
+			return null;
 		}
 
 		
@@ -217,7 +224,7 @@ package editor_panel.containers {
 				// update core song
 				var i:uint = App.connection.coreSongData.songTracks.push(td);
 				for each(var p:TrackCommon in _trackList) if(p.trackID == td.trackID) {
-					p.trackData = td; //App.connection.coreSongData.songTracks[i - 1];
+					p.trackData = td;
 					p.load();
 				}
 				
@@ -271,46 +278,40 @@ package editor_panel.containers {
 		 * @return New track
 		 * @throws Error if could not add record track
 		 */
-		public function createRecordTrack():RecordTrack {
-			if(_type == TrackCommon.RECORD_TRACK) {				
-				Logger.info('Adding record track');
-				
-				// create track data
-				var td:TrackData = new TrackData();
-				td.trackID = Rnd.integer(10000, 99999);
-				td.trackUserNickname = App.connection.coreUserData.userNickname;
-				td.trackTitle = 'Untitled';
-				td.trackAuthor = App.connection.coreUserData.userNickname;
-				td.trackTags = '';
-				td.trackInstrumentID = 0;
-				td.trackRating = 0;
-				td.trackSampleURL = '';
-				td.trackWaveformURL = '';
-				td.trackMilliseconds = 0;
-				td.trackVolume = .9;
-				td.trackBalance = 0;
-				
-				// create track
-				createTrack(td.trackID);
-				
-				// update core song
-				var t:RecordTrack;
-				var i:uint = App.connection.coreSongData.songTracks.push(td);
-				for each(var p:RecordTrack in _trackList) if(p.trackID == td.trackID) {
-					t = p;
-					p.trackData = td;// App.connection.coreSongData.songTracks[i - 1];
-					p.load();
-				}
-				
-				// dispatch
-				dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {trackData:td}));
-				dispatchEvent(new AppEvent(AppEvent.REFRESH_TOP_PANE, true, false));
-				
-				return t;
-			}
-			else {
+		public function createRecordTrack():void {
+			if(_type != TrackCommon.RECORD_TRACK) {				
 				throw new Error('Could not add record track to standard track container.');
 			}
+			Logger.info('Creating record track');
+
+			// create this track on the server
+			_trackCreateService = new TrackCreateService();
+			_trackCreateService.url = App.connection.serverPath + App.connection.configService.trackCreateRequestURL; /// XXX REMOVE ME
+			_trackCreateService.addEventListener(RemotingEvent.REQUEST_FAILED, _onTrackCreateFailed, false, 0, true);
+			_trackCreateService.addEventListener(TrackCreateEvent.REQUEST_DONE, _onTrackCreateDone, false, 0, true);
+			_trackCreateService.request();
+		}
+				
+		
+		
+		private function _onTrackCreateDone(event:TrackCreateEvent):void {
+			Logger.info(sprintf("Track %u created on the server", event.trackData.trackID));
+
+			// create track
+			var t:RecordTrack = createTrack(event.trackData.trackID) as RecordTrack;
+				
+			// dispatch
+			dispatchEvent(new ContainerEvent(ContainerEvent.RECORD_TRACK_READY, true, false, {track:t}));
+			dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {trackData:event.trackData}));
+			
+			dispatchEvent(new AppEvent(AppEvent.REFRESH_TOP_PANE, true, false));
+		}
+		
+		
+		
+		private function _onTrackCreateFailed(event:Event):void {
+			App.messageModal.show({title:"Something is wrong", description:"Track create service failed",
+				buttons:MessageModal.BUTTONS_RELOAD, icon:MessageModal.ICON_ERROR});
 		}
 
 		
@@ -320,22 +321,11 @@ package editor_panel.containers {
 		 * @param id Track ID to be killed
 		 */
 		public function killTrack(id:uint):void {
-			// call song unload service
-/*			try {
-				var service:SongUnloadService = new SongUnloadService();
-				service.url = App.connection.serverPath + App.connection.configService.songUnloadRequestURL;
-				service.addEventListener(RemotingEvent.REQUEST_DONE, _onRefreshTopPane, false, 0, true);
-				service.request({songID:App.connection.coreSongData.songID, trackID:id});
-			}
-			catch(err:Error) {
-				// something went wrong
-				Logger.warn(sprintf('Error unloading track:\n%s', err.message));
-			}*/
-
+			var t:TrackCommon;
 			// remove track
 			var i:int = 0;
 			var j:int = -1;
-			for each(var t:TrackCommon in _trackList) {
+			for each(t in _trackList) {
 				if(t.trackID == id && t.isEnabled) {
 					try {
 						j = i;
@@ -350,7 +340,7 @@ package editor_panel.containers {
 			}
 			if(j != -1) _trackList.splice(j, 1);
 			
-			// remove fron core song
+			// remove from core song
 			for(var m:uint = 0;m < App.connection.coreSongData.songTracks.length; m++) {
 				if(App.connection.coreSongData.songTracks[m].trackID == id) App.connection.coreSongData.songTracks.splice(m, 1);
 			}
@@ -376,10 +366,10 @@ package editor_panel.containers {
 			
 			// reposition
 			var idx:uint = 0;
-			for each(var s:TrackCommon in _trackList) {
-				if(s.isEnabled) {
+			for each(t in _trackList) {
+				if(t.isEnabled) {
 					var my:uint = Settings.TRACK_CONTAINER_HEADER_HEIGHT + idx * Settings.TRACK_HEIGHT;
-					Tweener.addTween(s, {y:my, time:$morphTime, rounded:true, transition:'easeInOutQuad'});
+					Tweener.addTween(t, {y:my, time:$morphTime, rounded:true, transition:'easeInOutQuad'});
 					idx++;
 				}
 			}
@@ -657,27 +647,15 @@ package editor_panel.containers {
 				if(p.trackID == event.trackData.trackID) {
 					// it's found, update it
 					// set track data
-					p.trackData = event.trackData; //App.connection.coreSongData.songTracks[App.connection.coreSongData.songTracks.length - 1];
-					
+					p.trackData = event.trackData;
+
 					// load sample and waveform
 					p.load();
 					
 					_refreshWaveforms();
 					
 					// dispatch events
-					dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {trackData:event.trackData}));
-					
-					// call song load service
-					/*try {
-						var service:SongLoadService = new SongLoadService();
-						service.url = App.connection.serverPath + App.connection.configService.songLoadRequestURL;
-						service.addEventListener(RemotingEvent.REQUEST_DONE, _onRefreshTopPane, false, 0, true);
-						service.request({songID:App.connection.coreSongData.songID, trackID:event.trackData.trackID});
-					}
-					catch(err:Error) {
-						// something went wrong
-						Logger.warn(sprintf('Error loading track:\n%s', err.message));
-					}*/
+					dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {trackData:event.trackData}));					
 				}
 			}
 		}

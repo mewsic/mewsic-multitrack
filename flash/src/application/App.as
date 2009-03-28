@@ -57,7 +57,6 @@ package application {
 		public static var bulkLoader:BulkLoader;
 		public static var connection:Connection;
 		public static var editor:Editor;
-		public static var worker:Progress;
 		public static var settings:Settings;
 		public static var messageModal:MessageModal;
 		public static var exportSongModal:ExportSongModal;
@@ -113,7 +112,6 @@ package application {
 			try {
 				// add panels
 				editor = new Editor();
-				worker = new Progress();
 				
 				// add modal windows
 				messageModal = new MessageModal();
@@ -174,7 +172,6 @@ package application {
 			// wait for stage initial display
 			// and connect services after a short while
 			Tweener.addTween(this, {time:Settings.PANEL_EDITOR_LAUNCH_DELAY, onComplete:App.editor.launch});
-			//Tweener.addTween(this, {time:Settings.PANEL_WORKER_LAUNCH_DELAY, onComplete:App.worker.launch});
 			Tweener.addTween(this, {time:Settings.CONNECTION_LAUNCH_DELAY, onComplete:connection.configService.request});
 		}
 

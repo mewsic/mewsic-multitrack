@@ -47,48 +47,22 @@ package remoting.dynamic_services {
 		 * Request service.
 		 * Using POST method.
 		 * Parameters could contain:
-		 * params.title - Track title
-		 * params.filename - Track filename
-		 * params.description - Track description
-		 * params.instrumentDescription - Instrument description
-		 * params.key - Track key
-		 * params.songID - Song ID
-		 * params.instrumentID - Instrument ID
-		 * params.milliseconds - Track milliseconds
-		 * params.userID - User ID
-		 * @param params Parameters
+		 *   params.title - Track title
+		 *   params.filename - Track filename
+		 *   params.instrumentID - Instrument ID
+		 *   params.milliseconds - Track milliseconds
+		 * 
+		 * @param params Query Parameters
 		 */
 		override public function request(params:Object = null):void {
 			if(params == null) params = new Object();
 			
-			var query:String = '';
+			var query:String = 'flashStinks=true';
 			
 			if(params.title != undefined) query += 'track[title]=' + escape(params.title);
-			else throw new Error(sprintf('Service %s: Title is not defined.', $serviceID));
-			
 			if(params.filename != undefined) query += '&track[filename]=' + escape(params.filename);
-			else throw new Error(sprintf('Service %s: Filename is not defined.', $serviceID));
-			
-			if(params.key != undefined) query += '&track[tonality]=' + escape(params.key);
-			else throw new Error(sprintf('Service %s: Key is not defined.', $serviceID));
-			
-			if(params.songID != undefined) query += '&track[song_id]=' + escape(params.songID);
-			else throw new Error(sprintf('Service %s: Song ID is not defined.', $serviceID));
-			
 			if(params.instrumentID != undefined) query += '&track[instrument_id]=' + escape(params.instrumentID);
-			else throw new Error(sprintf('Service %s: Instrument ID is not defined.', $serviceID));
-			
 			if(params.milliseconds != undefined) query += '&track[seconds]=' + (params.milliseconds / 1000);
-			else throw new Error(sprintf('Service %s: Milliseconds is not defined.', $serviceID));
-			
-			if(params.userID != undefined) query += '&track[user_id]=' + escape(params.userID);
-			else throw new Error(sprintf('Service %s: User ID is not defined.', $serviceID));
-			
-			if(params.isIdea != undefined) query += '&track[idea]=' + ((params.isIdea) ? 1 : 0);
-			else throw new Error(sprintf('Service %s: Idea is not defined.', $serviceID));
-			
-			if(params.description != undefined) query += '&track[description]=' + escape(params.description);
-			if(params.instrumentDescription != undefined) query += '&track[instrument_description]=' + params.instrumentDescription;
 			
 			super.request({suffix:query, method:METHOD_POST});
 		}

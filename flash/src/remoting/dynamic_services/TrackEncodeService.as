@@ -1,11 +1,11 @@
 package remoting.dynamic_services {
-	import org.osflash.thunderbolt.Logger;
-	
 	import com.gskinner.utils.Rnd;
+	
+	import config.Settings;
 	
 	import de.popforge.utils.sprintf;
 	
-	import config.Settings;
+	import org.osflash.thunderbolt.Logger;
 	
 	import remoting.IService;
 	import remoting.ServiceCommon;
@@ -56,6 +56,9 @@ package remoting.dynamic_services {
 			
 			if(params.filename != undefined) query += 'filename=' + escape(params.filename);
 			else throw new Error(sprintf('Service %s: Filename is not defined.', $serviceID));
+			
+			if(params.trackID != undefined) query += '&track_id=' + escape(params.trackID);
+			else throw new Error(sprintf('Service %s: Track ID is not defined.', $serviceID));
 			
 			super.request({suffix:query, method:METHOD_POST});
 		}

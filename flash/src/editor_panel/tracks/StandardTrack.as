@@ -6,24 +6,37 @@ package editor_panel.tracks {
 	import config.Embeds;
 	import config.Settings;
 	
+	import controls.ProgressBar;
 	import controls.Slider;
 	import controls.SliderEvent;
+	
+	import de.popforge.utils.sprintf;
 	
 	import editor_panel.sampler.Sampler;
 	import editor_panel.sampler.SamplerEvent;
 	import editor_panel.waveform.Waveform;
 	
-	import de.popforge.utils.sprintf;
-	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
+	import flash.utils.Timer;
+	
+	import modals.MessageModal;
 	
 	import org.osflash.thunderbolt.Logger;
 	import org.vancura.graphics.QBitmap;
 	import org.vancura.util.addChildren;
-	import org.vancura.util.removeChildren;	
-
+	import org.vancura.util.removeChildren;
 	
+	import remoting.data.WorkerStatusData;
+	import remoting.dynamic_services.TrackEncodeService;
+	import remoting.dynamic_services.TrackFetchService;
+	import remoting.dynamic_services.WorkerEncodeService;
+	import remoting.events.RemotingEvent;
+	import remoting.events.TrackEncodeEvent;
+	import remoting.events.TrackFetchEvent;
+	import remoting.events.WorkerEvent;
+
 	
 	/**
 	 * Standard track.
@@ -36,6 +49,8 @@ package editor_panel.tracks {
 	public class StandardTrack extends TrackCommon {
 
 		
+		private static const _WORKER_ID:String = 'workerSaveTrack';
+		
 		private var _sampler:Sampler;
 		private var _waveform:Waveform;
 
@@ -47,6 +62,14 @@ package editor_panel.tracks {
 		
 		// private var _balanceKnob:Knob; XXX RE-ENABLE ME
 		
+		private var _progressBar:ProgressBar;
+		// Encoding stuff
+		private var _encodeKey:String;
+		private var _workerEncodeService:WorkerEncodeService;
+		private var _trackEncodeService:TrackEncodeService;
+		private var _encodeWorkerTimer:Timer;
+		private var _trackFetchService:TrackFetchService;
+
 		
 		
 		/**
@@ -59,6 +82,13 @@ package editor_panel.tracks {
 			// create components
 			_sampler = new Sampler();
 			_waveform = new Waveform({x:Settings.TRACKCONTROLS_WIDTH});
+			_waveform.visible = false;
+			
+			_progressBar = new ProgressBar({x:Settings.TRACKCONTROLS_WIDTH, y:27,
+				background:new Embeds.recordProgressBack(), progress:new Embeds.recordProgress(),
+				grid:new Rectangle(9, 0, 22, 14)})
+			_progressBar.visible = false;
+			_progressBar.width = Settings.WAVEFORM_WIDTH;
 
 			// add event listeners
 			_sampler.addEventListener(SamplerEvent.SAMPLE_PROGRESS, _onSamplerProgress, false, 0, true);
@@ -80,7 +110,7 @@ package editor_panel.tracks {
 
 			// add to display list
 			addChildren(_waveform, $killBtn);
-			addChildren(this, _background, _volumeSlider, _volumeActive, _volumeMuted, _waveform);
+			addChildren(this, _background, _volumeSlider, _volumeActive, _volumeMuted, _waveform, _progressBar);
 			
 			// add event listeners
 			$killBtn.addEventListener(MouseEvent.CLICK, _onKillClick, false, 0, true);
@@ -92,11 +122,9 @@ package editor_panel.tracks {
 			
 			_volumeSlider.addEventListener(SliderEvent.REFRESH, _onVolumeSliderRefresh, false, 0, true);
 //			_balanceKnob.addEventListener(KnobEvent.REFRESH, _onKnobRefresh, false, 0, true);
-			super.addEventListener(TrackEvent.REFRESH, _onRefresh, false, 0, true);
 			
 			// set states and refresh
 			_volumeSlider.thumbPos = 1 - .9;
-			_onRefresh();			
 		}
 
 		
@@ -114,15 +142,14 @@ package editor_panel.tracks {
 			_volumeSlider.removeEventListener(SliderEvent.REFRESH, _onVolumeSliderRefresh);
 //			_balanceKnob.removeEventListener(KnobEvent.REFRESH, _onKnobRefresh);
 
-			super.removeEventListener(TrackEvent.REFRESH, _onRefresh);
-
 			// remove from display list
 			removeChildren(_waveform, $killBtn);
-			removeChildren(this, _background, _volumeSlider, _volumeActive, _volumeMuted, _waveform);
+			removeChildren(this, _background, _volumeSlider, _volumeActive, _volumeMuted, _waveform, _progressBar);
 
 			// destroy components
 			_sampler.destroy();
 			_waveform.destroy();
+			_progressBar.destroy();
 			_volumeSlider.destroy();
 
 //			_balanceKnob.destroy();
@@ -139,7 +166,6 @@ package editor_panel.tracks {
 			// refresh volume & balance
 			_sampler.volume = $trackData.trackVolume;
 			_sampler.balance = $trackData.trackBalance;
-
 			
 			super.refresh();
 		}
@@ -158,8 +184,15 @@ package editor_panel.tracks {
 			refresh();
 			
 			// load sampler and waveform
-			_sampler.load(App.connection.serverPath + $trackData.trackSampleURL, $trackData.trackMilliseconds);
-			_waveform.load(App.connection.serverPath + $trackData.trackWaveformURL, $trackData.trackMilliseconds);
+			if($trackData.trackSampleURL && $trackData.trackWaveformURL) {
+				_sampler.load(App.connection.serverPath + $trackData.trackSampleURL, $trackData.trackMilliseconds);
+				_waveform.load(App.connection.serverPath + $trackData.trackWaveformURL, $trackData.trackMilliseconds);
+				_waveform.visible = true;
+				_progressBar.visible = false;
+			} else {
+				_waveform.visible = false;
+				_progressBar.visible = true;
+			}
 		}
 		
 		
@@ -203,11 +236,14 @@ package editor_panel.tracks {
 			_sampler.seek(position);
 		}
 		
+
 		
 		override public function get position():uint {
 			return _sampler.position;
 		}
-		
+
+
+
 		override public function get volume():Number {
 			return _sampler.volume;
 		}
@@ -227,45 +263,16 @@ package editor_panel.tracks {
 		}
 		
 		
-		public function get isSolo():Boolean {
-			return $isSolo;
-		}
-
-		
-		
-		public function get isMuted():Boolean {
-			return $isMuted;
-		}
-
-		
-		
-		public function set isSolo(value:Boolean):void {
-			$isSolo = value;
-			$isMuted = false;
-			_sampler.isMuted = isMuted;
-			dispatchEvent(new TrackEvent(TrackEvent.REFRESH));
-		}
-
-		
-		
-		public function set isMuted(value:Boolean):void {
-			$isMuted = value;
-			$isSolo = false;
-			_sampler.isMuted = isMuted;
-			dispatchEvent(new TrackEvent(TrackEvent.REFRESH));
-		}
-
-		
-		
-		
 		/**
 		 * Kill button click event handler.
 		 * @param event Event data
 		 */
-		private function _onKillClick(event:MouseEvent):void {
+		private function _onKillClick(event:MouseEvent = null):void {
 			Logger.debug(sprintf('Kill track (trackID=%u, trackTitle=%s)', $trackData.trackID, $trackData.trackTitle));
 			dispatchEvent(new TrackEvent(TrackEvent.KILL));
 		}
+
+
 
 		/**
 		 * Sample download progress
@@ -292,17 +299,8 @@ package editor_panel.tracks {
 			dispatchEvent(event);
 		}
 
-		
-		
-		private function _onRefresh(event:Event = null):void {
-/*			_muteOffBtn.visible = !$isMuted;
-			_muteOnBtn.visible = $isMuted;
-			_soloOffBtn.visible = !$isSolo;
-			_soloOnBtn.visible = $isSolo;*/
-		}
 
-		
-		
+
 /*		private function _onKnobRefresh(event:KnobEvent):void {
 			var p:Number = -1 / (118 / event.thumbAngle);
 			
@@ -336,6 +334,134 @@ package editor_panel.tracks {
 			catch(err:Error) {
 				// sampler may be not initialized
 			}
+		}
+		
+		
+		
+		/// ENCODING STUFF
+		///
+		public function encode(recordName:String):void {
+			_encodeWorkerTimer = new Timer(Settings.WORKER_INTERVAL * 1000);
+
+			_trackEncodeService = new TrackEncodeService();
+			_workerEncodeService = new WorkerEncodeService();
+
+			_trackEncodeService.url = App.connection.mediaPath + App.connection.configService.mediaEncodeRequestURL;
+			_workerEncodeService.url = App.connection.mediaPath + App.connection.configService.workerEncodeRequestURL;
+
+			_trackEncodeService.addEventListener(TrackEncodeEvent.REQUEST_DONE, _onTrackEncodeRequestDone, false, 0, true);
+			_workerEncodeService.addEventListener(WorkerEvent.REQUEST_DONE, _onEncodeWorkerDone, false, 0, true);
+
+			_trackEncodeService.addEventListener(RemotingEvent.REQUEST_FAILED, _onTrackEncodeFailed, false, 0, true);
+			_workerEncodeService.addEventListener(RemotingEvent.REQUEST_FAILED, _onTrackEncodeFailed, false, 0, true);
+			
+			_trackEncodeService.request({filename:recordName, trackID:$trackID});
+			
+			_progressBar.visible = true;
+			_progressBar.progress = 2;
+		}
+
+
+		
+		/**
+		 * Track encode failed event handler.
+		 * @param event Event data
+		 */
+		private function _onTrackEncodeFailed(event:RemotingEvent):void {
+			_onKillClick(); /// XXX FIXME
+
+			App.messageModal.show({title:'Save track', description:'Error while adding track.',
+				buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
+		}
+
+
+
+		/**
+		 * Track encode request done event handler.
+		 * Start banging the worker for completion.
+		 * @param event Event data
+		 */
+		private function _onTrackEncodeRequestDone(event:TrackEncodeEvent):void {
+			_encodeKey = event.key;
+			
+			try {
+				_encodeWorkerTimer.start();
+				_onEncodeWorkerBang();
+			}
+			catch(err:Error) {
+				Logger.error(sprintf('Cannot start encoding of your track.\nPlease wait a while and try again.\n%s', err.message));
+			}
+		}
+
+
+
+		/**
+		 * Encode worker bang event handler.
+		 * Bangs encoder worker. But only if it is not connecting, preventing overloading.
+		 * @param event Event data
+		 */
+		private function _onEncodeWorkerBang(event:Event = null):void {
+			if(!_workerEncodeService.isConnecting) {
+				try {
+					_workerEncodeService.request({key:_encodeKey});
+					_progressBar.progress += 5;
+				}
+				catch(err:Error) {
+					Logger.warn(sprintf('Error banging encode worker:\n%s', err.message));
+				}
+			}
+		}
+
+
+
+		/**
+		 * Encode worker done event handler.
+		 * Saving and encoding done, parse results.
+		 * If everything is ok, add track to editor (after request).
+		 * @param event Event data
+		 */
+		private function _onEncodeWorkerDone(event:WorkerEvent):void {
+			_encodeWorkerTimer.stop();
+
+			switch(event.workerStatusData.status) {
+				case WorkerStatusData.STATUS_ERROR:
+					_onKillClick();
+
+					App.messageModal.show({title:'Encoding error', description:'Error while encoding your track.',
+						buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
+					break;
+					
+				case WorkerStatusData.STATUS_FINISHED:
+					// refresh track
+					_trackFetchService = new TrackFetchService();
+					
+					_trackFetchService.url = App.connection.serverPath + App.connection.configService.trackFetchRequestURL;
+					_trackFetchService.addEventListener(TrackFetchEvent.REQUEST_DONE, _onTrackFetchDone, false, 0, true);
+					_trackFetchService.addEventListener(RemotingEvent.REQUEST_FAILED, _onTrackFetchFailed, false, 0, true);
+					_trackFetchService.request({trackID:$trackData.trackID});
+	
+					break;
+			}
+		}
+
+
+
+		private function _onTrackFetchDone(event:TrackFetchEvent):void {
+			$trackData = event.trackData;
+			this.load();
+			
+			_trackFetchService.removeEventListener(TrackFetchEvent.REQUEST_DONE, _onTrackFetchDone);
+			_trackFetchService.removeEventListener(RemotingEvent.REQUEST_FAILED, _onTrackFetchFailed);
+		}
+
+
+
+		private function _onTrackFetchFailed(event:RemotingEvent):void {
+			App.messageModal.show({title:"Unable to refresh track", description:event.description});
+			_onKillClick();
+			
+			_trackFetchService.removeEventListener(TrackFetchEvent.REQUEST_DONE, _onTrackFetchDone);
+			_trackFetchService.removeEventListener(RemotingEvent.REQUEST_FAILED, _onTrackFetchFailed);			
 		}
 	}
 }

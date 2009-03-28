@@ -11,6 +11,8 @@ package editor_panel.tracks {
 	
 	import de.popforge.utils.sprintf;
 	
+	import editor_panel.sampler.SamplerEvent;
+	
 	import flash.display.BlendMode;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -27,9 +29,11 @@ package editor_panel.tracks {
 	import org.vancura.graphics.Drawing;
 	import org.vancura.graphics.QSprite;
 	import org.vancura.util.addChildren;
-	import org.vancura.util.removeChildren;	
-
+	import org.vancura.util.removeChildren;
 	
+	import remoting.dynamic_services.TrackCreateService;
+	import remoting.events.TrackCreateEvent;	
+	import remoting.events.RemotingEvent;
 	
 	/**
 	 * Record track.
@@ -55,6 +59,9 @@ package editor_panel.tracks {
 		private var _isPrecounting:Boolean;
 		private var _startTime:uint;
 		private var _syncedRecordTimeout:uint;
+		
+		private static const _MAX_REC_LEN:uint = 10 * 60 * 1000; // 10 minutes
+		private static var _maxrecTimeout:uint;
 
 		
 		
@@ -85,7 +92,7 @@ package editor_panel.tracks {
 
 			enableVuMeter();	
 			
-			$killBtn.addEventListener(MouseEvent.CLICK, _onKillClick, false, 0, true);		
+			$killBtn.addEventListener(MouseEvent.CLICK, _onKillClick, false, 0, true);			
 		}
 
 		
@@ -102,7 +109,7 @@ package editor_panel.tracks {
 			// destroy components
 			_vuMeter.destroy();
 			_recordProgress.destroy();
-			
+						
 			// remove precount timer
 			_removePrecountTimer();
 			
@@ -135,9 +142,25 @@ package editor_panel.tracks {
 			_addPrecountTimer(precountDelay, 4);
 						
 			_syncedRecordTimeout = setTimeout(_onStartSyncedRecord, precountDelay * 4);
+			_maxrecTimeout = setTimeout(_onMaximalRecordLength, _MAX_REC_LEN);
 			
 			//_recordOverlayTick();
 		}
+
+
+
+		private function _onStartSyncedRecord():void {
+			_isRecording = true;
+		
+			try {
+				Logger.info('Synced record start.');
+				App.connection.streamService.record();
+			}
+			catch(err:Error) {
+				App.messageModal.show({title:'Record track', description:sprintf('Error recording track.\n%s', err.message), buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
+				return; 
+			}
+		}		
 
 		
 		
@@ -146,6 +169,8 @@ package editor_panel.tracks {
 		 * @param event Event data
 		 */
 		public function stopRecording(event:Event = null):void {
+			clearTimeout(_maxrecTimeout);
+
 			if(_isRecording) {
 				Logger.debug('Stop recording.');
 				App.connection.streamService.stop();
@@ -159,9 +184,7 @@ package editor_panel.tracks {
 			
 			_startTime = 0;
 
-			Tweener.removeTweens(_visualTickSpr);
-			_visualTickSpr.alpha = 0;
-			_visualTickSpr.visible = false;
+			Tweener.addTween(_visualTickSpr, {alpha:0, visible:false});
 			
 			_removePrecountTimer();
 		}
@@ -227,24 +250,15 @@ package editor_panel.tracks {
 
 			dispatchEvent(new TrackEvent(TrackEvent.RECORD_START, true));
 		}
-
-
-
-		private function _onStartSyncedRecord():void {
-			_isRecording = true;
-		
-			try {
-				Logger.info('Synced record start.');
-				App.connection.streamService.record();
-			}
-			catch(err:Error) {
-				App.messageModal.show({title:'Record track', description:sprintf('Error recording track.\n%s', err.message), buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
-				return; 
-			}
-		}		
 		
 		
 
+		public function _onMaximalRecordLength():void {
+			dispatchEvent(new SamplerEvent(SamplerEvent.PLAYBACK_COMPLETE, true));
+		}
+		
+		
+		
 		public function enableVuMeter():void {
 			if(!_vuMeterEnabled) {
 				this.addEventListener(Event.ENTER_FRAME, _onEnterFrame, false, 0, true);
@@ -269,8 +283,8 @@ package editor_panel.tracks {
 		
 		
 	
-		private function _onKillClick(event:Event):void {
+		private function _onKillClick(event:Event = null):void {
 			App.editor.killRecordTrack();
-		}
+		}		
 	}
 }

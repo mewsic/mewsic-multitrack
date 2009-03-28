@@ -1,6 +1,5 @@
 package editor_panel {
 	import application.App;
-	import application.AppEvent;
 	import application.PanelCommon;
 	
 	import caurina.transitions.Tweener;
@@ -13,7 +12,6 @@ package editor_panel {
 	import controls.Button;
 	import controls.MorphSprite;
 	import controls.Slider;
-	import controls.SliderEvent;
 	import controls.Toolbar;
 	import controls.VUMeter;
 	
@@ -23,13 +21,13 @@ package editor_panel {
 	import editor_panel.containers.ContainerEvent;
 	import editor_panel.sampler.SamplerEvent;
 	import editor_panel.tracks.RecordTrack;
+	import editor_panel.tracks.StandardTrack;
 	import editor_panel.tracks.TrackCommon;
 	import editor_panel.tracks.TrackEvent;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.media.SoundMixer;
-	import flash.media.SoundTransform;
 	import flash.utils.ByteArray;
 	
 	import modals.MessageModal;
@@ -319,13 +317,13 @@ package editor_panel {
 		 * Add track.
 		 * @param trackID Track ID
 		 */
-		public function addTrack(trackID:uint):void {
-			// add standard track
-			_standardContainer.addStandardTrack(trackID); 
-			
-			// refresh visual
-			_refreshVisual();
-		}
+//		public function addTrack(trackID:uint):void {
+	//		// add standard track
+	//		_standardContainer.addStandardTrack(trackID); 
+	//		
+	//		// refresh visual
+	//		_refreshVisual();
+	//	}
 
 		
 		
@@ -425,8 +423,7 @@ package editor_panel {
 		private function _onRecordStopButtonClick(event:MouseEvent):void {
 			if(_state == _STATE_RECORDING) {
 				_state = _STATE_STOPPED;
-				_recordTrack.stopRecording();
-				stop();
+				_encodeRecordedTrack();
 			} else {
 				Logger.warn("Machine error: should be in REC state");
 			}
@@ -458,13 +455,21 @@ package editor_panel {
 		private function _onMicrophoneAllowed(event:UserEvent = null):void {
 			_isMikeInited = true;
 			
-			if(_recordTrack == null)
-				_recordTrack = _recordContainer.createRecordTrack();
+			if(_recordTrack != null)
+				throw new Error("Record track should be null");
 			
-			_state = _STATE_RECORDING;
-
+			_recordContainer.createRecordTrack();
+			_recordContainer.addEventListener(ContainerEvent.RECORD_TRACK_READY, _onRecordTrackReady, false, 0, true);
+		}
+		
+		private function _onRecordTrackReady(event:ContainerEvent):void {
+			if(_recordTrack != null)
+				throw new Error("Record track should be null");
+			
+			_recordTrack = event.data.track;
 			_recordTrack.startRecording();
-			
+
+			_state = _STATE_RECORDING;			
 			_refreshVisual();
 		}
 		
@@ -489,9 +494,7 @@ package editor_panel {
 				//if(_completedTracksCounter == allTrackCount - 1) {
 					Logger.info('Song recording completed.');
 					_completedTracksCounter = 0;
-					_recordTrack.stopRecording(event);
-					stop();
-					
+					_encodeRecordedTrack();					
 				//}
 				
 			} else {
@@ -525,6 +528,16 @@ package editor_panel {
 			play();
 		}
 
+
+
+		private function _encodeRecordedTrack():void {
+			var id:uint = _recordTrack.trackID;
+			var t:StandardTrack;
+
+			killRecordTrack();
+			t = _standardContainer.addStandardTrack(id);
+			t.encode(App.connection.streamService.filename);
+		}
 		
 
 		private function _onSearchButtonClick(event:MouseEvent = null):void {
@@ -534,7 +547,7 @@ package editor_panel {
 		
 		/**
 		 * Upload track button clicked event handler.
-		 * Display upload trac modal.
+		 * Display upload track modal.
 		 * @param event Event data
 		 */
 		private function _onUploadButtonClick(event:MouseEvent = null):void {
