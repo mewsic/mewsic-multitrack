@@ -21,20 +21,11 @@ package application {
 	import flash.external.*;
 	import flash.system.Security;
 	
-	import modals.CloseModal;
-	import modals.DownloadSongModal;
-	import modals.DownloadTrackModal;
-	import modals.ExportSongModal;
 	import modals.MessageModal;
-	import modals.SaveSongModal;
-	import modals.SaveTrackModal;
-	import modals.UploadTrackModal;
 	
 	import org.osflash.thunderbolt.Logger;
 	import org.vancura.graphics.FPS;
 	import org.vancura.util.addChildren;
-	
-	import progress_panel.Progress;
 	
 	import remoting.Connection;
 	import remoting.events.RemotingEvent;	
@@ -59,13 +50,6 @@ package application {
 		public static var editor:Editor;
 		public static var settings:Settings;
 		public static var messageModal:MessageModal;
-		public static var exportSongModal:ExportSongModal;
-		public static var saveSongModal:SaveSongModal;
-		public static var uploadTrackModal:UploadTrackModal;
-		public static var saveTrackModal:SaveTrackModal;
-		public static var downloadSongModal:DownloadSongModal;
-		public static var downloadTrackModal:DownloadTrackModal;
-		public static var closeModal:CloseModal;
 		public static var fps:FPS;
 
 		private var _currentStageHeight:int = Settings.START_STAGE_HEIGHT;
@@ -73,7 +57,7 @@ package application {
 		private var _lastMouseX:int;
 		private var _lastMouseY:int;
 		private var _helpServicesCounter:uint = 0;
-		private var _loadSong:Boolean;
+		private var _loadSong:uint;
 		private var _fastSeekTimeout:uint;
 		
 
@@ -102,8 +86,8 @@ package application {
 			// add data from FlashVars
 			connection.serverPath = data.serverPath;
 			connection.configService.url = connection.serverPath + data.settingsXMLPath;
-			connection.coreSongData.songID = data.songID;
-			_loadSong = data.loadSong;
+
+			_loadSong = data.songID;
 
 			// set GUI defaults
 			_addDefaults();
@@ -115,13 +99,6 @@ package application {
 				
 				// add modal windows
 				messageModal = new MessageModal();
-				exportSongModal = new ExportSongModal();
-				saveSongModal = new SaveSongModal();
-				uploadTrackModal = new UploadTrackModal();
-				saveTrackModal = new SaveTrackModal();
-				downloadSongModal = new DownloadSongModal();
-				downloadTrackModal = new DownloadTrackModal();
-				closeModal = new CloseModal();
 				
 				// add fps meter and enable it if needed
 				if(Settings.isLogEnabled) {
@@ -142,10 +119,6 @@ package application {
 			
 			// add static services events
 			connection.instrumentsService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
-
-			connection.coreSongService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
-			connection.coreSongService.addEventListener(RemotingEvent.REFRESH_DONE, _onSongRefreshResponse, false, 0, true);
-
 			connection.coreUserService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
 			
 			// add this events
@@ -156,8 +129,8 @@ package application {
 
 			// init javascript to actionscript calls
 			try {
-				ExternalInterface.addCallback('refreshSong', _onSongRefresh);
 				ExternalInterface.addCallback('loadSong', _onLoadSong);
+				ExternalInterface.addCallback('loadTrack', _onLoadTrack);
 				ExternalInterface.addCallback('killRecordTrack', _onKillRecordTrack);
 			}
 			catch(err2:Error) {
@@ -166,7 +139,7 @@ package application {
 			}
 
 			// add modules to display list
-			addChildren(this, editor, exportSongModal, saveSongModal, uploadTrackModal, saveTrackModal, downloadSongModal, downloadTrackModal, closeModal, messageModal);
+			addChildren(this, editor, messageModal);
 			if(Settings.isLogEnabled) addChildren(this, fps);
 
 			// wait for stage initial display
@@ -293,15 +266,11 @@ package application {
 			switch(event.currentTarget) {
 				
 				case connection.configService:
-					dsc = 'Could not load user config data.' + l8r;
+					dsc = 'Could not load configuration.' + l8r;
 					break;
 										
 				case connection.instrumentsService:
-					dsc = 'Could not load instruments data.' + l8r;
-					break;
-					
-				case connection.coreSongService:
-					dsc = 'Could not load core song.' + l8r;
+					dsc = 'Could not load instruments.' + l8r;
 					break;
 					
 				case connection.coreUserService:
@@ -346,13 +315,11 @@ package application {
 				// set services url
 				connection.streamService.url = connection.configService.streamGatewayURL;
 				connection.instrumentsService.url = connection.serverPath + connection.configService.instrumentsRequestURL;
-				connection.coreSongService.url = connection.serverPath + connection.configService.songFetchRequestURL;
 				connection.coreUserService.url = connection.serverPath + connection.configService.userRequestURL;
 
 				// connect static services
 				connection.streamService.connect();
 				connection.instrumentsService.request();
-				connection.coreSongService.request({songID:connection.coreSongData.songID});
 
 				// get core user data
 				// or fill it with guest information in case user is not logged in
@@ -422,14 +389,10 @@ package application {
 		 * @param event Event data
 		 */
 		private function _onHelpServicesDone(event:RemotingEvent):void {
-			if(++_helpServicesCounter == 7) {
-				editor.postInit();
-				uploadTrackModal.postInit();
-				saveTrackModal.postInit();
-				
+			if(++_helpServicesCounter == 2) {				
 				if(_loadSong) {
-					Logger.info(sprintf('Loading core song %u', connection.coreSongData.songID));
-					App.editor.addSong(connection.coreSongData.songID);
+					Logger.info(sprintf('Autoloading song %u', _loadSong));
+					App.editor.addSong(_loadSong);
 				}
 			}
 		}
@@ -460,29 +423,14 @@ package application {
 		
 		
 		/**
-		 * Refresh song data event handler.
-		 * @param event Event data
-		 */
-		private function _onSongRefreshResponse(event:RemotingEvent):void {
-			editor.refreshSongData();
-		}
-
-		
-		
-		/**
-		 * Song information in HTML page was changed, refresh song values and re-render content.
-		 */
-		private function _onSongRefresh():void {
-			connection.coreSongService.refresh();
-		}
-
-
-
-		/**
 		 * Load a song from javascript
 		 */
 		 private function _onLoadSong(songID:uint):void {
 			App.editor.addSong(songID);
+		 }
+		 
+		 private function _onLoadTrack(trackID:uint):void {
+		 	App.editor.addTrack(trackID);
 		 }
 
 		 private function _onKillRecordTrack():void {

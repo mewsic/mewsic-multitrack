@@ -42,7 +42,6 @@ package remoting {
 		protected static var $coreUserAuthenticityToken:String;
 		protected static var $coreUserLoginStatus:Boolean;
 		protected static var $coreUserData:UserData = new UserData();
-		protected static var $coreSongData:SongData = new SongData();
 		protected static var $defaultAvatarURL:String;
 		public var url:String;
 		protected var $serviceID:String;
@@ -107,7 +106,6 @@ package remoting {
 					// user is logged in, we will have to replace {:id} with user id
 					params.url = url;
 					params.url = params.url.replace(/{:id}/g, $coreUserData.userID);
-					params.url = params.url.replace(/{:song_id}/g, $coreSongData.songID);
 				}
 				else {
 					// user is not logged in, use the whole url variable
@@ -244,16 +242,6 @@ package remoting {
 		 */
 		public static function get coreUserData():UserData {
 			return $coreUserData;
-		}
-
-		
-		
-		/**
-		 * Get core song data.
-		 * @return Core user data
-		 */
-		public static function get coreSongData():SongData {
-			return $coreSongData;
 		}
 
 		

@@ -4,7 +4,6 @@ package remoting {
 	import remoting.data.UserData;
 	import remoting.events.RemotingEvent;
 	import remoting.static_services.ConfigService;
-	import remoting.static_services.CoreSongService;
 	import remoting.static_services.CoreUserService;
 	import remoting.static_services.InstrumentsService;
 	import remoting.static_services.StreamService;
@@ -26,7 +25,6 @@ package remoting {
 		private var _streamService:StreamService;
 		private var _configService:ConfigService;
 		private var _instrumentsService:InstrumentsService;
-		private var _coreSongService:CoreSongService;
 		private var _coreUserService:CoreUserService;
 
 		
@@ -39,7 +37,6 @@ package remoting {
 			_configService = new ConfigService();
 			_streamService = new StreamService();
 			_instrumentsService = new InstrumentsService();
-			_coreSongService = new CoreSongService();
 			_coreUserService = new CoreUserService();
 			
 			// add config event listeners
@@ -59,11 +56,6 @@ package remoting {
 			_instrumentsService.addEventListener(RemotingEvent.REQUEST_DONE, _onInstrumentsRequestDone, false, 0, true);
 			_instrumentsService.addEventListener(RemotingEvent.REQUEST_FAILED, _onFailed, false, 0, true);
 						
-			// add core song event listeners
-			_coreSongService.addEventListener(RemotingEvent.TIMEOUT, _onTimeout, false, 0, true);
-			_coreSongService.addEventListener(RemotingEvent.REQUEST_DONE, _onCoreSongRequestDone, false, 0, true);
-			_coreSongService.addEventListener(RemotingEvent.REQUEST_FAILED, _onFailed, false, 0, true);
-		
 			// add core user event listener			
 			_coreUserService.addEventListener(RemotingEvent.TIMEOUT, _onTimeout, false, 0, true);
 			_coreUserService.addEventListener(RemotingEvent.REQUEST_DONE, _onCoreUserRequestDone, false, 0, true);
@@ -99,26 +91,6 @@ package remoting {
 		}
 		
 
-		
-		/**
-		 * Get Core song service.
-		 * @return Core song service
-		 */
-		public function get coreSongService():CoreSongService {
-			return _coreSongService;
-		}
-
-		
-		
-		/**
-		 * Get Core song data.
-		 * @return Core song data
-		 */
-		public function get coreSongData():SongData {
-			return ServiceCommon.coreSongData;
-		}
-
-		
 		
 		/**
 		 * Get Core user service.
@@ -207,15 +179,6 @@ package remoting {
 		 */
 		private function _onInstrumentsRequestDone(event:RemotingEvent):void {
 			dispatchEvent(new RemotingEvent(RemotingEvent.INSTRUMENTS_REQUEST_DONE));
-		}
-
-		
-		
-		/**
-		 * Core song request done.
-		 */
-		private function _onCoreSongRequestDone(event:RemotingEvent):void {
-			dispatchEvent(new RemotingEvent(RemotingEvent.CORE_SONG_REQUEST_DONE));
 		}
 
 		
