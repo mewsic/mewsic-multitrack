@@ -40,8 +40,8 @@ package editor_panel {
 	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
 	
-	import remoting.events.UserEvent;	
 	import remoting.data.TrackData;
+	import remoting.events.UserEvent;
 
 	
 	
@@ -123,6 +123,8 @@ package editor_panel {
 
 		private var _recordLimit:uint;
 		private var _isStreamDown:Boolean;
+		
+		private var _isMikeInited:Boolean = false;
 
 		
 		
@@ -344,6 +346,7 @@ package editor_panel {
 		public function killRecordTrack():void {
 			// kill track
 			_state = _STATE_STOPPED;
+			stop();
 
 			_recordContainer.killTrack(_recordTrack.trackID);
 			_recordTrack = null;
@@ -400,31 +403,25 @@ package editor_panel {
 			//}
 					
 			if(_state == _STATE_STOPPED) {	
-				// initialize microphone, when it is ready, the UserEvent.ALLOWED_MIKE
-				// event is dispatched
-				try {
-					App.connection.streamService.prepare();
-					App.connection.streamService.addEventListener(UserEvent.ALLOWED_MIKE, _onMicrophoneAllowed, false, 0, true);
-					App.connection.streamService.addEventListener(UserEvent.DENIED_MIKE, _onMicrophoneDenied, false, 0, true);
-
-					if(_recordTrack == null)
-						_recordTrack = _recordContainer.createRecordTrack();
-
-				}
-				catch(err1:Error) {
-					// something is blatantly wrong
-					App.messageModal.show({title:'Record track', description:err1.message, buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
-					return;
-				}
-
 				_state = _STATE_WAIT_REC;
+		
+				try {
+					grabMikeAndRecord();
+					
+				 } catch(e:Error) {
+					App.messageModal.show({title:'Record track', description:e.message,
+					   buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
+
+					_state = _STATE_STOPPED;
+				}
+
 			} else {
 				Logger.warn("Machine error: should be in STOP state");
 			}
 			
 			_refreshVisual();
 		}
-		
+
 		private function _onRecordStopButtonClick(event:MouseEvent):void {
 			if(_state == _STATE_RECORDING) {
 				_state = _STATE_STOPPED;
@@ -437,8 +434,35 @@ package editor_panel {
 			_refreshVisual();
 		}
 		
+		private function grabMikeAndRecord():void {
+
+			if(!_isMikeInited) {
+				// initialize microphone for the first time. when it is ready,
+				//  the UserEvent.ALLOWED_MIKE event is dispatched and record
+				// begins
+				App.connection.streamService.prepare();
+				
+				App.connection.streamService.addEventListener(UserEvent.ALLOWED_MIKE, _onMicrophoneAllowed, false, 0, true);
+				App.connection.streamService.addEventListener(UserEvent.DENIED_MIKE, _onMicrophoneDenied, false, 0, true);
+			} else {
+				// already asked the user for permission, remove listeners and
+				// start recording immediately.
+				App.connection.streamService.removeEventListener(UserEvent.ALLOWED_MIKE, _onMicrophoneAllowed);
+				App.connection.streamService.removeEventListener(UserEvent.DENIED_MIKE, _onMicrophoneDenied);
+				
+				_onMicrophoneAllowed();
+			}
+		}
+		
+		
 		private function _onMicrophoneAllowed(event:UserEvent = null):void {
+			_isMikeInited = true;
+			
+			if(_recordTrack == null)
+				_recordTrack = _recordContainer.createRecordTrack();
+			
 			_state = _STATE_RECORDING;
+
 			_recordTrack.startRecording();
 			
 			_refreshVisual();

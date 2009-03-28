@@ -12,9 +12,10 @@ package editor_panel.tracks {
 	import de.popforge.utils.sprintf;
 	
 	import flash.display.BlendMode;
-	import flash.geom.Rectangle;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
+	import flash.geom.Rectangle;
 	import flash.media.Sound;
 	import flash.utils.Timer;
 	import flash.utils.clearTimeout;
@@ -79,9 +80,12 @@ package editor_panel.tracks {
 			refresh();
 
 			// add to display list
+			addChildren(_recordProgress, $killBtn);
 			addChildren(this, _vuMeter, _visualTickSpr, _recordProgress);
 
-			enableVuMeter();			
+			enableVuMeter();	
+			
+			$killBtn.addEventListener(MouseEvent.CLICK, _onKillClick, false, 0, true);		
 		}
 
 		
@@ -118,71 +122,21 @@ package editor_panel.tracks {
 		}
 		
 		
-		
-		/**
-		 * Add precount timer.
-		 */
-		private function _addPrecountTimer():void {
-			// remove old precount timer if it is already added
-			_removePrecountTimer();
-			
-			// add precount timer
-			_precountTimer = new Timer(1000);
-			_precountSound = new Embeds.soundPrecountSnd() as Sound;
-			_precountTimer.addEventListener(TimerEvent.TIMER, _onPrecountTimer, false, 0, true);
-			_precountTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _onPrecountComplete, false, 0, true);
-		}
-
-		
-		
-		/**
-		 * Remove precount timer.
-		 */
-		private function _removePrecountTimer():void {
-			if(_precountTimer != null) {
-				_precountTimer.removeEventListener(TimerEvent.TIMER, _onPrecountTimer);
-				_precountTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _onPrecountComplete);
-				_precountTimer.stop();
-				_precountTimer = null;
-				clearTimeout(_syncedRecordTimeout);
-			}
-		}
-
-		
-		
-		/**
-		 * Visual tick.
-		 */
-		private function _recordOverlayTick():void {
-			if(_precountTimer.currentCount < 7) _precountSound.play();
-			_visualTickSpr.alpha = .5;
-			_visualTickSpr.visible = true;
-			Tweener.addTween(_visualTickSpr, {alpha:0, time:0.5, transition:'easeOutSine'});
-		}
-
-		
 
 		/**
 		 * Start recording event handler.
 		 * @param event Event data
 		 */		
 		public function startRecording(event:Event = null):void {
-			var precountDelay:uint = 60000 / Settings.BPM / 2;
-			var syncDelay:int = precountDelay * 7;
+			var precountDelay:uint = 60000 / Settings.BPM;
 			
-			Logger.debug(sprintf('Start precounting (%u BPM, record=%u)', Settings.BPM, precountDelay));
+			Logger.debug('Start precounting');
+			_isPrecounting = true;			
+			_addPrecountTimer(precountDelay, 4);
+						
+			_syncedRecordTimeout = setTimeout(_onStartSyncedRecord, precountDelay * 4);
 			
-			_isPrecounting = true;
-			
-			_addPrecountTimer(); 
-			
-			_precountTimer.delay = precountDelay;
-			_precountTimer.repeatCount = 7;
-			_precountTimer.start();
-			
-			_syncedRecordTimeout = setTimeout(_onStartSyncedRecord, syncDelay);
-			
-			_recordOverlayTick();
+			//_recordOverlayTick();
 		}
 
 		
@@ -211,8 +165,85 @@ package editor_panel.tracks {
 			
 			_removePrecountTimer();
 		}
+		
 
 
+		/**
+		 * Add precount timer.
+		 */
+		private function _addPrecountTimer(delay:uint, count:uint):void {
+			// remove old precount timer if it is already added
+			_removePrecountTimer();
+			
+			// add precount timer
+			_precountTimer = new Timer(delay);
+			_precountSound = new Embeds.soundPrecountSnd() as Sound;
+
+			_precountTimer.repeatCount = count;
+			_precountTimer.start();
+
+			_precountTimer.addEventListener(TimerEvent.TIMER, _recordOverlayTick, false, 0, true);
+			_precountTimer.addEventListener(TimerEvent.TIMER_COMPLETE, _onPrecountComplete, false, 0, true);
+		}
+
+		
+		
+		/**
+		 * Remove precount timer.
+		 */
+		private function _removePrecountTimer():void {
+			if(_precountTimer != null) {
+				_precountTimer.removeEventListener(TimerEvent.TIMER, _recordOverlayTick);
+				_precountTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _onPrecountComplete);
+				_precountTimer.stop();
+				_precountTimer = null;
+				clearTimeout(_syncedRecordTimeout);
+			}
+		}
+
+		
+		
+		/**
+		 * Visual tick.
+		 */
+		private function _recordOverlayTick(event:TimerEvent = null):void {
+			_precountSound.play();
+			
+			_visualTickSpr.alpha = .5;
+			_visualTickSpr.visible = true;
+			Tweener.addTween(_visualTickSpr, {alpha:0, time:0.5, transition:'easeOutSine'});
+		}
+
+
+		
+		private function _onPrecountComplete(event:TimerEvent):void {
+			_isPrecounting = false;
+			clearTimeout(_syncedRecordTimeout);
+			
+			Tweener.removeTweens(_visualTickSpr);
+			_visualTickSpr.alpha = .25;
+			
+			_startTime = uint(new Date());
+
+			dispatchEvent(new TrackEvent(TrackEvent.RECORD_START, true));
+		}
+
+
+
+		private function _onStartSyncedRecord():void {
+			_isRecording = true;
+		
+			try {
+				Logger.info('Synced record start.');
+				App.connection.streamService.record();
+			}
+			catch(err:Error) {
+				App.messageModal.show({title:'Record track', description:sprintf('Error recording track.\n%s', err.message), buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
+				return; 
+			}
+		}		
+		
+		
 
 		public function enableVuMeter():void {
 			if(!_vuMeterEnabled) {
@@ -237,38 +268,9 @@ package editor_panel.tracks {
 		}
 		
 		
-		
-		private function _onPrecountTimer(event:TimerEvent):void {
-			if((_precountTimer.currentCount <= 8 && _precountTimer.currentCount % 2 == 0) || _precountTimer.currentCount > 8) _recordOverlayTick();
-		}
-		
-		
-		
-		private function _onStartSyncedRecord():void {
-			try {
-				Logger.info('Synced record start.');
-				App.connection.streamService.record();
-			}
-			catch(err:Error) {
-				App.messageModal.show({title:'Record track', description:sprintf('Error recording track.\n%s', err.message), buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
-				return; 
-			}
-		}
-
-		
-		
-		private function _onPrecountComplete(event:TimerEvent):void {
-			_isPrecounting = false;
-			clearTimeout(_syncedRecordTimeout);
-			
-			_isRecording = true;
-			
-			Tweener.removeTweens(_visualTickSpr);
-			_visualTickSpr.alpha = .25;
-			
-			_startTime = uint(new Date());
-				
-			dispatchEvent(new TrackEvent(TrackEvent.RECORD_START, true));
+	
+		private function _onKillClick(event:Event):void {
+			App.editor.killRecordTrack();
 		}
 	}
 }
