@@ -116,9 +116,6 @@ package modals {
 				// song is already exporting
 				App.messageModal.show({title:'Export song', description:'Your song is already exporting. Please watch its progress in the panel below.', buttons:MessageModal.BUTTONS_OK});
 			}
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -140,9 +137,6 @@ package modals {
 		 */
 		private function _onCancelClick(event:MouseEvent):void {
 			hide();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -159,9 +153,6 @@ package modals {
 			}
 			
 			hide();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -184,9 +175,6 @@ package modals {
 				Logger.error(sprintf('Could not add export worker:\n%s', err1.message));
 				hide();
 			}
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -238,9 +226,6 @@ package modals {
 						_removeExportWorker();
 					}
 			}
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -254,9 +239,6 @@ package modals {
 			_isExporting = false;
 			_removeExportWorker();
 			hide();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -270,9 +252,6 @@ package modals {
 			_isExporting = false;
 			_removeExportWorker();
 			hide();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 	}
 }

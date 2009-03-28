@@ -45,7 +45,6 @@ package config {
 		public static var inputOver:TextFormat = new TextFormat();
 		public static var inputPress:TextFormat = new TextFormat();
 		public static var inputIntro:TextFormat = new TextFormat();
-		public static var dropboxList:TextFormat = new TextFormat();
 		public static var modalTitle:TextFormat = new TextFormat();
 		public static var modalDescription:TextFormat = new TextFormat();
 		public static var modalDescriptionLeft:TextFormat = new TextFormat();
@@ -200,10 +199,6 @@ package config {
 		progress.font = _MYRIAD_WEB_BOLD;
 		progress.size = 11;
 		progress.color = 0xFFFFFF;
-		
-		dropboxList.font = _MYRIAD_WEB_REGULAR;
-		dropboxList.size = 10;
-		dropboxList.color = 0x000000;
 		
 		rulerTickLabel.font = _MYRIAD_WEB_REGULAR;
 		rulerTickLabel.size = 8;

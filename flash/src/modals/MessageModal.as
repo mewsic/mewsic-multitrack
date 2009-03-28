@@ -152,9 +152,6 @@ package modals {
 			}
 			
 			super.show(c);
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -165,9 +162,6 @@ package modals {
 		 */
 		private function _onBtnOKClick(event:MouseEvent):void {
 			hide();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 		
 		

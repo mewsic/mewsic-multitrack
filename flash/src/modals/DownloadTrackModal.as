@@ -81,9 +81,6 @@ package modals {
 				y = _PANEL_Y;
 			}
 			else throw new Error('Download URL not defined.');
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 		
 		
@@ -108,18 +105,12 @@ package modals {
 		 */
 		private function _onOKClick(event:MouseEvent):void {
 			hide();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 		
 		
 		
 		private function _onDownloadClick(event:MouseEvent):void {
 			navigateToURL(new URLRequest(_downloadURL), '_blank');
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 	}
 }

@@ -195,9 +195,6 @@ package modals {
 				// track is already encoding
 				App.messageModal.show({title:'Encoding track', description:'Your track is already encoding.\nPlease watch its progress in the panel below.', buttons:MessageModal.BUTTONS_OK});
 			}
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -210,9 +207,6 @@ package modals {
 				_isEncoding = false;
 			}
 			super.hide();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -258,9 +252,6 @@ package modals {
 			App.editor.killRecordTrack();
 			
 			hide();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -283,9 +274,6 @@ package modals {
 				_isEncoding = false;
 				hide();
 			}
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -297,9 +285,6 @@ package modals {
 		private function _onTrackEncodeFailed(event:RemotingEvent):void {
 			App.messageModal.show({title:'Save track', description:'Error while adding track.', buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
 			_removeEncodeWorker();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -320,9 +305,6 @@ package modals {
 			catch(err:Error) {
 				Logger.error(sprintf('Cannot start encoding of your track.\nPlease wait a while and try again.\n%s', err.message));
 			}
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -375,9 +357,6 @@ package modals {
 			}
 			
 			if(finished) _removeEncodeWorker();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -389,9 +368,6 @@ package modals {
 		private function _onEncodeWorkerFailed(event:RemotingEvent):void {
 			App.messageModal.show({title:'Encoding error', description:'Encoding of your track failed.', buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
 			_removeEncodeWorker();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -403,9 +379,6 @@ package modals {
 		private function _onTrackCreateFailed(event:RemotingEvent):void {
 			App.messageModal.show({title:'Save track', description:'Error while creating track.', buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
 			_removeEncodeWorker();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -419,9 +392,6 @@ package modals {
 			_removeEncodeWorker();
 			App.editor.addTrack(event.trackData.trackID);
 			App.editor.killRecordTrack();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -434,9 +404,6 @@ package modals {
 		private function _onIdeaClick(event:MouseEvent):void {
 			_isIdea = !_isIdea;
 			_ideaBtn.icon = (_isIdea) ? new Embeds.glyphCheckboxOnBD() : new Embeds.glyphCheckboxOffBD();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -446,7 +413,7 @@ package modals {
 		 * @param event Event data
 		 */
 		private function _onInputFocusIn(event:InputEvent):void {
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
+			//dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 	}
 }

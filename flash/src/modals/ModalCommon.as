@@ -95,9 +95,6 @@ package modals {
 			}});
 			
 			c; // disable FDT warning
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -117,9 +114,6 @@ package modals {
 					$contentSpr.cacheAsBitmap = false;
 				}});
 			}
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		

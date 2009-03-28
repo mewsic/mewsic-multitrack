@@ -543,10 +543,7 @@ package editor_panel {
 			//	App.messageModal.show({title:'Upload track', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
 			//	return;
 			//}
-			App.uploadTrackModal.show();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
+			App.uploadTrackModal.show();			
 		}
 
 
@@ -737,9 +734,6 @@ package editor_panel {
 					
 					break;
 			}
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -834,9 +828,6 @@ package editor_panel {
 		 */
 		private function _onTrackSampleError(event:SamplerEvent):void {
 			App.messageModal.show({title:'Add track', description:'Sample error.', buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		

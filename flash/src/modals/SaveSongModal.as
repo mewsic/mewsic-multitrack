@@ -121,9 +121,6 @@ package modals {
 			else {
 				App.messageModal.show({title:'Save song', description:'Your song is already being saved.', buttons:MessageModal.BUTTONS_OK});
 			}
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -134,9 +131,6 @@ package modals {
 		 */
 		private function _onCancelClick(event:MouseEvent):void {
 			hide();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -153,9 +147,6 @@ package modals {
 				_isSaving = false;
 				hide();
 			}
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -180,9 +171,6 @@ package modals {
 				_isSaving = false;
 				hide();
 			}
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -195,9 +183,6 @@ package modals {
 			App.messageModal.show({title:'Save song error', description:'Error while saving song.', buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
 			_isSaving = false;
 			hide();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -211,9 +196,6 @@ package modals {
 			App.closeModal.show();
 			
 			navigateToURL(new URLRequest(sprintf('/songs/%u', App.connection.coreSongData.songID)), '_self');
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -226,9 +208,6 @@ package modals {
 			App.messageModal.show({title:'Export song error', description:'Error while exporting song.', buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
 			_isExporting = false;
 			hide();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -236,9 +215,6 @@ package modals {
 		private function _onSaveAndCloseClick(event:MouseEvent):void {
 			_isClosing = true;
 			_onSaveClick(event);
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 	}
 }

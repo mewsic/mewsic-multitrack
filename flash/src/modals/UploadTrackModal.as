@@ -188,10 +188,7 @@ package modals {
 			else {
 				// track is already encoding
 				App.messageModal.show({title:'Encoding track', description:'Your track is already encoding.\nPlease watch its progress in the panel below.', buttons:MessageModal.BUTTONS_OK});
-			}
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
+			}			
 		}
 
 		
@@ -205,9 +202,6 @@ package modals {
 				_file.cancel();
 			}
 			super.hide();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -248,9 +242,6 @@ package modals {
 		 */
 		private function _onCancelClick(event:MouseEvent):void {
 			hide();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -278,9 +269,6 @@ package modals {
 			
 			_isUploading = true;
 			_file.upload(_uploadURL);
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -292,9 +280,6 @@ package modals {
 		 */
 		private function _onBrowseClick(event:MouseEvent):void {
 			_file.browse([new FileFilter('Sound files (*.mp3)', '*.mp3')]);
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -320,9 +305,6 @@ package modals {
 			_uploadURL.url = App.connection.mediaPath + App.connection.configService.mediaUploadRequestURL;
 			_filenameTF.text = _file.name;
 			_parseData();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -336,9 +318,6 @@ package modals {
 			Logger.error('ioerror', event.text);
 			var desc:String = sprintf('Read error while uploading file.\nPlease check that the file name is correct.\n%s', event);
 			App.messageModal.show({title:'Upload error', description:desc, buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -351,9 +330,6 @@ package modals {
 		private function _onFileSecurityError(event:SecurityErrorEvent):void {
 			var desc:String = sprintf('Read error while uploading file.\nPlease check that the file name is correct.\n%s', event);
 			App.messageModal.show({title:'Upload error', description:desc, buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -381,9 +357,6 @@ package modals {
 			}
 			
 			hide();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -440,9 +413,6 @@ package modals {
 			}
 			
 			if(finished) _removeEncodeWorker();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -454,9 +424,6 @@ package modals {
 		private function _onEncodeWorkerFailed(event:RemotingEvent):void {
 			App.messageModal.show({title:'Encoding error', description:'Encoding of your track failed.', buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
 			_removeEncodeWorker();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -468,9 +435,6 @@ package modals {
 		private function _onTrackCreateFailed(event:RemotingEvent):void {
 			App.messageModal.show({title:'Save track', description:'Error while creating track.', buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
 			_removeEncodeWorker();
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -483,9 +447,6 @@ package modals {
 		private function _onTrackCreateDone(event:TrackCreateEvent):void {
 			_removeEncodeWorker();
 			App.editor.addTrack(event.trackData.trackID);
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 		
 		

@@ -97,9 +97,6 @@ package application {
 					height = this.height;
 				}});
 			}
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 
 		
@@ -182,9 +179,6 @@ package application {
 				
 				Tweener.addTween(_currentBackSBM, {time:Settings.TAB_CHANGE_TIME, alpha:1, transition:'easeOutSine'});
 			}
-			
-			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 		}
 	}
 }

@@ -62,7 +62,6 @@ package modals {
 			y = _PANEL_Y;
 			
 			// dispatch
-			dispatchEvent(new AppEvent(AppEvent.HIDE_DROPBOX, true));
 			dispatchEvent(new AppEvent(AppEvent.RELOAD_PAGE, true));
 		}
 

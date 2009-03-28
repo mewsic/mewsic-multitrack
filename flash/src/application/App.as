@@ -14,8 +14,6 @@ package application {
 	
 	import de.popforge.utils.sprintf;
 	
-	//import dropbox.DropboxContent;
-	
 	import editor_panel.Editor;
 	
 	import flash.display.*;
@@ -69,10 +67,8 @@ package application {
 		public static var downloadSongModal:DownloadSongModal;
 		public static var downloadTrackModal:DownloadTrackModal;
 		public static var closeModal:CloseModal;
-		//public static var dropboxContent:DropboxContent;
 		public static var fps:FPS;
 
-		//public static var recordSyncDelay:int;
 		private var _currentStageHeight:int = Settings.START_STAGE_HEIGHT;
 		private var _isMouseInside:Boolean;
 		private var _lastMouseX:int;
@@ -129,9 +125,6 @@ package application {
 				downloadTrackModal = new DownloadTrackModal();
 				closeModal = new CloseModal();
 				
-				// add dropbox content window
-				//dropboxContent = new DropboxContent();
-
 				// add fps meter and enable it if needed
 				if(Settings.isLogEnabled) {
 					fps = new FPS(Formats.fps);
@@ -161,7 +154,6 @@ package application {
 			this.addEventListener(Event.ENTER_FRAME, _onEnterFrame, false, 0, true);
 			this.addEventListener(AppEvent.HEIGHT_CHANGE, _onHeightChange, false, 0, true);
 			this.addEventListener(AppEvent.REFRESH_TOP_PANE, _onRefreshTopPane, false, 0, true);
-			//this.addEventListener(AppEvent.HIDE_DROPBOX, _onHideDropbox, false, 0, true);
 			this.addEventListener(AppEvent.RELOAD_PAGE, _onReloadPage, false, 0, true);
 
 			// init javascript to actionscript calls
@@ -176,7 +168,7 @@ package application {
 			}
 
 			// add modules to display list
-			addChildren(this, editor, exportSongModal, saveSongModal, uploadTrackModal, saveTrackModal, downloadSongModal, downloadTrackModal, closeModal, messageModal/*, dropboxContent*/);
+			addChildren(this, editor, exportSongModal, saveSongModal, uploadTrackModal, saveTrackModal, downloadSongModal, downloadTrackModal, closeModal, messageModal);
 			if(Settings.isLogEnabled) addChildren(this, fps);
 
 			// wait for stage initial display
@@ -421,9 +413,7 @@ package application {
 			var sum:Number = 0;
 			sum += editor.height;
 			sum += 30;
-			//sum += worker.height;
-			//worker.y = editor.height + 30;
-			//sum += 40; // dropbox fix
+
 			stageHeight = sum;
 		}
 
@@ -469,17 +459,6 @@ package application {
 			Logger.debug('Reloading page');
 			ExternalInterface.call('reload');
 		}
-
-		
-		
-		/**
-		 * Hide dropbox event handler.
-		 * Called when other control gains focus and so on.
-		 * @param event Event data
-		 */
-//		private function _onHideDropbox(event:AppEvent):void {
-//			dropboxContent.hide();
-//		}
 
 		
 		
