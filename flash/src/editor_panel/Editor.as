@@ -297,9 +297,7 @@ package editor_panel {
 		 * Called from JavaScript when page information changes.
 		 */
 		public function refreshSongData():void {
-			Logger.info('Refreshing song');
-//			_standardContainer.refresh(App.connection.coreSongData);
-//			_recordContainer.refresh(App.connection.coreSongData);
+			Logger.info('REMOVE ME');
 		}
 
 		
@@ -308,7 +306,7 @@ package editor_panel {
 		 * Initialize core song.
 		 */
 		public function postInit():void {
-			Logger.info(sprintf('Initializing song (songID=%u)', App.connection.coreSongData.songID));
+			Logger.info(sprintf('REMOVE ME'));
 		}
 
 		
@@ -317,13 +315,13 @@ package editor_panel {
 		 * Add track.
 		 * @param trackID Track ID
 		 */
-//		public function addTrack(trackID:uint):void {
-	//		// add standard track
-	//		_standardContainer.addStandardTrack(trackID); 
-	//		
-	//		// refresh visual
-	//		_refreshVisual();
-	//	}
+		public function addTrack(trackID:uint):void {
+			// add standard track
+			_standardContainer.addStandardTrack(trackID); 
+		
+			// refresh visual
+			_refreshVisual();
+		}
 
 		
 		
@@ -556,7 +554,8 @@ package editor_panel {
 			//	App.messageModal.show({title:'Upload track', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
 			//	return;
 			//}
-			App.uploadTrackModal.show();			
+			//App.uploadTrackModal.show();
+			App.messageModal.show({title:"UPLOAD", description:'Now browse for a file, create the track, and wait for upload && encoding'});			
 		}
 
 
@@ -800,10 +799,7 @@ package editor_panel {
 			if((_state == _STATE_RECORDING) && _standardContainer.trackCount == 0) {
 				_milliseconds = _recordTrack.position;
 			} else {
-				_milliseconds = 0;
-				for each(var td:TrackData in App.connection.coreSongData.songTracks) {
-					_milliseconds = Math.max(_milliseconds, td.trackMilliseconds);
-				}
+				_milliseconds = _standardContainer.milliseconds;
 			}
 		}
 

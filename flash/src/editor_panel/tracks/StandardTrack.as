@@ -18,6 +18,7 @@ package editor_panel.tracks {
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
 	import flash.utils.Timer;
 	
@@ -342,6 +343,7 @@ package editor_panel.tracks {
 		///
 		public function encode(recordName:String):void {
 			_encodeWorkerTimer = new Timer(Settings.WORKER_INTERVAL * 1000);
+			_encodeWorkerTimer.addEventListener(TimerEvent.TIMER, _onEncodeWorkerBang, false, 0, true);
 
 			_trackEncodeService = new TrackEncodeService();
 			_workerEncodeService = new WorkerEncodeService();
@@ -350,7 +352,7 @@ package editor_panel.tracks {
 			_workerEncodeService.url = App.connection.mediaPath + App.connection.configService.workerEncodeRequestURL;
 
 			_trackEncodeService.addEventListener(TrackEncodeEvent.REQUEST_DONE, _onTrackEncodeRequestDone, false, 0, true);
-			_workerEncodeService.addEventListener(WorkerEvent.REQUEST_DONE, _onEncodeWorkerDone, false, 0, true);
+			_workerEncodeService.addEventListener(WorkerEvent.REQUEST_DONE, _onEncodeWorkerProgress, false, 0, true);
 
 			_trackEncodeService.addEventListener(RemotingEvent.REQUEST_FAILED, _onTrackEncodeFailed, false, 0, true);
 			_workerEncodeService.addEventListener(RemotingEvent.REQUEST_FAILED, _onTrackEncodeFailed, false, 0, true);
@@ -382,6 +384,7 @@ package editor_panel.tracks {
 		 * @param event Event data
 		 */
 		private function _onTrackEncodeRequestDone(event:TrackEncodeEvent):void {
+			Logger.info("Encoding request done, start polling");
 			_encodeKey = event.key;
 			
 			try {
@@ -420,18 +423,21 @@ package editor_panel.tracks {
 		 * If everything is ok, add track to editor (after request).
 		 * @param event Event data
 		 */
-		private function _onEncodeWorkerDone(event:WorkerEvent):void {
-			_encodeWorkerTimer.stop();
+		private function _onEncodeWorkerProgress(event:WorkerEvent):void {
+			Logger.info("Encode worker progress: " + event.workerStatusData.status);
 
 			switch(event.workerStatusData.status) {
 				case WorkerStatusData.STATUS_ERROR:
-					_onKillClick();
+					_encodeWorkerTimer.stop();
+					_onKillClick();					
 
 					App.messageModal.show({title:'Encoding error', description:'Error while encoding your track.',
 						buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
 					break;
 					
 				case WorkerStatusData.STATUS_FINISHED:
+					_encodeWorkerTimer.stop();
+				
 					// refresh track
 					_trackFetchService = new TrackFetchService();
 					
@@ -441,17 +447,22 @@ package editor_panel.tracks {
 					_trackFetchService.request({trackID:$trackData.trackID});
 	
 					break;
+					
+				default:
+					// still running .. progress update should be done here.
 			}
 		}
 
 
 
 		private function _onTrackFetchDone(event:TrackFetchEvent):void {
+			Logger.info("Refetched track " + event.trackData.trackID);
+			
 			$trackData = event.trackData;
 			this.load();
 			
 			_trackFetchService.removeEventListener(TrackFetchEvent.REQUEST_DONE, _onTrackFetchDone);
-			_trackFetchService.removeEventListener(RemotingEvent.REQUEST_FAILED, _onTrackFetchFailed);
+			_trackFetchService.removeEventListener(RemotingEvent.REQUEST_FAILED, _onTrackFetchFailed);			
 		}
 
 

@@ -175,6 +175,7 @@ package editor_panel.containers {
 				
 				// load track
 				service.url = App.connection.serverPath + App.connection.configService.trackFetchRequestURL;
+
 				service.addEventListener(TrackFetchEvent.REQUEST_DONE, _onTrackFetchDone, false, 0, true);
 				service.addEventListener(RemotingEvent.REQUEST_FAILED, _onTrackFetchFailed, false, 0, true);
 				service.request({trackID:id});
@@ -200,38 +201,38 @@ package editor_panel.containers {
 		 * @throws Error if track is already in the queue.
 		 */
 		public function addStandardTrackByTD(td:TrackData):void {
-			if(_type == TrackCommon.STANDARD_TRACK) {
-				// check for track dupe
-				for each(var t:Object in _trackQueue) {
-					// crawl through all tracks in the queue
-					if(t.trackID == td.trackID) {
-						// track is duped
-						// throw error
-						throw new Error('Track already loaded.');
-					}
-				}
-				
-				// it's not duped.
-				// so let's continue
-				Logger.info(sprintf('Adding track from track data (trackID=%u, balance=%.2f, volume=%.2f)', td.trackID, td.trackBalance, td.trackVolume));
-				
-				// add to track queue to prevent dupes
-				_trackQueue.push({trackID:td.trackID, isLoaded:true, balance:td.trackBalance, volume:td.trackVolume});
-				
-				// check for record or standard and create tracks
-				createTrack(td.trackID);
-				
-				// update core song
-				var i:uint = App.connection.coreSongData.songTracks.push(td);
-				for each(var p:TrackCommon in _trackList) if(p.trackID == td.trackID) {
-					p.trackData = td;
-					p.load();
-				}
-				
-				// dispatch events
-				dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {trackData:td}));
-				dispatchEvent(new AppEvent(AppEvent.REFRESH_TOP_PANE, true));
+			// check for track dupe
+			if(_type != TrackCommon.STANDARD_TRACK) {
+				throw new Error("Cannot add standard track to record track container");
 			}
+
+			for each(var t:Object in _trackQueue) {
+				// crawl through all tracks in the queue
+				if(t.trackID == td.trackID) {
+					// track is duped, throw error
+					throw new Error('Track already loaded.');
+				}
+			}
+				
+			// it's not duped.
+			// so let's continue
+			Logger.info(sprintf('Adding track from track data (trackID=%u, balance=%.2f, volume=%.2f)', td.trackID, td.trackBalance, td.trackVolume));
+				
+			// add to track queue to prevent dupes
+			_trackQueue.push({trackID:td.trackID, isLoaded:true, balance:td.trackBalance, volume:td.trackVolume});
+				
+			// check for record or standard and create tracks
+			createTrack(td.trackID);
+				
+			// update core song
+			for each(var p:TrackCommon in _trackList) if(p.trackID == td.trackID) {
+				p.trackData = td;
+				p.load();
+			}
+				
+			// dispatch events
+			dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {trackData:td}));
+			dispatchEvent(new AppEvent(AppEvent.REFRESH_TOP_PANE, true));
 		}
 
 		
@@ -314,8 +315,8 @@ package editor_panel.containers {
 				buttons:MessageModal.BUTTONS_RELOAD, icon:MessageModal.ICON_ERROR});
 		}
 
-		
-		
+
+
 		/**
 		 * Kill track by it's ID.
 		 * @param id Track ID to be killed
@@ -339,11 +340,6 @@ package editor_panel.containers {
 				i++;
 			}
 			if(j != -1) _trackList.splice(j, 1);
-			
-			// remove from core song
-			for(var m:uint = 0;m < App.connection.coreSongData.songTracks.length; m++) {
-				if(App.connection.coreSongData.songTracks[m].trackID == id) App.connection.coreSongData.songTracks.splice(m, 1);
-			}
 			
 			// remove from queue
 			var k:int = 0;
@@ -402,18 +398,14 @@ package editor_panel.containers {
 		 * @param sd Song data
 		 */
 		private function _refreshWaveforms():void {
-			var max:uint = 0;
+			var max:uint = this.milliseconds;
 			var t:TrackCommon;
-			
-			for each(t in _trackList) {
-				max = Math.max(max, t.trackData.trackMilliseconds); 
-			}
-			
+
 			for each(t in _trackList) {
 				t.rescale(max);
 			}
 		}
-
+		
 		
 		
 		/**
@@ -572,6 +564,19 @@ package editor_panel.containers {
 			return c;
 		}
 
+
+		
+		public function get milliseconds():uint {
+			var max:uint = 0;
+			var t:TrackCommon;
+
+			for each(t in _trackList) {
+				if(t.trackData)
+					max = Math.max(max, t.trackData.trackMilliseconds); 
+			}			
+			return max;
+		}
+
 		
 		
 		/**
@@ -593,9 +598,9 @@ package editor_panel.containers {
 
 			dispatchEvent(new ContainerEvent(ContainerEvent.CONTENT_HEIGHT_CHANGE, true));
 		}
+		
+		
 
-		
-		
 		/**
 		 * Song fetch done event handler.
 		 * @param event Event data
@@ -637,9 +642,6 @@ package editor_panel.containers {
 					event.trackData.trackBalance = (t.balance == undefined) ? 0 : t.balance;
 				}
 			}
-			
-			// update core song
-			App.connection.coreSongData.songTracks.push(event.trackData);
 			
 			// crawl all track in the container
 			for each(var p:TrackCommon in _trackList) {
