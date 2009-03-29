@@ -16,6 +16,7 @@ package editor_panel.containers {
 	import editor_panel.tracks.TrackEvent;
 	
 	import flash.events.Event;
+	import flash.net.FileReference;
 	
 	import modals.MessageModal;
 	
@@ -53,6 +54,7 @@ package editor_panel.containers {
 
 		private var _trackCreateService:TrackCreateService;
 		
+
 		
 		/**
 		 * Constructor.
@@ -242,7 +244,7 @@ package editor_panel.containers {
 		 * @param id Track ID
 		 * @return New track
 		 */
-		public function createTrack(id:uint):TrackCommon {
+		private function createTrack(id:uint):TrackCommon {
 			var t:TrackCommon;
 			
 			// check for record or standard and create tracks
@@ -275,6 +277,39 @@ package editor_panel.containers {
 
 		
 		
+		public function createUploadTrack():void {
+			if(_type != TrackCommon.STANDARD_TRACK) {
+				throw new Error('Could not add upload track to record track container.');
+			}
+			Logger.info('Creating upload track');
+			
+			// create this track on the server
+			_trackCreateService = new TrackCreateService();
+			_trackCreateService.url = App.connection.serverPath + App.connection.configService.trackCreateRequestURL; /// XXX REMOVE ME
+			_trackCreateService.addEventListener(RemotingEvent.REQUEST_FAILED, _onTrackCreateFailed, false, 0, true);
+			_trackCreateService.addEventListener(TrackCreateEvent.REQUEST_DONE, _onUploadTrackCreateDone, false, 0, true);
+			_trackCreateService.request();
+		}
+		
+		
+		
+		private function _onUploadTrackCreateDone(event:TrackCreateEvent):void {
+			Logger.info(sprintf("Track %u created on the server", event.trackData.trackID));
+
+			// create track
+			var t:StandardTrack = createTrack(event.trackData.trackID) as StandardTrack;
+			t.trackData = event.trackData;
+			t.load();
+				
+			// dispatch
+			dispatchEvent(new ContainerEvent(ContainerEvent.UPLOAD_TRACK_READY, true, false, {track:t}));
+			dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {trackData:event.trackData}));
+			
+			dispatchEvent(new AppEvent(AppEvent.REFRESH_TOP_PANE, true, false));
+		}		
+
+		
+		
 		/**
 		 * Create new record track.
 		 * @return New track
@@ -290,13 +325,13 @@ package editor_panel.containers {
 			_trackCreateService = new TrackCreateService();
 			_trackCreateService.url = App.connection.serverPath + App.connection.configService.trackCreateRequestURL; /// XXX REMOVE ME
 			_trackCreateService.addEventListener(RemotingEvent.REQUEST_FAILED, _onTrackCreateFailed, false, 0, true);
-			_trackCreateService.addEventListener(TrackCreateEvent.REQUEST_DONE, _onTrackCreateDone, false, 0, true);
+			_trackCreateService.addEventListener(TrackCreateEvent.REQUEST_DONE, _onRecordTrackCreateDone, false, 0, true);
 			_trackCreateService.request();
 		}
 				
 		
 		
-		private function _onTrackCreateDone(event:TrackCreateEvent):void {
+		private function _onRecordTrackCreateDone(event:TrackCreateEvent):void {
 			Logger.info(sprintf("Track %u created on the server", event.trackData.trackID));
 
 			// create track

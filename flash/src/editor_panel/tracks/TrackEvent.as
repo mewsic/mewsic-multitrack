@@ -24,6 +24,9 @@ package editor_panel.tracks {
 		public static const RECORD_START:String = 'onRecordStart';
 		public static const RECORD_STOP:String = 'onRecordStop';
 		
+		public static const UPLOAD_FAILED:String = 'onUploadFailed';
+		public static const UPLOAD_COMPLETED:String = 'onUploadCompleted';
+		
 		public var data:Object;
 
 		

@@ -28,6 +28,8 @@ package editor_panel {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.media.SoundMixer;
+	import flash.net.FileFilter;
+	import flash.net.FileReference;
 	import flash.utils.ByteArray;
 	
 	import modals.MessageModal;
@@ -63,11 +65,13 @@ package editor_panel {
 		private static const _STILL_SEEK_STEP:uint = 10000;
 		
 		// editor machine state definitions
-		private static const _STATE_STOPPED:String   = 'STOPPED';
-		private static const _STATE_PLAYING:String   = 'PLAYING';
-		private static const _STATE_PAUSED:String    = 'PAUSED';
-		private static const _STATE_WAIT_REC:String  = 'WAIT_REC';
-		private static const _STATE_RECORDING:String = 'RECORDING';
+		private static const _STATE_STOPPED:String     = 'STOPPED';
+		private static const _STATE_PLAYING:String     = 'PLAYING';
+		private static const _STATE_PAUSED:String      = 'PAUSED';
+		private static const _STATE_WAIT_REC:String    = 'WAIT_REC';
+		private static const _STATE_RECORDING:String   = 'RECORDING';
+		private static const _STATE_WAIT_UPLOAD:String = 'WAIT_UPLOAD';
+		private static const _STATE_UPLOADING:String   = 'UPLOADING';
 		
 		private static const _OFF_PLAYHEAD:uint = 112;
 		private static const _OFF_STAGE:uint = 129;
@@ -122,6 +126,7 @@ package editor_panel {
 		
 		private var _isMikeInited:Boolean = false;
 
+		private var _file:FileReference; // Flash, you do stink.
 		
 		
 		/**
@@ -499,18 +504,20 @@ package editor_panel {
 					_completedTracksCounter = 0;
 
 					stopRecording();					
+					_state = _STATE_STOPPED;
+					_refreshVisual();
 				//}
 				
 			} else {
 				if(_completedTracksCounter == allTrackCount) {
 					Logger.info('Song playback completed.');
 					_completedTracksCounter = 0;
+		
 					stop();
+					_state = _STATE_STOPPED;
+					_refreshVisual();
 				}
 			}
-
-			_state = _STATE_STOPPED;
-			_refreshVisual();
 		}
 
 
@@ -560,16 +567,68 @@ package editor_panel {
 		 */
 		private function _onUploadButtonClick(event:MouseEvent = null):void {
 			if(!App.connection.coreUserLoginStatus) {
-				// user is not logged in, don't allow him to display My List
 				App.messageModal.show({title:'Upload track',
 					description:'Please log in or wait until the multitrack is fully loaded.',
 					buttons:MessageModal.BUTTONS_OK});
 				return;
 			}
+			
+			_file = new FileReference();
+			_file.addEventListener(Event.SELECT, _onFileSelect, false, 0, true);
+			_file.addEventListener(Event.CANCEL, _onFileCancel, false, 0, true);
 
-			App.messageModal.show({title:"UPLOAD",
-				description:'Now browse for a file, create the track, and wait for upload && encoding',
-				buttons:MessageModal.BUTTONS_OK});			
+			_file.browse([new FileFilter('MP3 files (*.mp3)', '*.mp3')]);
+		}
+
+
+		private function _onFileSelect(event:Event):void {
+			_file.removeEventListener(Event.SELECT, _onFileSelect);
+			_file.removeEventListener(Event.CANCEL, _onFileCancel);
+
+			_standardContainer.createUploadTrack();
+			_standardContainer.addEventListener(ContainerEvent.UPLOAD_TRACK_READY, _onUploadTrackReady, false, 0, true);
+
+			_state = _STATE_WAIT_UPLOAD;
+			_refreshVisual();			
+		}
+		
+		
+		
+		private function _onFileCancel(event:Event):void {
+			_file.removeEventListener(Event.SELECT, _onFileSelect);
+			_file.removeEventListener(Event.CANCEL, _onFileCancel);
+			_file.cancel();
+			_file = null;
+
+			_state = _STATE_STOPPED;
+			_refreshVisual();
+		}
+		
+
+
+		private function _onUploadTrackReady(event:ContainerEvent):void {
+			var t:StandardTrack = event.data.track;
+			t.upload(_file);
+
+			t.addEventListener(TrackEvent.UPLOAD_COMPLETED, _onUploadDone, false, 0, true);
+			t.addEventListener(TrackEvent.UPLOAD_FAILED, _onUploadDone, false, 0, true);
+
+			_state = _STATE_UPLOADING;
+			_refreshVisual();
+		}
+		
+		
+		
+		private function _onUploadDone(event:TrackEvent):void {
+			var t:StandardTrack = event.data.track;
+
+			t.removeEventListener(TrackEvent.UPLOAD_COMPLETED, _onUploadDone);
+			t.removeEventListener(TrackEvent.UPLOAD_FAILED, _onUploadDone);
+			
+			_file = null;			
+			_state = _STATE_STOPPED;
+			stop();
+			_refreshVisual();
 		}
 
 
@@ -588,6 +647,8 @@ package editor_panel {
 		 * Low-level stop method.
 		 */
 		public function stop(event:Event = null):void {
+			rewind();
+
 			Logger.info('Stop playback.');
 			_standardContainer.stop();
 		}
@@ -746,7 +807,7 @@ package editor_panel {
 
 					_disableButton(_controllerRecordBtn);
 					_enableButton(_controllerSearchBtn);
-					_enableButton(_controllerUploadBtn);					
+					//_enableButton(_controllerUploadBtn);					
 
 					break;
 					
@@ -756,11 +817,11 @@ package editor_panel {
 
 					_enableButton(_controllerRecordBtn);
 					_enableButton(_controllerSearchBtn);
-					_enableButton(_controllerUploadBtn);
+					//_enableButton(_controllerUploadBtn);
 					
 					break;
 				
-				case _STATE_WAIT_REC:
+				case _STATE_WAIT_REC, _STATE_WAIT_UPLOAD:
 					_disableButton(_controllerPlayBtn);
 					_disableButton(_controllerRecordBtn);
 					_disableButton(_controllerSearchBtn);
@@ -777,6 +838,12 @@ package editor_panel {
 					_disableButton(_controllerUploadBtn);
 					
 					break;
+					
+				case _STATE_UPLOADING:
+					_enableButton(_controllerPlayBtn);
+					_enableButton(_controllerSearchBtn);
+					_disableButton(_controllerRecordBtn);
+					_disableButton(_controllerUploadBtn);
 			}
 		}
 

@@ -13,18 +13,18 @@ package remoting.events {
 
 		
 		
-		public static const TIMEOUT:String = 'onTimeout';
-		public static const SECURITY_ERROR:String = 'onSecurityError';
-		public static const ASYNC_ERROR:String = 'onAsyncError';
-		public static const IO_ERROR:String = 'onIOError';
-		public static const REQUEST_DONE:String = 'onRequestDone';
-		public static const REFRESH_DONE:String = 'onRefreshDone';
-		public static const REQUEST_FAILED:String = 'onRequestFailed';
-		public static const CONNECTION_DONE:String = 'onConnectionDone';
-		public static const CONNECTION_FAILED:String = 'onConnectionFailed';
-		public static const CONFIG_REQUEST_DONE:String = 'onConfigRequestDone';
-		public static const INSTRUMENTS_REQUEST_DONE:String = 'onInstrumentsRequestDone';
-		public static const CORE_USER_REQUEST_DONE:String = 'onCoreUserRequestDone';
+		public static const TIMEOUT:String = 'onRemotingTimeout';
+		public static const SECURITY_ERROR:String = 'onRemotingSecurityError';
+		public static const ASYNC_ERROR:String = 'onRemotingAsyncError';
+		public static const IO_ERROR:String = 'onRemotingIOError';
+		public static const REQUEST_DONE:String = 'onRemotingRequestDone';
+		public static const REFRESH_DONE:String = 'onRemotingRefreshDone';
+		public static const REQUEST_FAILED:String = 'onRemotingRequestFailed';
+		public static const CONNECTION_DONE:String = 'onRemotingConnectionDone';
+		public static const CONNECTION_FAILED:String = 'onRemotingConnectionFailed';
+		public static const CONFIG_REQUEST_DONE:String = 'onRemotingConfigRequestDone';
+		public static const INSTRUMENTS_REQUEST_DONE:String = 'onRemotingInstrumentsRequestDone';
+		public static const CORE_USER_REQUEST_DONE:String = 'onRemotingCoreUserRequestDone';
 		public var description:String;
 		public var dataXML:XML;
 

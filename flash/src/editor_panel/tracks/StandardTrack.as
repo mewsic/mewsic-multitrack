@@ -16,10 +16,17 @@ package editor_panel.tracks {
 	import editor_panel.sampler.SamplerEvent;
 	import editor_panel.waveform.Waveform;
 	
+	import flash.events.DataEvent;
 	import flash.events.Event;
+	import flash.events.IOErrorEvent;
 	import flash.events.MouseEvent;
+	import flash.events.ProgressEvent;
+	import flash.events.SecurityErrorEvent;
 	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
+	import flash.net.FileReference;
+	import flash.net.URLRequest;
+	import flash.net.URLVariables;
 	import flash.utils.Timer;
 	
 	import modals.MessageModal;
@@ -64,6 +71,7 @@ package editor_panel.tracks {
 		// private var _balanceKnob:Knob; XXX RE-ENABLE ME
 		
 		private var _progressBar:ProgressBar;
+
 		// Encoding stuff
 		private var _encodeKey:String;
 		private var _workerEncodeService:WorkerEncodeService;
@@ -71,8 +79,6 @@ package editor_panel.tracks {
 		private var _encodeWorkerTimer:Timer;
 		private var _trackFetchService:TrackFetchService;
 
-		
-		
 		/**
 		 * Constructor.
 		 * @param trackID Track ID
@@ -90,6 +96,8 @@ package editor_panel.tracks {
 				grid:new Rectangle(9, 0, 22, 14)})
 			_progressBar.visible = false;
 			_progressBar.width = Settings.WAVEFORM_WIDTH;
+			_progressBar.progress = 1;
+			
 
 			// add event listeners
 			_sampler.addEventListener(SamplerEvent.SAMPLE_PROGRESS, _onSamplerProgress, false, 0, true);
@@ -270,6 +278,17 @@ package editor_panel.tracks {
 		 */
 		private function _onKillClick(event:MouseEvent = null):void {
 			Logger.debug(sprintf('Kill track (trackID=%u, trackTitle=%s)', $trackData.trackID, $trackData.trackTitle));
+
+			if(_encodeWorkerTimer) {
+				_encodeWorkerTimer.stop();
+				_encodeWorkerTimer = null;
+			}
+			
+//			if(_file) {
+//				_file.cancel();
+//				_file = null;
+//			}
+
 			dispatchEvent(new TrackEvent(TrackEvent.KILL));
 		}
 
@@ -339,6 +358,62 @@ package editor_panel.tracks {
 		
 		
 		
+		/// UPLOAD STUFF
+		/// 
+		public function upload(fileReference:FileReference):void {
+			var variables:URLVariables = new URLVariables();
+			variables.track_id = $trackID;
+			variables.id = App.connection.coreUserData.userID;
+
+			var request:URLRequest = new URLRequest();
+			request.url = App.connection.mediaPath + App.connection.configService.mediaUploadRequestURL + '&';
+			request.data = variables;
+
+			fileReference.addEventListener(ProgressEvent.PROGRESS, _onFileProgress, false, 0, true);
+			fileReference.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, _onFileUploadComplete, false, 0, true);
+			fileReference.addEventListener(IOErrorEvent.IO_ERROR, _onFileUploadFailed, false, 0, true);
+			fileReference.addEventListener(SecurityErrorEvent.SECURITY_ERROR, _onFileUploadFailed, false, 0, true);
+
+			fileReference.upload(request);			
+		}
+
+		
+		
+		private function _onFileProgress(event:ProgressEvent):void {
+			var w:uint = _progressBar.width / (event.bytesTotal / event.bytesLoaded);
+			_progressBar.width = w / 2; // Half width for upload. The rest is for encoding.
+		}
+		
+		private function _onFileUploadFailed(event:Event):void {
+			_onKillClick();
+	
+			App.messageModal.show({title:'Upload track', description:'Error while uploading track.',
+				buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
+
+			dispatchEvent(new TrackEvent(TrackEvent.UPLOAD_FAILED, false, false, {track:this}));
+		}
+		
+		private function _onFileUploadComplete(event:DataEvent):void {
+			_encodeKey = XML(event.data).@key;
+
+			_workerEncodeService = new WorkerEncodeService();
+			_workerEncodeService.url = App.connection.mediaPath + App.connection.configService.workerEncodeRequestURL;
+			_workerEncodeService.addEventListener(WorkerEvent.REQUEST_DONE, _onEncodeWorkerProgress, false, 0, true);
+			_workerEncodeService.addEventListener(RemotingEvent.REQUEST_FAILED, _onTrackEncodeFailed, false, 0, true);
+	
+			Logger.info("Upload done, start polling");
+
+			_encodeWorkerTimer = new Timer(Settings.WORKER_INTERVAL * 1000);
+			_encodeWorkerTimer.addEventListener(TimerEvent.TIMER, _onEncodeWorkerBang, false, 0, true);
+
+			_encodeWorkerTimer.start();
+			_onEncodeWorkerBang();
+			
+			dispatchEvent(new TrackEvent(TrackEvent.UPLOAD_COMPLETED, false, false, {track:this}));
+		}
+		
+		
+		
 		/// ENCODING STUFF
 		///
 		public function encode(recordName:String):void {
@@ -360,7 +435,6 @@ package editor_panel.tracks {
 			_trackEncodeService.request({filename:recordName, trackID:$trackID});
 			
 			_progressBar.visible = true;
-			_progressBar.progress = 2;
 		}
 
 
@@ -369,10 +443,10 @@ package editor_panel.tracks {
 		 * Track encode failed event handler.
 		 * @param event Event data
 		 */
-		private function _onTrackEncodeFailed(event:RemotingEvent):void {
+		private function _onTrackEncodeFailed(event:TrackEvent):void {
 			_onKillClick(); /// XXX FIXME
 
-			App.messageModal.show({title:'Save track', description:'Error while adding track.',
+			App.messageModal.show({title:'Save track', description:'Error while encoding track.',
 				buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
 		}
 
@@ -387,13 +461,8 @@ package editor_panel.tracks {
 			Logger.info("Encoding request done, start polling");
 			_encodeKey = event.key;
 			
-			try {
-				_encodeWorkerTimer.start();
-				_onEncodeWorkerBang();
-			}
-			catch(err:Error) {
-				Logger.error(sprintf('Cannot start encoding of your track.\nPlease wait a while and try again.\n%s', err.message));
-			}
+			_encodeWorkerTimer.start();
+			_onEncodeWorkerBang();
 		}
 
 
@@ -405,13 +474,8 @@ package editor_panel.tracks {
 		 */
 		private function _onEncodeWorkerBang(event:Event = null):void {
 			if(!_workerEncodeService.isConnecting) {
-				try {
-					_workerEncodeService.request({key:_encodeKey});
-					_progressBar.progress += 5;
-				}
-				catch(err:Error) {
-					Logger.warn(sprintf('Error banging encode worker:\n%s', err.message));
-				}
+				_workerEncodeService.request({key:_encodeKey});
+				_progressBar.progress += 5;
 			}
 		}
 
@@ -428,7 +492,6 @@ package editor_panel.tracks {
 
 			switch(event.workerStatusData.status) {
 				case WorkerStatusData.STATUS_ERROR:
-					_encodeWorkerTimer.stop();
 					_onKillClick();					
 
 					App.messageModal.show({title:'Encoding error', description:'Error while encoding your track.',
@@ -437,6 +500,7 @@ package editor_panel.tracks {
 					
 				case WorkerStatusData.STATUS_FINISHED:
 					_encodeWorkerTimer.stop();
+					_encodeWorkerTimer = null;
 				
 					// refresh track
 					_trackFetchService = new TrackFetchService();

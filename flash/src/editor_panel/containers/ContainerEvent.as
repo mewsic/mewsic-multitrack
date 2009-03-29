@@ -21,6 +21,7 @@ package editor_panel.containers {
 		
 		public static const CONTENT_HEIGHT_CHANGE:String = 'onContentHeightChange';
 		public static const RECORD_TRACK_READY:String = 'onRecordTrackReady';
+		public static const UPLOAD_TRACK_READY:String = 'onUploadTrackReady';
 		public static const TRACK_ADDED:String = 'onTrackAdded';
 		public static const SONG_FETCH_FAILED:String = 'onSongFetchFailed';
 		public static const TRACK_FETCH_FAILED:String = 'onTrackFetchFailed';
