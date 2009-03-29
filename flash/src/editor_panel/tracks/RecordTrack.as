@@ -149,12 +149,11 @@ package editor_panel.tracks {
 
 
 
-		private function _onStartSyncedRecord():void {
-			_isRecording = true;
-		
+		private function _onStartSyncedRecord():void {		
 			try {
 				Logger.info('Synced record start.');
 				App.connection.streamService.record();
+				_isRecording = true;
 			}
 			catch(err:Error) {
 				App.messageModal.show({title:'Record track', description:sprintf('Error recording track.\n%s', err.message), buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
@@ -212,21 +211,6 @@ package editor_panel.tracks {
 		
 		
 		/**
-		 * Remove precount timer.
-		 */
-		private function _removePrecountTimer():void {
-			if(_precountTimer != null) {
-				_precountTimer.removeEventListener(TimerEvent.TIMER, _recordOverlayTick);
-				_precountTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _onPrecountComplete);
-				_precountTimer.stop();
-				_precountTimer = null;
-				clearTimeout(_syncedRecordTimeout);
-			}
-		}
-
-		
-		
-		/**
 		 * Visual tick.
 		 */
 		private function _recordOverlayTick(event:TimerEvent = null):void {
@@ -249,6 +233,21 @@ package editor_panel.tracks {
 			_startTime = uint(new Date());
 
 			dispatchEvent(new TrackEvent(TrackEvent.RECORD_START, true));
+		}
+		
+
+		
+		/**
+		 * Remove precount timer.
+		 */
+		private function _removePrecountTimer():void {
+			if(_precountTimer != null) {
+				_precountTimer.removeEventListener(TimerEvent.TIMER, _recordOverlayTick);
+				_precountTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, _onPrecountComplete);
+				_precountTimer.stop();
+				_precountTimer = null;
+				clearTimeout(_syncedRecordTimeout);
+			}
 		}
 		
 		

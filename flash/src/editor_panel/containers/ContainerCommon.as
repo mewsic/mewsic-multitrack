@@ -219,7 +219,7 @@ package editor_panel.containers {
 			Logger.info(sprintf('Adding track from track data (trackID=%u, balance=%.2f, volume=%.2f)', td.trackID, td.trackBalance, td.trackVolume));
 				
 			// add to track queue to prevent dupes
-			_trackQueue.push({trackID:td.trackID, balance:td.trackBalance, volume:td.trackVolume});
+			_trackQueue.push({trackID:td.trackID});
 				
 			// check for record or standard and create tracks
 			createTrack(td.trackID);
@@ -345,16 +345,13 @@ package editor_panel.containers {
 			// remove from queue
 			var k:int = 0;
 			var l:int = -1;
+
 			for each(var q:Object in _trackQueue) {
 				if(q.trackID == id) {
-					try {
-						l = k;
+					l = k;
+					if(q.service) {
 						q.service.removeEventListener(TrackFetchEvent.REQUEST_DONE, _onTrackFetchDone);
 						q.service.removeEventListener(RemotingEvent.REQUEST_FAILED, _onTrackFetchFailed);
-						q.service.destroy();
-					}
-					catch(err2:Error) {
-						Logger.error(sprintf('Error removing track #%u from the queue:\n', k, err2.message));
 					}
 				}
 				k++;
@@ -634,12 +631,12 @@ package editor_panel.containers {
 		 */
 		private function _onTrackFetchDone(event:TrackFetchEvent):void {
 			// set track loaded flag
-			for each(var t:Object in _trackQueue) {
-				if(t.trackID == event.trackData.trackID) {
-					event.trackData.trackVolume = (t.volume == undefined) ? .9 : t.volume;
-					event.trackData.trackBalance = (t.balance == undefined) ? 0 : t.balance;
-				}
-			}
+			//for each(var t:Object in _trackQueue) {
+			//	if(t.trackID == event.trackData.trackID) {
+			//		event.trackData.trackVolume = (t.volume == undefined) ? .9 : t.volume;
+			//		event.trackData.trackBalance = (t.balance == undefined) ? 0 : t.balance;
+			//	}
+			//}
 			
 			// crawl all track in the container
 			for each(var p:TrackCommon in _trackList) {

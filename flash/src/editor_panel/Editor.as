@@ -38,7 +38,6 @@ package editor_panel {
 	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
 	
-	import remoting.data.TrackData;
 	import remoting.events.UserEvent;
 
 	
@@ -64,16 +63,16 @@ package editor_panel {
 		private static const _STILL_SEEK_STEP:uint = 10000;
 		
 		// editor machine state definitions
-		private static const _STATE_STOPPED:uint   = 0x0;
-		private static const _STATE_PLAYING:uint   = 0x2;
-		private static const _STATE_PAUSED:uint    = 0x3;
-		private static const _STATE_WAIT_REC:uint  = 0x4;
-		private static const _STATE_RECORDING:uint = 0x5;
+		private static const _STATE_STOPPED:String   = 'STOPPED';
+		private static const _STATE_PLAYING:String   = 'PLAYING';
+		private static const _STATE_PAUSED:String    = 'PAUSED';
+		private static const _STATE_WAIT_REC:String  = 'WAIT_REC';
+		private static const _STATE_RECORDING:String = 'RECORDING';
 		
 		private static const _OFF_PLAYHEAD:uint = 112;
 		private static const _OFF_STAGE:uint = 129;
 		
-		private var _state:uint;
+		private var _state:String;
 		
 		private var _playhead:Playhead;
 		private var _containersMaskSpr:MorphSprite;
@@ -119,7 +118,6 @@ package editor_panel {
 		private var _vuMeterBytes:ByteArray;
 		//private var _isVUMeterEnabled:Boolean;
 
-		private var _recordLimit:uint;
 		private var _isStreamDown:Boolean;
 		
 		private var _isMikeInited:Boolean = false;
@@ -288,6 +286,8 @@ package editor_panel {
 			
 			// add global volume event listeners
 			// _globalVolumeSlider.addEventListener(SliderEvent.REFRESH, _onGlobalVolumeRefresh, false, 0, true);
+			
+			_state = _STATE_STOPPED;
 		}
 
 		
@@ -381,7 +381,7 @@ package editor_panel {
 
 				_refreshVisual();
 			} else {
-				Logger.warn('Machine error: should be in PLAY state');
+				Logger.warn('Machine error: should be in PLAY state, current: ' + _state);
 			}		
 		}
 
@@ -392,11 +392,14 @@ package editor_panel {
 		 * If recording, stop.
 		 */
 		private function _onRecordButtonClick(event:MouseEvent = null):void {
-			// only logged in user can use recording
-			//if(!App.connection.coreUserLoginStatus) {
-			//	App.messageModal.show({title:'Record track', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
-			//	return;
-			//}
+			// only logged in users can use recording
+			if(!App.connection.coreUserLoginStatus) {
+				App.messageModal.show({title:'Record track',
+					description:'Please log in or wait until the multitrack is fully loaded.',
+					buttons:MessageModal.BUTTONS_OK});
+
+				return;
+			}
 					
 			if(_state == _STATE_STOPPED) {	
 				_state = _STATE_WAIT_REC;
@@ -412,7 +415,7 @@ package editor_panel {
 				}
 
 			} else {
-				Logger.warn("Machine error: should be in STOP state");
+				Logger.warn("Machine error: should be in STOP state, current: " + _state);
 			}
 			
 			_refreshVisual();
@@ -421,9 +424,11 @@ package editor_panel {
 		private function _onRecordStopButtonClick(event:MouseEvent):void {
 			if(_state == _STATE_RECORDING) {
 				_state = _STATE_STOPPED;
-				_encodeRecordedTrack();
+
+				stopRecording();
+
 			} else {
-				Logger.warn("Machine error: should be in REC state");
+				Logger.warn("Machine error: should be in REC state, current: " + _state);
 			}
 
 			_refreshVisual();
@@ -473,7 +478,7 @@ package editor_panel {
 		
 		private function _onMicrophoneDenied(event:UserEvent = null):void {
 			_state = _STATE_STOPPED;
-			this.killRecordTrack();
+			killRecordTrack();
 			
 			_refreshVisual();
 		}
@@ -492,14 +497,15 @@ package editor_panel {
 				//if(_completedTracksCounter == allTrackCount - 1) {
 					Logger.info('Song recording completed.');
 					_completedTracksCounter = 0;
-					_encodeRecordedTrack();					
+
+					stopRecording();					
 				//}
 				
 			} else {
 				if(_completedTracksCounter == allTrackCount) {
 					Logger.info('Song playback completed.');
 					_completedTracksCounter = 0;
-					stop();			
+					stop();
 				}
 			}
 
@@ -512,10 +518,8 @@ package editor_panel {
 		private function _onRecordStart(event:TrackEvent):void {
 			if(allTrackCount == 1) {
 				Logger.info('Starting recording (first track recorded, so no record length limit).');
-				_recordLimit = 0;
 			} else {
 				Logger.info(sprintf('Starting recording (record length limit = %s).', App.getTimeCode(_milliseconds)));
-				_recordLimit = _milliseconds;
 			}
 			
 			_state = _STATE_RECORDING;
@@ -528,13 +532,19 @@ package editor_panel {
 
 
 
-		private function _encodeRecordedTrack():void {
-			var id:uint = _recordTrack.trackID;
-			var t:StandardTrack;
-
+		private function stopRecording():void {
+			var recorded:uint = _recordTrack.position;
+			_recordTrack.stopRecording();
+			
+			if(recorded) {
+				var t:StandardTrack;
+				var id:uint = _recordTrack.trackID;
+				
+				t = _standardContainer.addStandardTrack(id);
+				t.encode(App.connection.streamService.filename);
+			}
+			
 			killRecordTrack();
-			t = _standardContainer.addStandardTrack(id);
-			t.encode(App.connection.streamService.filename);
 		}
 		
 
@@ -549,13 +559,17 @@ package editor_panel {
 		 * @param event Event data
 		 */
 		private function _onUploadButtonClick(event:MouseEvent = null):void {
-			//if(!App.connection.coreUserLoginStatus) {
-			//	// user is not logged in, don't allow him to display My List
-			//	App.messageModal.show({title:'Upload track', description:'Please log in or wait until the multitrack is fully loaded.', buttons:MessageModal.BUTTONS_OK});
-			//	return;
-			//}
-			//App.uploadTrackModal.show();
-			App.messageModal.show({title:"UPLOAD", description:'Now browse for a file, create the track, and wait for upload && encoding'});			
+			if(!App.connection.coreUserLoginStatus) {
+				// user is not logged in, don't allow him to display My List
+				App.messageModal.show({title:'Upload track',
+					description:'Please log in or wait until the multitrack is fully loaded.',
+					buttons:MessageModal.BUTTONS_OK});
+				return;
+			}
+
+			App.messageModal.show({title:"UPLOAD",
+				description:'Now browse for a file, create the track, and wait for upload && encoding',
+				buttons:MessageModal.BUTTONS_OK});			
 		}
 
 
@@ -736,6 +750,14 @@ package editor_panel {
 					
 					break;
 				
+				case _STATE_WAIT_REC:
+					_disableButton(_controllerPlayBtn);
+					_disableButton(_controllerRecordBtn);
+					_disableButton(_controllerSearchBtn);
+					_disableButton(_controllerUploadBtn);
+					
+					break;
+
 				case _STATE_RECORDING:
 					_controllerRecordBtn.visible = false;
 					_controllerRecordStopBtn.visible = true;
