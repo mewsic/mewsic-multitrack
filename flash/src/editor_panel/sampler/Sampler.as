@@ -4,18 +4,18 @@ package editor_panel.sampler {
 	import br.com.stimuli.loading.BulkErrorEvent;
 	import br.com.stimuli.loading.BulkLoader;
 	
-	import de.popforge.utils.sprintf;
-	
 	import com.gskinner.utils.Rnd;
 	
-	import org.osflash.thunderbolt.Logger;
+	import de.popforge.utils.sprintf;
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.ProgressEvent;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
-	import flash.media.SoundTransform;	
+	import flash.media.SoundTransform;
+	
+	import org.osflash.thunderbolt.Logger;	
 
 	
 	
@@ -48,8 +48,7 @@ package editor_panel.sampler {
 		 * Constructor.
 		 * @param o MorphSprite config Object
 		 */
-		public function Sampler() {
-			
+		public function Sampler() {	
 			var id:String = sprintf('sampler.%u.%u', uint(new Date()), Rnd.integer(1000, 9999));			
 			_sampleID = sprintf('%s.sample', id);
 			_currentSoundTransform = new SoundTransform();
@@ -134,7 +133,7 @@ package editor_panel.sampler {
 					_sampleChannel.removeEventListener(Event.SOUND_COMPLETE, _onSoundComplete);
 					_sampleChannel.stop();
 				}
-				else throw new Error('Sample playing but paused.');
+				else throw new Error('Sample already paused.');
 			}
 			else throw new Error('Sample not playing.');
 		}
@@ -145,16 +144,16 @@ package editor_panel.sampler {
 		 * Resume sample.
 		 */
 		public function resume():void {
-			if(_isSamplePlaying) {
-				if(_isSamplePaused) {
+			if(_isSamplePlaying || _pausedSamplePos) {
+				//if(_isSamplePaused) {
 					_isSamplePaused = false;
+					_isSamplePlaying = true;
 					_sampleChannel = _sampleSound.play(_pausedSamplePos); 
 					_sampleChannel.addEventListener(Event.SOUND_COMPLETE, _onSoundComplete, false, 0, true);
 					_refreshSoundTransform();
-				}
-				else throw new Error('Sample playing but not paused.');
-			}
-			else throw new Error('Sample not playing.');
+				//}
+				//else throw new Error('Sample playing but not paused.');
+			} else throw new Error('Sample not playing nor ever played.');
 		}
 
 		
@@ -164,6 +163,11 @@ package editor_panel.sampler {
 		 * @param position Seek position in ms
 		 */
 		public function seek(position:uint):void {
+			if(position > _milliseconds) {
+				Logger.info("Seek beyond end of file (ms: " + _milliseconds + ", pos: " + position);
+				return;
+			}
+
 			if(_isSamplePlaying) {
 				// sample playing
 				if(_isSamplePaused) {
@@ -180,6 +184,8 @@ package editor_panel.sampler {
 			else {
 				// sample not playing
 				// dummy seek
+				Logger.info("Seek while stopped to pos:" + position);
+				 
 				_pausedSamplePos = position;
 			}
 		}
@@ -206,6 +212,12 @@ package editor_panel.sampler {
 
 		
 		
+		public function get isPlaying():Boolean {
+			return _isSamplePlaying;
+		}
+		
+		
+		
 		/**
 		 * Get current sample position.
 		 * @return Sample position in ms
@@ -216,6 +228,12 @@ package editor_panel.sampler {
 			else return _sampleChannel.position;
 		}
 
+		
+		
+		public function get milliseconds():uint {
+			return _milliseconds;
+		}
+		
 		
 		
 		/**
@@ -255,6 +273,16 @@ package editor_panel.sampler {
 		
 		
 		/**
+		 * Get current balance.
+		 * @return Current balance
+		 */
+		public function get balance():Number {
+			return _currentSoundTransform.pan;
+		}
+
+		
+		
+		/**
 		 * Set sample balance.
 		 * @param value Balance
 		 */
@@ -265,14 +293,10 @@ package editor_panel.sampler {
 
 		
 		
-		/**
-		 * Get current balance.
-		 * @return Current balance
-		 */
-		public function get balance():Number {
-			return _currentSoundTransform.pan;
+		public function get isMuted():Boolean {
+			return _isMuted;
 		}
-
+		
 		
 		
 		/**
@@ -320,6 +344,7 @@ package editor_panel.sampler {
 				
 				// dispatch event
 				dispatchEvent(new SamplerEvent(SamplerEvent.SAMPLE_DOWNLOADED, true));
+				_milliseconds = _sampleSound.length; /// XXX REMOVE ME WHEN WE'LL USE MSEC IN THE DB
 			}
 			
 			// dispatch progress event

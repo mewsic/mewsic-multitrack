@@ -82,6 +82,8 @@ package editor_panel.containers {
 			$isChangeHeightEnabled = false;
 			$isMorphWidthEnabled = false;
 			$isMorphHeightEnabled = false;
+			
+			_trackCreateService = new TrackCreateService();
 
 			// intro animation
 			Tweener.addTween(this, {delay:.05, onComplete:function():void {
@@ -233,7 +235,7 @@ package editor_panel.containers {
 			}
 				
 			// dispatch events
-			dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {trackData:td}));
+			dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {track:p}));
 			dispatchEvent(new AppEvent(AppEvent.REFRESH_TOP_PANE, true));
 		}
 
@@ -277,18 +279,17 @@ package editor_panel.containers {
 
 		
 		
-		public function createUploadTrack():void {
+		public function createUploadTrack(name:String):void {
 			if(_type != TrackCommon.STANDARD_TRACK) {
 				throw new Error('Could not add upload track to record track container.');
 			}
 			Logger.info('Creating upload track');
 			
 			// create this track on the server
-			_trackCreateService = new TrackCreateService();
 			_trackCreateService.url = App.connection.serverPath + App.connection.configService.trackCreateRequestURL; /// XXX REMOVE ME
 			_trackCreateService.addEventListener(RemotingEvent.REQUEST_FAILED, _onTrackCreateFailed, false, 0, true);
 			_trackCreateService.addEventListener(TrackCreateEvent.REQUEST_DONE, _onUploadTrackCreateDone, false, 0, true);
-			_trackCreateService.request();
+			_trackCreateService.request({title:name});
 		}
 		
 		
@@ -303,7 +304,7 @@ package editor_panel.containers {
 				
 			// dispatch
 			dispatchEvent(new ContainerEvent(ContainerEvent.UPLOAD_TRACK_READY, true, false, {track:t}));
-			dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {trackData:event.trackData}));
+			dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {track:t}));
 			
 			dispatchEvent(new AppEvent(AppEvent.REFRESH_TOP_PANE, true, false));
 		}		
@@ -322,11 +323,10 @@ package editor_panel.containers {
 			Logger.info('Creating record track');
 
 			// create this track on the server
-			_trackCreateService = new TrackCreateService();
 			_trackCreateService.url = App.connection.serverPath + App.connection.configService.trackCreateRequestURL; /// XXX REMOVE ME
 			_trackCreateService.addEventListener(RemotingEvent.REQUEST_FAILED, _onTrackCreateFailed, false, 0, true);
 			_trackCreateService.addEventListener(TrackCreateEvent.REQUEST_DONE, _onRecordTrackCreateDone, false, 0, true);
-			_trackCreateService.request();
+			_trackCreateService.request({title:App.connection.coreUserData.userNickname + " performance"});
 		}
 				
 		
@@ -341,7 +341,7 @@ package editor_panel.containers {
 				
 			// dispatch
 			dispatchEvent(new ContainerEvent(ContainerEvent.RECORD_TRACK_READY, true, false, {track:t}));
-			dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {trackData:event.trackData}));
+			dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {track:t}));
 			
 			dispatchEvent(new AppEvent(AppEvent.REFRESH_TOP_PANE, true, false));
 		}
@@ -519,11 +519,19 @@ package editor_panel.containers {
 		 * Seek container.
 		 * @param position Seek position
 		 */
-		public function seek(position:uint):void {
-			for each(var t:TrackCommon in _trackList) {
+		public function seek(position:uint, isPlaying:Boolean = false):void {
+			for each(var x:TrackCommon in _trackList) {
 				// seek all tracks in the container
+				var t:StandardTrack = x as StandardTrack; /// XXX EVEN UGLIER HACK
 				try {
-					if(t.isEnabled) t.seek(position);
+					if(t.isEnabled) {
+						t.seek(position);
+						
+						if(isPlaying && !t.isPlaying && position < t.milliseconds) {
+							Logger.info("Resuming playback of stopped track " + t.trackData.trackTitle);
+							t.resume();
+						}
+					}
 				}
 				catch(err:Error) {
 					// something went wrong, grr
@@ -589,6 +597,14 @@ package editor_panel.containers {
 
 		
 		
+		public function get playingTracksCount():uint {
+			var c:uint = 0;
+			for each(var t:TrackCommon in _trackList) if((t as StandardTrack).isPlaying) c++; // XXX UGLY CAST
+			return c;
+		}
+		
+		
+		
 		/**
 		 * Get current sample position.
 		 * @author Shimray Current sample position.
@@ -607,7 +623,7 @@ package editor_panel.containers {
 
 			for each(t in _trackList) {
 				if(t.trackData)
-					max = Math.max(max, t.trackData.trackMilliseconds); 
+					max = Math.max(max, (t as StandardTrack).milliseconds);//trackData.trackMilliseconds); 
 			}			
 			return max;
 		}
@@ -689,7 +705,7 @@ package editor_panel.containers {
 					_refreshWaveforms();
 					
 					// dispatch events
-					dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {trackData:event.trackData}));					
+					dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {track:p}));					
 				}
 			}
 		}

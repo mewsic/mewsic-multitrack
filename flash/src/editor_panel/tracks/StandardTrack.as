@@ -272,6 +272,18 @@ package editor_panel.tracks {
 		}
 		
 		
+		public function get isPlaying():Boolean {
+			return _sampler.isPlaying;
+		}
+		
+		
+		
+		public function get milliseconds():uint {
+			return _sampler.milliseconds;
+		}
+		
+		
+		
 		/**
 		 * Kill button click event handler.
 		 * @param event Event data
@@ -308,6 +320,7 @@ package editor_panel.tracks {
 		 */
 		private function _onSamplerDownloaded(event:SamplerEvent):void {
 			_waveform.progress = 1;
+			dispatchEvent(new TrackEvent(TrackEvent.SAMPLE_DOWNLOADED, false, false, {track:this}));
 		}
 		
 		
@@ -381,7 +394,7 @@ package editor_panel.tracks {
 		
 		private function _onFileProgress(event:ProgressEvent):void {
 			var w:uint = _progressBar.width / (event.bytesTotal / event.bytesLoaded);
-			_progressBar.width = w / 2; // Half width for upload. The rest is for encoding.
+			_progressBar.progress = w / 2; // Half width for upload. The rest is for encoding.
 		}
 		
 		private function _onFileUploadFailed(event:Event):void {
@@ -394,6 +407,8 @@ package editor_panel.tracks {
 		}
 		
 		private function _onFileUploadComplete(event:DataEvent):void {
+			_progressBar.progress = _progressBar.width / 2;
+
 			_encodeKey = XML(event.data).@key;
 
 			_workerEncodeService = new WorkerEncodeService();
@@ -528,7 +543,7 @@ package editor_panel.tracks {
 			_trackFetchService.removeEventListener(TrackFetchEvent.REQUEST_DONE, _onTrackFetchDone);
 			_trackFetchService.removeEventListener(RemotingEvent.REQUEST_FAILED, _onTrackFetchFailed);
 			
-			dispatchEvent(new TrackEvent(TrackEvent.REFRESH));			
+			dispatchEvent(new TrackEvent(TrackEvent.REFRESH, false, false, {track:this}));			
 		}
 
 

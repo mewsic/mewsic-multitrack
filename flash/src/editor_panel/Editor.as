@@ -31,6 +31,7 @@ package editor_panel {
 	import flash.net.FileFilter;
 	import flash.net.FileReference;
 	import flash.utils.ByteArray;
+	import flash.utils.setTimeout;
 	
 	import modals.MessageModal;
 	
@@ -65,18 +66,17 @@ package editor_panel {
 		private static const _STILL_SEEK_STEP:uint = 10000;
 		
 		// editor machine state definitions
-		private static const _STATE_STOPPED:String     = 'STOPPED';
-		private static const _STATE_PLAYING:String     = 'PLAYING';
-		private static const _STATE_PAUSED:String      = 'PAUSED';
-		private static const _STATE_WAIT_REC:String    = 'WAIT_REC';
-		private static const _STATE_RECORDING:String   = 'RECORDING';
-		private static const _STATE_WAIT_UPLOAD:String = 'WAIT_UPLOAD';
-		private static const _STATE_UPLOADING:String   = 'UPLOADING';
+		private static const _STATE_STOPPED:uint     = 0x01;
+		private static const _STATE_PLAYING:uint     = 0x02;
+		private static const _STATE_PAUSED:uint      = 0x04;
+		private static const _STATE_WAIT_REC:uint    = 0x08;
+		private static const _STATE_RECORDING:uint   = 0x10;
+		private static const _STATE_UPLOADING:uint   = 0x20;
 		
 		private static const _OFF_PLAYHEAD:uint = 112;
 		private static const _OFF_STAGE:uint = 129;
 		
-		private var _state:String;
+		private var _state:uint;
 		
 		private var _playhead:Playhead;
 		private var _containersMaskSpr:MorphSprite;
@@ -113,8 +113,6 @@ package editor_panel {
 		private var _recordContainer:ContainerCommon;
 
 		private var _milliseconds:uint;
-
-		private var _completedTracksCounter:uint;
 		private var _recordTrack:RecordTrack;
 
 		//private var _beatClicker:BeatClicker;
@@ -259,18 +257,18 @@ package editor_panel {
 
 			_standardContainer.addEventListener(ContainerEvent.TRACK_FETCH_FAILED, _onContainerTrackFetchFailed, false, 0, true);
 			_standardContainer.addEventListener(ContainerEvent.SONG_FETCH_FAILED, _onContainerSongFetchFailed, false, 0, true);
-			_standardContainer.addEventListener(ContainerEvent.TRACK_ADDED, _onContainerTrackAdded, false, 0, true);
+			_standardContainer.addEventListener(ContainerEvent.TRACK_ADDED, _onPlayableTrackAdded, false, 0, true);
 			_standardContainer.addEventListener(ContainerEvent.TRACK_KILL, _onContainerTrackKilled, false, 0, true);
 
 			_standardContainer.addEventListener(SamplerEvent.PLAYBACK_COMPLETE, _onTrackPlaybackComplete, false, 0, true);
 			_standardContainer.addEventListener(SamplerEvent.SAMPLE_ERROR, _onTrackSampleError, false, 0, true);
+			_standardContainer.addEventListener(ContainerEvent.UPLOAD_TRACK_READY, _onUploadTrackReady, false, 0, true);
 
 
 			_recordContainer.addEventListener(ContainerEvent.CONTENT_HEIGHT_CHANGE, _onContainerContentHeightChange, false, 0, true);
 
 			_recordContainer.addEventListener(ContainerEvent.TRACK_FETCH_FAILED, _onContainerTrackFetchFailed, false, 0, true);
 			_recordContainer.addEventListener(ContainerEvent.SONG_FETCH_FAILED, _onContainerSongFetchFailed, false, 0, true);
-			_recordContainer.addEventListener(ContainerEvent.TRACK_ADDED, _onContainerTrackAdded, false, 0, true);
 			_recordContainer.addEventListener(ContainerEvent.TRACK_KILL, _onContainerTrackKilled, false, 0, true);
 
 			_recordContainer.addEventListener(SamplerEvent.PLAYBACK_COMPLETE, _onTrackPlaybackComplete, false, 0, true);
@@ -368,8 +366,8 @@ package editor_panel {
 				return;
 			}
 			
-			if(_state == _STATE_STOPPED) play()
-			else if(_state == _STATE_PAUSED) resume()
+			if(_state & _STATE_STOPPED) play()
+			else if(_state & _STATE_PAUSED) resume()
 			else {
 				Logger.warn('Machine error: should be in STOP, PLAY or PAUSE state, current: ' + _state);
 				return;
@@ -380,9 +378,10 @@ package editor_panel {
 		}
 		
 		private function _onPauseButtonClick(event:MouseEvent = null):void {
-			if(_state == _STATE_PLAYING) {
+			if(_state & _STATE_PLAYING) {
+				_state &= ~_STATE_PLAYING;
+				_state |= _STATE_PAUSED;
 				pause();
-				_state = _STATE_PAUSED;
 
 				_refreshVisual();
 			} else {
@@ -406,10 +405,10 @@ package editor_panel {
 				return;
 			}
 					
-			if(_state == _STATE_STOPPED) {	
-				_state = _STATE_WAIT_REC;
-		
+			if(_state == _STATE_STOPPED) {		
 				try {
+
+					_state = _STATE_WAIT_REC;
 					grabMikeAndRecord();
 					
 				 } catch(e:Error) {
@@ -428,8 +427,8 @@ package editor_panel {
 
 		private function _onRecordStopButtonClick(event:MouseEvent):void {
 			if(_state == _STATE_RECORDING) {
-				_state = _STATE_STOPPED;
 
+				_state = _STATE_STOPPED;
 				stopRecording();
 
 			} else {
@@ -469,18 +468,39 @@ package editor_panel {
 			_recordContainer.createRecordTrack();
 			_recordContainer.addEventListener(ContainerEvent.RECORD_TRACK_READY, _onRecordTrackReady, false, 0, true);
 		}
-		
+
+
+
 		private function _onRecordTrackReady(event:ContainerEvent):void {
 			if(_recordTrack != null)
 				throw new Error("Record track should be null");
 			
 			_recordTrack = event.data.track;
 			_recordTrack.startRecording();
+		}
 
-			_state = _STATE_RECORDING;			
+
+		
+		private function _onRecordStart(event:TrackEvent):void {
+			if(allTrackCount == 1) {
+				Logger.info('Starting recording (first track recorded, so no record length limit).');
+			} else {
+				Logger.info(sprintf('Starting recording (record length limit = %s).', App.getTimeCode(_milliseconds)));
+			}
+			
+			if(!(_state & _STATE_WAIT_REC)) {
+				throw new Error('Machine error: should be in WAIT_REC state');
+			}
+			
+			_state = _STATE_RECORDING;
+
+			stop();
+			play();
 			_refreshVisual();
 		}
-		
+
+
+
 		private function _onMicrophoneDenied(event:UserEvent = null):void {
 			_state = _STATE_STOPPED;
 			killRecordTrack();
@@ -497,24 +517,27 @@ package editor_panel {
 		 * @param event Event data
 		 */
 		private function _onTrackPlaybackComplete(event:SamplerEvent):void {
-			_completedTracksCounter++;
 			if(_state == _STATE_RECORDING) {
-				//if(_completedTracksCounter == allTrackCount - 1) {
+				Logger.info("playingTrackCount: " + playingTracksCount);
+ 
+				if(!playingTracksCount) {
 					Logger.info('Song recording completed.');
-					_completedTracksCounter = 0;
 
 					stopRecording();					
 					_state = _STATE_STOPPED;
 					_refreshVisual();
-				//}
+				}
 				
-			} else {
-				if(_completedTracksCounter == allTrackCount) {
+			} else if(_state & _STATE_PLAYING) {
+				Logger.info("playingTrackCount: " + playingTracksCount);
+ 
+				if(!playingTracksCount) {
 					Logger.info('Song playback completed.');
-					_completedTracksCounter = 0;
 		
+					_state &= ~_STATE_PLAYING;
+					_state |= _STATE_STOPPED;
 					stop();
-					_state = _STATE_STOPPED;
+					
 					_refreshVisual();
 				}
 			}
@@ -522,23 +545,6 @@ package editor_panel {
 
 
 		
-		private function _onRecordStart(event:TrackEvent):void {
-			if(allTrackCount == 1) {
-				Logger.info('Starting recording (first track recorded, so no record length limit).');
-			} else {
-				Logger.info(sprintf('Starting recording (record length limit = %s).', App.getTimeCode(_milliseconds)));
-			}
-			
-			_state = _STATE_RECORDING;
-			
-			// Great work, Vaclav.
-			// -vjt, 24/03/2009
-			rewind();
-			play();
-		}
-
-
-
 		private function stopRecording():void {
 			var recorded:uint = _recordTrack.position;
 			_recordTrack.stopRecording();
@@ -549,6 +555,7 @@ package editor_panel {
 				
 				t = _standardContainer.addStandardTrack(id);
 				t.encode(App.connection.streamService.filename);
+				t.addEventListener(SamplerEvent.SAMPLE_DOWNLOADED, _onTrackFullyLoaded, false, 0, true);
 			}
 			
 			killRecordTrack();
@@ -574,22 +581,20 @@ package editor_panel {
 			}
 			
 			_file = new FileReference();
-			_file.addEventListener(Event.SELECT, _onFileSelect, false, 0, true);
-			_file.addEventListener(Event.CANCEL, _onFileCancel, false, 0, true);
+			_file.addEventListener(Event.SELECT, _onFileSelect);
+			_file.addEventListener(Event.CANCEL, _onFileCancel);
 
 			_file.browse([new FileFilter('MP3 files (*.mp3)', '*.mp3')]);
 		}
 
 
 		private function _onFileSelect(event:Event):void {
+			_standardContainer.createUploadTrack(_file.name);
 			_file.removeEventListener(Event.SELECT, _onFileSelect);
 			_file.removeEventListener(Event.CANCEL, _onFileCancel);
 
-			_standardContainer.createUploadTrack();
-			_standardContainer.addEventListener(ContainerEvent.UPLOAD_TRACK_READY, _onUploadTrackReady, false, 0, true);
-
-			_state = _STATE_WAIT_UPLOAD;
-			_refreshVisual();			
+			_state |= _STATE_UPLOADING;
+			_refreshVisual();
 		}
 		
 		
@@ -598,40 +603,49 @@ package editor_panel {
 			_file.removeEventListener(Event.SELECT, _onFileSelect);
 			_file.removeEventListener(Event.CANCEL, _onFileCancel);
 			_file.cancel();
-			_file = null;
-
-			_state = _STATE_STOPPED;
-			_refreshVisual();
+			_file = null;			
 		}
 		
 
 
 		private function _onUploadTrackReady(event:ContainerEvent):void {
 			var t:StandardTrack = event.data.track;
+			Logger.info("UPLOADING " + _file.name);
 			t.upload(_file);
 
 			t.addEventListener(TrackEvent.UPLOAD_COMPLETED, _onUploadDone, false, 0, true);
 			t.addEventListener(TrackEvent.UPLOAD_FAILED, _onUploadDone, false, 0, true);
 
-			_state = _STATE_UPLOADING;
-			_refreshVisual();
+			t.addEventListener(TrackEvent.SAMPLE_DOWNLOADED, _onTrackFullyLoaded, false, 0, true); // called when the track is playable
 		}
 		
 		
 		
 		private function _onUploadDone(event:TrackEvent):void {
 			var t:StandardTrack = event.data.track;
+			Logger.info("UPLOAD OF " + t.trackData.trackTitle + " COMPLETED");
 
 			t.removeEventListener(TrackEvent.UPLOAD_COMPLETED, _onUploadDone);
 			t.removeEventListener(TrackEvent.UPLOAD_FAILED, _onUploadDone);
 			
 			_file = null;			
-			_state = _STATE_STOPPED;
-			stop();
+			
+			_state &= ~_STATE_UPLOADING;
+			_enableButton(_controllerUploadBtn); // XXX WTF?!?!?! WHY SHOULD THIS DONE HERE? MACHINE ERROR!
 			_refreshVisual();
 		}
 
 
+		
+		private function _onTrackFullyLoaded(event:TrackEvent):void {
+			var t:StandardTrack = event.data.track;
+			t.removeEventListener(TrackEvent.SAMPLE_DOWNLOADED, _onTrackFullyLoaded);
+			t.seek(_standardContainer.position);
+
+			if(_state & _STATE_PLAYING) {
+				t.play();
+			}
+		}
 
 		/**
 		 * Low-level play method, XXX: make it protected
@@ -647,8 +661,6 @@ package editor_panel {
 		 * Low-level stop method.
 		 */
 		public function stop(event:Event = null):void {
-			rewind();
-
 			Logger.info('Stop playback.');
 			_standardContainer.stop();
 		}
@@ -677,7 +689,7 @@ package editor_panel {
 		
 		/**
 		 * Rewind the stage by _SEEK_STEP ms.
-		 */
+		 *
 		public function rewind(event:Event = null):void {
 			Logger.info('Rewind playback.');
 			var p:uint = currentPosition - _SEEK_STEP;
@@ -686,12 +698,13 @@ package editor_panel {
 			
 			_standardContainer.seek(p);
 		}
+		 */
 
 		
 		
 		/**
 		 * Forward the stage by _SEEK_STEP ms. 
-		 */
+		 *
 		public function forward(event:Event = null):void {
 			Logger.info('Forward playback.');
 			var p:uint = currentPosition + _SEEK_STEP;
@@ -699,6 +712,7 @@ package editor_panel {
 
 			_standardContainer.seek(p);
 		}
+		 */
 
 		
 		
@@ -707,11 +721,9 @@ package editor_panel {
 			if(value < 0) value = 0;
 			
 			Logger.info(sprintf('Seek playback (%u ms).', value));
+			_standardContainer.seek(value, _state == _STATE_PLAYING);			
 			
-			_standardContainer.seek(value);
-			
-			// refresh visual
-			_refreshVisual();			
+			//_refreshVisual();			
 		}
 
 		
@@ -731,6 +743,12 @@ package editor_panel {
 		 */
 		public function get allTrackCount():uint {
 			return _standardContainer.trackCount + _recordContainer.trackCount;
+		}
+		
+		
+		
+		public function get playingTracksCount():uint {
+			return _standardContainer.playingTracksCount;
 		}
 
 		
@@ -783,67 +801,64 @@ package editor_panel {
 			Logger.debug(sprintf('Current song length is %f ms', _milliseconds));
 
 			// set buttons states
-			switch(_state) {
-				case _STATE_STOPPED:
-					// Set play active only if there's already a track loaded, enable all other buttons
-					_controllerPlayBtn.visible = true;
-					_controllerPauseBtn.visible = false;
+			if(_state & _STATE_STOPPED) {
+				_controllerPlayBtn.visible = true;
+				_controllerPauseBtn.visible = false;
 
-					_controllerRecordBtn.visible = true;
-					_controllerRecordStopBtn.visible = false;
+				_controllerRecordBtn.visible = true;
+				_controllerRecordStopBtn.visible = false;
 
-					_setButtonActive(_controllerPlayBtn, allTrackCount > 0);
-					_setButtonActive(_controllerRecordBtn, !App.connection.streamService.microphoneDenied);
-					_enableButton(_controllerSearchBtn);
-					_enableButton(_controllerUploadBtn);
+				// Set play active only if there's already a track loaded
+				_setButtonActive(_controllerPlayBtn, allTrackCount > 0);
+				// Set record active only if the stream service is available
+				_setButtonActive(_controllerRecordBtn, !App.connection.streamService.microphoneDenied);
 
-					
-					break;
-					
-				case _STATE_PLAYING:
-					// Show pause button, disable record and upload button
-					_controllerPlayBtn.visible = false;
-					_controllerPauseBtn.visible = true;
-
-					_disableButton(_controllerRecordBtn);
-					_enableButton(_controllerSearchBtn);
-					//_enableButton(_controllerUploadBtn);					
-
-					break;
-					
-				case _STATE_PAUSED:
-					_controllerPlayBtn.visible = true;
-					_controllerPauseBtn.visible = false;
-
-					_enableButton(_controllerRecordBtn);
-					_enableButton(_controllerSearchBtn);
-					//_enableButton(_controllerUploadBtn);
-					
-					break;
+				_enableButton(_controllerSearchBtn);
+			}
 				
-				case _STATE_WAIT_REC, _STATE_WAIT_UPLOAD:
-					_disableButton(_controllerPlayBtn);
-					_disableButton(_controllerRecordBtn);
-					_disableButton(_controllerSearchBtn);
-					_disableButton(_controllerUploadBtn);
-					
-					break;
+			if(_state & _STATE_PLAYING) {
+				// Show pause button, disable record button
+				_controllerPlayBtn.visible = false;
+				_controllerPauseBtn.visible = true;
 
-				case _STATE_RECORDING:
-					_controllerRecordBtn.visible = false;
-					_controllerRecordStopBtn.visible = true;
+				_disableButton(_controllerRecordBtn);
+				_enableButton(_controllerSearchBtn);
+			}
+					
+			if(_state & _STATE_PAUSED) {
+				// show play button, re-enable record button
+				_controllerPlayBtn.visible = true;
+				_controllerPauseBtn.visible = false;
 
-					_disableButton(_controllerPlayBtn);
-					_disableButton(_controllerSearchBtn);
-					_disableButton(_controllerUploadBtn);
-					
-					break;
-					
-				case _STATE_UPLOADING:
-					_enableButton(_controllerPlayBtn);
-					_enableButton(_controllerSearchBtn);
-					_disableButton(_controllerRecordBtn);
-					_disableButton(_controllerUploadBtn);
+				_enableButton(_controllerRecordBtn);
+				_enableButton(_controllerSearchBtn);
+			}
+
+			if(_state & _STATE_WAIT_REC) {
+				_disableButton(_controllerPlayBtn);
+				_disableButton(_controllerRecordBtn);
+				_disableButton(_controllerSearchBtn);
+				_disableButton(_controllerUploadBtn);
+			}
+
+			if(_state & _STATE_RECORDING) {
+				_controllerRecordBtn.visible = false;
+				_controllerRecordStopBtn.visible = true;
+
+				_disableButton(_controllerPlayBtn);
+				_disableButton(_controllerSearchBtn);
+				_disableButton(_controllerUploadBtn);
+			} else {
+				_enableButton(_controllerUploadBtn);
+			}
+
+			if(_state & _STATE_UPLOADING) {
+				_enableButton(_controllerPlayBtn);
+				_enableButton(_controllerSearchBtn);
+				_disableButton(_controllerRecordBtn);
+				_disableButton(_controllerUploadBtn);
+			} else {
+				_enableButton(_controllerUploadBtn);
 			}
 		}
 
@@ -898,19 +913,28 @@ package editor_panel {
 		 * Container track added event handler.
 		 * @param event Event data
 		 */
-		private function _onContainerTrackAdded(event:ContainerEvent):void {
+		private function _onPlayableTrackAdded(event:ContainerEvent):void {
+			//var t:StandardTrack = event.data.track;
+			//t.seek(_standardContainer.position);
+
+			//if(_state & _STATE_PLAYING) {
+			//	t.play();
+			//}
+			
 			// stop playback
-			stop();
+			//	_state = _STATE_STOPPED;
+			//	stop();
+			//}
 			
 			// refresh buttons states
 			_refreshVisual();
 		}
-
+		
 		
 		
 		private function _onContainerTrackKilled(event:ContainerEvent):void {
 			// stop playback
-			stop();
+			stop(); // XXX REMOVE ME
 			
 			// refresh buttons states
 			_refreshVisual();

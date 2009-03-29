@@ -27,6 +27,8 @@ package editor_panel.tracks {
 		public static const UPLOAD_FAILED:String = 'onUploadFailed';
 		public static const UPLOAD_COMPLETED:String = 'onUploadCompleted';
 		
+		public static const SAMPLE_DOWNLOADED:String = 'onTrackSampleDownloaded';
+		
 		public var data:Object;
 
 		

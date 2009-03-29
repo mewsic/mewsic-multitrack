@@ -37,7 +37,7 @@ package config {
 		public static const PREVENT_CACHING:Boolean = false;
 		public static const IGNORE_FMS_CALLS:Boolean = false; // :D
 		public static const MAX_TRACKS:uint = 16;
-		public static const WORKER_INTERVAL:Number = 1;
+		public static const WORKER_INTERVAL:Number = 3;
 
 		public static var isLogEnabled:Boolean;
 		public static var isServiceDumpEnabled:Boolean;

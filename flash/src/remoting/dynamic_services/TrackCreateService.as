@@ -57,7 +57,7 @@ package remoting.dynamic_services {
 		override public function request(params:Object = null):void {
 			if(params == null) params = new Object();
 			
-			var query:String = 'flashStinks=true';
+			var query:String = 'flashStinks=true&';
 			
 			if(params.title != undefined) query += 'track[title]=' + escape(params.title);
 			if(params.filename != undefined) query += '&track[filename]=' + escape(params.filename);
