@@ -185,14 +185,10 @@ package editor_panel.tracks {
 		
 		
 		public function load():void {
-			if($trackData == null) throw new Error('Track data is not set.');
+			if($trackData == null)
+				throw new Error('Track data is not set.');
 			
-			try { 
-				_userService.request({userNickname:$trackData.trackUserNickname});
-			}
-			catch(err:Error) { 
-				Logger.error(sprintf('Could not get user data:\n%s', err.message)); 
-			}
+			_userService.request({userNickname:$trackData.trackUserNickname});
 			
 			// get instrument description and icon
 			if($trackData.trackInstrumentID) {

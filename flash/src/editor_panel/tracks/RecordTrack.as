@@ -60,7 +60,7 @@ package editor_panel.tracks {
 		private var _startTime:uint;
 		private var _syncedRecordTimeout:uint;
 		
-		private static const _MAX_REC_LEN:uint = 10 * 60 * 1000; // 10 minutes
+		public static const MAX_REC_LEN:uint = 10 * 60 * 1000; // 10 minutes
 		private static var _maxrecTimeout:uint;
 
 		
@@ -142,7 +142,7 @@ package editor_panel.tracks {
 			_addPrecountTimer(precountDelay, 4);
 						
 			_syncedRecordTimeout = setTimeout(_onStartSyncedRecord, precountDelay * 4);
-			_maxrecTimeout = setTimeout(_onMaximalRecordLength, _MAX_REC_LEN);
+			_maxrecTimeout = setTimeout(_onMaximalRecordLength, MAX_REC_LEN);
 			
 			//_recordOverlayTick();
 		}

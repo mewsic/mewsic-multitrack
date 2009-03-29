@@ -371,7 +371,7 @@ package editor_panel {
 			}
 
 			_state = _STATE_PLAYING;
-			_refreshVisual();	
+			_refreshVisual();
 		}
 		
 		private function _onPauseButtonClick(event:MouseEvent = null):void {
@@ -705,8 +705,18 @@ package editor_panel {
 			_setButtonActive(button, false);
 		}
 		
+		
+		private function _recountSongLength():void {
+			if((_state == _STATE_RECORDING) && _standardContainer.trackCount == 0) {
+				_milliseconds = RecordTrack.MAX_REC_LEN;
+			} else {
+				_milliseconds = _standardContainer.milliseconds;
+			}
+		}
+
+		
+		
 		private function _refreshVisual():void {
-			// recound song length from core song data
 			_recountSongLength();
 			
 			Logger.debug(sprintf('Current song length is %f ms', _milliseconds));
@@ -817,16 +827,6 @@ package editor_panel {
 
 		
 		
-		private function _recountSongLength():void {
-			if((_state == _STATE_RECORDING) && _standardContainer.trackCount == 0) {
-				_milliseconds = _recordTrack.position;
-			} else {
-				_milliseconds = _standardContainer.milliseconds;
-			}
-		}
-
-		
-		
 		/**
 		 * Container track added event handler.
 		 * @param event Event data
@@ -878,9 +878,6 @@ package editor_panel {
 			if(_state == _STATE_RECORDING) {
 				// recording mode
 				msec = _recordTrack.position;
-				
-				// recount song length from core song data
-				_recountSongLength();
 			} else {
 				// playback mode
 				msec = currentPosition;

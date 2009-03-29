@@ -301,6 +301,8 @@ package editor_panel.containers {
 
 			// create track
 			var t:RecordTrack = createTrack(event.trackData.trackID) as RecordTrack;
+			t.trackData = event.trackData;
+			t.load();
 				
 			// dispatch
 			dispatchEvent(new ContainerEvent(ContainerEvent.RECORD_TRACK_READY, true, false, {track:t}));
