@@ -501,10 +501,15 @@ package editor_panel.containers {
 		 * Resume container.
 		 */
 		public function resume():void {
-			for each(var t:TrackCommon in _trackList) {
+			for each(var x:TrackCommon in _trackList) {
+				var t:StandardTrack = x as StandardTrack; /// XXX EVEN UGLIER HACK
+				
 				// resume all tracks in the container
 				try {
-					if(t.isEnabled) t.resume();
+					if(t.isEnabled && position < t.milliseconds) {
+						Logger.info("Resuming playback of stopped track " + t.trackData.trackTitle);
+						t.resume();
+					}
 				}
 				catch(err:Error) {
 					// something went wrong, grr

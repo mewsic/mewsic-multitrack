@@ -366,14 +366,20 @@ package editor_panel {
 				return;
 			}
 			
-			if(_state & _STATE_STOPPED) play()
-			else if(_state & _STATE_PAUSED) resume()
+			if(_state & _STATE_STOPPED) { 
+				_state &= ~_STATE_STOPPED;
+				play();
+			}
+			else if(_state & _STATE_PAUSED) {
+				_state &= ~_STATE_PAUSED;
+				resume();
+			}
 			else {
-				Logger.warn('Machine error: should be in STOP, PLAY or PAUSE state, current: ' + _state);
+				Logger.warn('Machine error: should be in STOP or PAUSE state, current: ' + _state);
 				return;
 			}
 
-			_state = _STATE_PLAYING;
+			_state |= _STATE_PLAYING;
 			_refreshVisual();
 		}
 		
@@ -528,13 +534,13 @@ package editor_panel {
 					_refreshVisual();
 				}
 				
-			} else if(_state & _STATE_PLAYING) {
+			} else if(_state & (_STATE_PLAYING|_STATE_PAUSED)) {
 				Logger.info("playingTrackCount: " + playingTracksCount);
  
 				if(!playingTracksCount) {
 					Logger.info('Song playback completed.');
 		
-					_state &= ~_STATE_PLAYING;
+					_state &= ~(_STATE_PLAYING|_STATE_PAUSED);
 					_state |= _STATE_STOPPED;
 					stop();
 					
@@ -640,10 +646,17 @@ package editor_panel {
 		private function _onTrackFullyLoaded(event:TrackEvent):void {
 			var t:StandardTrack = event.data.track;
 			t.removeEventListener(TrackEvent.SAMPLE_DOWNLOADED, _onTrackFullyLoaded);
-			t.seek(_standardContainer.position);
+			
+			if(_state & (_STATE_PAUSED|_STATE_PLAYING)) {
+				Logger.info("SEEK to " + _standardContainer.position + " after completed download");
+				t.seek(_standardContainer.position);
+			}
 
 			if(_state & _STATE_PLAYING) {
-				t.play();
+				Logger.info("AUTOPLAY");
+				pause();
+				resume();
+				//t.resume();
 			}
 		}
 
@@ -721,7 +734,7 @@ package editor_panel {
 			if(value < 0) value = 0;
 			
 			Logger.info(sprintf('Seek playback (%u ms).', value));
-			_standardContainer.seek(value, _state == _STATE_PLAYING);			
+			_standardContainer.seek(value, Boolean(_state & _STATE_PLAYING));			
 			
 			//_refreshVisual();			
 		}
@@ -914,7 +927,9 @@ package editor_panel {
 		 * @param event Event data
 		 */
 		private function _onPlayableTrackAdded(event:ContainerEvent):void {
-			//var t:StandardTrack = event.data.track;
+			var t:StandardTrack = event.data.track;
+			t.addEventListener(TrackEvent.SAMPLE_DOWNLOADED, _onTrackFullyLoaded, false, 0, true);
+			
 			//t.seek(_standardContainer.position);
 
 			//if(_state & _STATE_PLAYING) {
@@ -934,7 +949,9 @@ package editor_panel {
 		
 		private function _onContainerTrackKilled(event:ContainerEvent):void {
 			// stop playback
-			stop(); // XXX REMOVE ME
+			_state &= ~(_STATE_PLAYING|_STATE_PAUSED);
+			_state |= _STATE_STOPPED;
+			stop();
 			
 			// refresh buttons states
 			_refreshVisual();

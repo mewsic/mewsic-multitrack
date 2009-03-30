@@ -82,12 +82,12 @@ package editor_panel.tracks {
 			$trackID = trackID;
 
 			// add components
-			$titleTF = new QTextField({alpha:0, x:154, width:116, height:52,
+			$titleTF = new QTextField({alpha:0, x:154, y:0, width:90, height:30,
 				defaultTextFormat:Formats.standardContainerTitle,
 				filters:Filters.standardContainerContentTitle,
 				sharpness:-25, thickness:-50});
 	
-			$specsTagsTF = new QTextField({alpha:0, x:154, width:116, height:52,
+			$specsTagsTF = new QTextField({alpha:0, x:154, width:90, height:30,
 				defaultTextFormat:Formats.standardContainerSpecsContent,
 				filters:Filters.standardContainerContentTitle,
 				sharpness:-25, thickness:-50});
