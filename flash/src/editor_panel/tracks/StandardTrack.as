@@ -296,11 +296,6 @@ package editor_panel.tracks {
 				_encodeWorkerTimer = null;
 			}
 			
-//			if(_file) {
-//				_file.cancel();
-//				_file = null;
-//			}
-
 			dispatchEvent(new TrackEvent(TrackEvent.KILL));
 		}
 
@@ -522,7 +517,8 @@ package editor_panel.tracks {
 					
 					_trackFetchService.url = App.connection.serverPath + App.connection.configService.trackFetchRequestURL;
 					_trackFetchService.addEventListener(TrackFetchEvent.REQUEST_DONE, _onTrackFetchDone, false, 0, true);
-					_trackFetchService.addEventListener(RemotingEvent.REQUEST_FAILED, _onTrackFetchFailed, false, 0, true);
+					_trackFetchService.addEventListener(TrackFetchEvent.REQUEST_FAILED, _onTrackFetchFailed, false, 0, true);
+					
 					_trackFetchService.request({trackID:$trackData.trackID});
 	
 					break;
@@ -541,19 +537,19 @@ package editor_panel.tracks {
 			this.load();
 			
 			_trackFetchService.removeEventListener(TrackFetchEvent.REQUEST_DONE, _onTrackFetchDone);
-			_trackFetchService.removeEventListener(RemotingEvent.REQUEST_FAILED, _onTrackFetchFailed);
+			_trackFetchService.removeEventListener(TrackFetchEvent.REQUEST_FAILED, _onTrackFetchFailed);
 			
 			dispatchEvent(new TrackEvent(TrackEvent.REFRESH, false, false, {track:this}));			
 		}
 
 
 
-		private function _onTrackFetchFailed(event:RemotingEvent):void {
-			App.messageModal.show({title:"Unable to refresh track", description:event.description});
+		private function _onTrackFetchFailed(event:TrackFetchEvent):void {
+			App.messageModal.show({title:"Unable to fetch track", description:"please try again"});
 			_onKillClick();
 			
 			_trackFetchService.removeEventListener(TrackFetchEvent.REQUEST_DONE, _onTrackFetchDone);
-			_trackFetchService.removeEventListener(RemotingEvent.REQUEST_FAILED, _onTrackFetchFailed);			
+			_trackFetchService.removeEventListener(TrackFetchEvent.REQUEST_FAILED, _onTrackFetchFailed);			
 		}
 	}
 }

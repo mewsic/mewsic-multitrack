@@ -108,7 +108,7 @@ package editor_panel.sampler {
 		 * Stop sample.
 		 */
 		public function stop():void {
-			if(!(_isSamplePlaying && _isSamplePaused)) {
+			if(!(_isSamplePlaying || _isSamplePaused)) {
 				Logger.debug(sprintf("Sample %s is not playing", _sampleID));
 				return;
 			}

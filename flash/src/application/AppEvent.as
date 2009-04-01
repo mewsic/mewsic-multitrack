@@ -10,7 +10,7 @@ package application {
 	 * FATAL_ERROR - fatal error, show system modalWindow (pink bar on top)
 	 * CALL_STAGE_RESIZE - call for stage resize (not used here as stage does not resize)
 	 * HEIGHT_CHANGE - height of a panel changed, resize Flash object container
-	 * REFRESH_TOP_PANE - call to JavaScript to refresh top HTML pane
+	 * //REFRESH_TOP_PANE - call to JavaScript to refresh top HTML pane
 	 * RELOAD_PAGE - reload page via javascript (destroys everything)
 	 * 
 	 * @author Vaclav Vancura (http://vaclav.vancura.org)
@@ -24,7 +24,7 @@ package application {
 		public static const FATAL_ERROR:String = 'onFatalError';
 		public static const CALL_STAGE_RESIZE:String = 'onCallStageResize';
 		public static const HEIGHT_CHANGE:String = 'onHeightChange';
-		public static const REFRESH_TOP_PANE:String = 'onRefreshTopPane';
+		//public static const REFRESH_TOP_PANE:String = 'onRefreshTopPane';
 		public static const RELOAD_PAGE:String = 'onReloadPage';
 		public var description:String;
 

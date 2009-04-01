@@ -124,7 +124,7 @@ package application {
 			// add this events
 			this.addEventListener(Event.ENTER_FRAME, _onEnterFrame, false, 0, true);
 			this.addEventListener(AppEvent.HEIGHT_CHANGE, _onHeightChange, false, 0, true);
-			this.addEventListener(AppEvent.REFRESH_TOP_PANE, _onRefreshTopPane, false, 0, true);
+			//this.addEventListener(AppEvent.REFRESH_TOP_PANE, _onRefreshTopPane, false, 0, true);
 			this.addEventListener(AppEvent.RELOAD_PAGE, _onReloadPage, false, 0, true);
 
 			// init javascript to actionscript calls

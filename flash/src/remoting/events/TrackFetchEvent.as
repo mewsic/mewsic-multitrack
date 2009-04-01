@@ -15,11 +15,14 @@ package remoting.events {
 
 		
 		
-		public static const REQUEST_DONE:String = 'requestDone';
+		public static const REQUEST_DONE:String = 'onTrackRequestDone';
+		public static const REQUEST_FAILED:String = 'onTrackRequestFailed';
+		
 		public var trackData:TrackData;
+		public var trackID:uint;
 
-		
-		
+
+
 		/**
 		 * Constructor.
 		 * @param type Event type
@@ -27,8 +30,10 @@ package remoting.events {
 		 * @param cancelable Cancelable flag
 		 * @param d User data object
 		 */
-		public function TrackFetchEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false, td:TrackData = null) {
-			trackData = td;
+		public function TrackFetchEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false, data:Object = null) {
+			if(data.trackData) trackData = data.trackData;
+			if(data.trackID) trackID = data.trackID;
+
 			super(type, bubbles, cancelable);
 		}
 
@@ -39,7 +44,7 @@ package remoting.events {
 		 * @return Cloned event
 		 */
 		public override function clone():Event {
-			return new TrackFetchEvent(type, bubbles, cancelable, trackData);
+			return new TrackFetchEvent(type, bubbles, cancelable, {trackData:trackData, trackID:trackID});
 		}
 
 		
@@ -49,7 +54,7 @@ package remoting.events {
 		 * @return Event description
 		 */
 		public override function toString():String {
-			return formatToString('TrackFetchEvent', 'type', 'bubbles', 'cancelable', 'trackData');
+			return formatToString('TrackFetchEvent', 'type', 'bubbles', 'cancelable', 'trackData', 'trackID');
 		}
 	}
 }

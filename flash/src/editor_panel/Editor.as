@@ -17,9 +17,12 @@ package editor_panel {
 	
 	import de.popforge.utils.sprintf;
 	
-	import editor_panel.containers.ContainerCommon;
+	import editor_panel.containers.StandardContainer;
+	import editor_panel.containers.RecordContainer;
 	import editor_panel.containers.ContainerEvent;
+	
 	import editor_panel.sampler.SamplerEvent;
+	
 	import editor_panel.tracks.RecordTrack;
 	import editor_panel.tracks.StandardTrack;
 	import editor_panel.tracks.TrackCommon;
@@ -109,8 +112,8 @@ package editor_panel {
 
 		private var _topDivBM:QBitmap;
 
-		private var _standardContainer:ContainerCommon;
-		private var _recordContainer:ContainerCommon;
+		private var _standardContainer:StandardContainer;
+		private var _recordContainer:RecordContainer;
 
 		private var _milliseconds:uint;
 		private var _recordTrack:RecordTrack;
@@ -228,8 +231,8 @@ package editor_panel {
 			_globalVUToolbar.addChildRight(_globalVUMeter);
 
 			// add containers
-			_standardContainer = new ContainerCommon(TrackCommon.STANDARD_TRACK);
-			_recordContainer = new ContainerCommon(TrackCommon.RECORD_TRACK);
+			_standardContainer = new StandardContainer();
+			_recordContainer = new RecordContainer();
 
 			Drawing.drawRect(_containersMaskSpr, 0, 0, Settings.STAGE_WIDTH, 121);
 			Drawing.drawRect(_playheadMaskSpr, 0, 0, Settings.STAGE_WIDTH, 10);
@@ -257,18 +260,18 @@ package editor_panel {
 
 			_standardContainer.addEventListener(ContainerEvent.TRACK_FETCH_FAILED, _onContainerTrackFetchFailed, false, 0, true);
 			_standardContainer.addEventListener(ContainerEvent.SONG_FETCH_FAILED, _onContainerSongFetchFailed, false, 0, true);
+
 			_standardContainer.addEventListener(ContainerEvent.TRACK_ADDED, _onPlayableTrackAdded, false, 0, true);
 			_standardContainer.addEventListener(ContainerEvent.TRACK_KILL, _onContainerTrackKilled, false, 0, true);
 
 			_standardContainer.addEventListener(SamplerEvent.PLAYBACK_COMPLETE, _onTrackPlaybackComplete, false, 0, true);
 			_standardContainer.addEventListener(SamplerEvent.SAMPLE_ERROR, _onTrackSampleError, false, 0, true);
+
 			_standardContainer.addEventListener(ContainerEvent.UPLOAD_TRACK_READY, _onUploadTrackReady, false, 0, true);
 
 
 			_recordContainer.addEventListener(ContainerEvent.CONTENT_HEIGHT_CHANGE, _onContainerContentHeightChange, false, 0, true);
 
-			_recordContainer.addEventListener(ContainerEvent.TRACK_FETCH_FAILED, _onContainerTrackFetchFailed, false, 0, true);
-			_recordContainer.addEventListener(ContainerEvent.SONG_FETCH_FAILED, _onContainerSongFetchFailed, false, 0, true);
 			_recordContainer.addEventListener(ContainerEvent.TRACK_KILL, _onContainerTrackKilled, false, 0, true);
 
 			_recordContainer.addEventListener(SamplerEvent.PLAYBACK_COMPLETE, _onTrackPlaybackComplete, false, 0, true);
@@ -320,7 +323,7 @@ package editor_panel {
 		 */
 		public function addTrack(trackID:uint):void {
 			// add standard track
-			_standardContainer.addStandardTrack(trackID); 
+			_standardContainer.addTrack(trackID); 
 		
 			// refresh visual
 			_refreshVisual();
@@ -347,7 +350,7 @@ package editor_panel {
 			_state = _STATE_STOPPED;
 			stop();
 
-			_recordContainer.killTrack(_recordTrack.trackID);
+			_recordContainer.killTrack(_recordTrack);
 			_recordTrack = null;
 			
 			// refresh buttons states
@@ -410,33 +413,31 @@ package editor_panel {
 
 				return;
 			}
+			
+			if(_state & (_STATE_PAUSED|_STATE_PLAYING)) {
+				_state &= ~(_STATE_PAUSED|_STATE_PLAYING);
+				_state |= _STATE_STOPPED;
+				stop();
+			}
+
+			try {
+				_state = _STATE_WAIT_REC;
+				grabMikeAndRecord();
 					
-			if(_state == _STATE_STOPPED) {		
-				try {
+			} catch(e:Error) {
+				App.messageModal.show({title:'Record track', description:e.message,
+					buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
 
-					_state = _STATE_WAIT_REC;
-					grabMikeAndRecord();
-					
-				 } catch(e:Error) {
-					App.messageModal.show({title:'Record track', description:e.message,
-					   buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
-
-					_state = _STATE_STOPPED;
-				}
-
-			} else {
-				Logger.warn("Machine error: should be in STOP state, current: " + _state);
+				_state = _STATE_STOPPED;
 			}
 			
 			_refreshVisual();
 		}
 
 		private function _onRecordStopButtonClick(event:MouseEvent):void {
-			if(_state == _STATE_RECORDING) {
-
+			if(_state & _STATE_RECORDING) {
 				_state = _STATE_STOPPED;
 				stopRecording();
-
 			} else {
 				Logger.warn("Machine error: should be in REC state, current: " + _state);
 			}
@@ -471,7 +472,7 @@ package editor_panel {
 			if(_recordTrack != null)
 				throw new Error("Record track should be null");
 			
-			_recordContainer.createRecordTrack();
+			_recordContainer.createTrack();
 			_recordContainer.addEventListener(ContainerEvent.RECORD_TRACK_READY, _onRecordTrackReady, false, 0, true);
 		}
 
@@ -498,7 +499,7 @@ package editor_panel {
 				throw new Error('Machine error: should be in WAIT_REC state');
 			}
 			
-			_state = _STATE_RECORDING;
+			_state |= _STATE_RECORDING;
 
 			stop();
 			play();
@@ -554,19 +555,20 @@ package editor_panel {
 		private function stopRecording():void {
 			var recorded:uint = _recordTrack.position;
 			_recordTrack.stopRecording();
-			
+
 			if(recorded) {
-				var t:StandardTrack;
-				var id:uint = _recordTrack.trackID;
-				
-				t = _standardContainer.addStandardTrack(id);
-				t.encode(App.connection.streamService.filename);
-				t.addEventListener(SamplerEvent.SAMPLE_DOWNLOADED, _onTrackFullyLoaded, false, 0, true);
+				_standardContainer.addTrack(_recordTrack.trackID, {onComplete: _onEncodableTrackReady});
 			}
 			
 			killRecordTrack();
 		}
-		
+
+		private function _onEncodableTrackReady(t:StandardTrack):void {
+			t.encode(App.connection.streamService.filename);
+			t.addEventListener(SamplerEvent.SAMPLE_DOWNLOADED, _onTrackFullyLoaded, false, 0, true);
+		}
+
+
 
 		private function _onSearchButtonClick(event:MouseEvent = null):void {
 			App.messageModal.show({title:'Show search', description:'now call the lightwindow in JS'});
@@ -595,7 +597,7 @@ package editor_panel {
 
 
 		private function _onFileSelect(event:Event):void {
-			_standardContainer.createUploadTrack(_file.name);
+			_standardContainer.uploadTrack(_file.name);
 			_file.removeEventListener(Event.SELECT, _onFileSelect);
 			_file.removeEventListener(Event.CANCEL, _onFileCancel);
 
@@ -929,17 +931,6 @@ package editor_panel {
 		private function _onPlayableTrackAdded(event:ContainerEvent):void {
 			var t:StandardTrack = event.data.track;
 			t.addEventListener(TrackEvent.SAMPLE_DOWNLOADED, _onTrackFullyLoaded, false, 0, true);
-			
-			//t.seek(_standardContainer.position);
-
-			//if(_state & _STATE_PLAYING) {
-			//	t.play();
-			//}
-			
-			// stop playback
-			//	_state = _STATE_STOPPED;
-			//	stop();
-			//}
 			
 			// refresh buttons states
 			_refreshVisual();

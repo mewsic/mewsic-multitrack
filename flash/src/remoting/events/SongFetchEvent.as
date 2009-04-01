@@ -15,9 +15,11 @@ package remoting.events {
 
 		
 		
-		public static const REQUEST_DONE:String = 'requestDone';
+		public static const REQUEST_DONE:String = 'onSongFetchRequestDone';
+		public static const REQUEST_FAILED:String = 'onSongFetchRequestFailed';
+
 		public var songData:SongData;
-		public var trackList:Array;
+		public var songID:uint;
 
 		
 		
@@ -28,9 +30,11 @@ package remoting.events {
 		 * @param cancelable Cancelable flag
 		 * @param d User data object
 		 */
-		public function SongFetchEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false, sd:SongData = null, tl:Array = null) {
-			songData = sd;
-			trackList = tl;
+		public function SongFetchEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false, data:Object = null) {
+			
+			if(data.songData) songData = data.songData;
+			if(data.songID) songID = data.songID;
+
 			super(type, bubbles, cancelable);
 		}
 
@@ -41,7 +45,7 @@ package remoting.events {
 		 * @return Cloned event
 		 */
 		public override function clone():Event {
-			return new SongFetchEvent(type, bubbles, cancelable, songData, trackList);
+			return new SongFetchEvent(type, bubbles, cancelable, {songData:songData, songID:songID});
 		}
 
 		
@@ -51,7 +55,7 @@ package remoting.events {
 		 * @return Event description
 		 */
 		public override function toString():String {
-			return formatToString('SongFetchEvent', 'type', 'bubbles', 'cancelable', 'songData', 'trackList');
+			return formatToString('SongFetchEvent', 'type', 'bubbles', 'cancelable', 'songData', 'songID');
 		}
 	}
 }

@@ -1,12 +1,12 @@
 package remoting.dynamic_services {
-	import org.osflash.thunderbolt.Logger;
-
 	import com.gskinner.utils.Rnd;
-
-	import de.popforge.utils.sprintf;
-
+	
 	import config.Settings;
-
+	
+	import de.popforge.utils.sprintf;
+	
+	import org.osflash.thunderbolt.Logger;
+	
 	import remoting.IService;
 	import remoting.ServiceCommon;
 	import remoting.data.SongData;
@@ -26,6 +26,7 @@ package remoting.dynamic_services {
 		
 		
 		private var _songData:SongData;
+		private var _songID:uint;
 
 		
 		
@@ -52,11 +53,10 @@ package remoting.dynamic_services {
 		override public function request(params:Object = null):void {
 			if(params == null) params = new Object();
 			
-			var rp:RegExp = /{:song_id}/g;
-			
-			if(params.songID != undefined) params.url = url.replace(rp, escape(params.songID));
+			if(params.songID != undefined) params.url = url.replace(/{:song_id}/g, escape(params.songID));
 			else throw new Error(sprintf('Service %s: No songID specified.', $serviceID));
 			
+			_songID = params.songID;
 			super.request(params);
 		}
 
@@ -79,13 +79,14 @@ package remoting.dynamic_services {
 			try {
 				_songData = $xml2SongData($responseData);
 				
-				if(Settings.isServiceDumpEnabled) Logger.debug(sprintf('Service %s: Song fetch song info dump:\n%s', $serviceID, _songData.toString()));
+				if(Settings.isServiceDumpEnabled)
+					Logger.debug(sprintf('Service %s: Song fetch song info dump:\n%s', $serviceID, _songData.toString()));
 				
 				dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_DONE));
-				dispatchEvent(new SongFetchEvent(SongFetchEvent.REQUEST_DONE, false, false, _songData));
+				dispatchEvent(new SongFetchEvent(SongFetchEvent.REQUEST_DONE, false, false, {songData:_songData}));
 			}
 			catch(err:Error) {
-				dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_FAILED, false, false, sprintf('Service %s: Fetch failed.\n%s', $serviceID, err.message)));
+				dispatchEvent(new SongFetchEvent(SongFetchEvent.REQUEST_FAILED, false, false, {songID:_songID}));
 			}
 		}
 
@@ -95,7 +96,7 @@ package remoting.dynamic_services {
 		 * Error event handler.
 		 */
 		private function _onError():void {
-			dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_FAILED, false, false, sprintf('Service %s: Fetch failed.', $serviceID)));
+			dispatchEvent(new SongFetchEvent(SongFetchEvent.REQUEST_FAILED, false, false, {songID:_songID}));
 		}
 	}
 }

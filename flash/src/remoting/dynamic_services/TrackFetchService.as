@@ -1,12 +1,12 @@
 package remoting.dynamic_services {
-	import org.osflash.thunderbolt.Logger;
-
 	import com.gskinner.utils.Rnd;
-
-	import de.popforge.utils.sprintf;
-
+	
 	import config.Settings;
-
+	
+	import de.popforge.utils.sprintf;
+	
+	import org.osflash.thunderbolt.Logger;
+	
 	import remoting.IService;
 	import remoting.ServiceCommon;
 	import remoting.data.TrackData;
@@ -26,6 +26,7 @@ package remoting.dynamic_services {
 		
 		
 		private var _trackData:TrackData;
+		private var _trackID:uint;
 
 		
 		
@@ -57,6 +58,8 @@ package remoting.dynamic_services {
 			if(params.trackID != undefined) params.url = url.replace(rp, escape(params.trackID));
 			else throw new Error(sprintf('Service %s: No trackID specified.', $serviceID));
 			
+			_trackID = params.trackID;
+			
 			super.request(params);
 		}
 
@@ -82,10 +85,10 @@ package remoting.dynamic_services {
 				if(Settings.isServiceDumpEnabled) Logger.debug(sprintf('Service %s: Track fetch info dump:\n%s', $serviceID, _trackData.toString()));
 				
 				dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_DONE));
-				dispatchEvent(new TrackFetchEvent(TrackFetchEvent.REQUEST_DONE, false, false, _trackData));
+				dispatchEvent(new TrackFetchEvent(TrackFetchEvent.REQUEST_DONE, false, false, {trackData:_trackData}));
 			}
 			catch(err:Error) {
-				dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_FAILED, false, false, sprintf('Service %s: Fetch failed.\n%s', $serviceID, err.message)));
+				dispatchEvent(new TrackFetchEvent(TrackFetchEvent.REQUEST_FAILED, false, false, {trackID:_trackID}));
 			}
 		}
 
@@ -95,7 +98,7 @@ package remoting.dynamic_services {
 		 * Error event handler.
 		 */
 		private function _onError():void {
-			dispatchEvent(new RemotingEvent(RemotingEvent.REQUEST_FAILED, false, false, sprintf('Service %s: Fetch failed.', $serviceID)));
+			dispatchEvent(new TrackFetchEvent(TrackFetchEvent.REQUEST_FAILED, false, false, {trackID:_trackID}));
 		}
 	}
 }
