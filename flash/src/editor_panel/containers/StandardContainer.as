@@ -324,13 +324,15 @@ package editor_panel.containers
 				return false; // remove from the queue
 			});
 
+			killed.stop();
+
 			killed.removeEventListener(TrackEvent.KILL, _onTrackKill);
 			killed.removeEventListener(TrackEvent.REFRESH, _onTrackRefresh);
 
-			_refreshWaveforms();
-
 			// Remove from display list and dispatch
 			super.killTrack(killed);	
+
+			_refreshWaveforms();
 		}
 
 
@@ -358,9 +360,9 @@ package editor_panel.containers
 			var max:uint = this.milliseconds;
 			var t:TrackCommon;
 
-			for each(t in $trackList) {
+			this.eachTrack(function(t:StandardTrack):void {
 				t.rescale(max);
-			}
+			});
 		}
 
 
@@ -369,7 +371,7 @@ package editor_panel.containers
 		 * Play container.
 		 */
 		public function play():void {
-			for each(var t:TrackCommon in $trackList) {
+			this.eachTrack(function(t:StandardTrack):void {
 				// play all tracks in the container
 				try {
 					t.play();
@@ -378,7 +380,7 @@ package editor_panel.containers
 					// something went wrong, grr
 					Logger.warn(sprintf('Problem trying to start playback of %s:\n%s', t.toString(), err.message));
 				}
-			}
+			});
 		}
 
 		
@@ -387,7 +389,7 @@ package editor_panel.containers
 		 * Stop container.
 		 */
 		public function stop():void {
-			for each(var t:TrackCommon in $trackList) {
+			this.eachTrack(function(t:StandardTrack):void {
 				// stop all tracks in the container
 				try {
 					t.stop();
@@ -396,7 +398,7 @@ package editor_panel.containers
 					// something went wrong, grr
 					Logger.warn(sprintf('Problem trying to stop playback of %s:\n%s', t.toString(), err.message));
 				}
-			}
+			});
 		}
 
 		
@@ -405,7 +407,7 @@ package editor_panel.containers
 		 * Pause container.
 		 */
 		public function pause():void {
-			for each(var t:TrackCommon in $trackList) {
+			this.eachTrack(function(t:StandardTrack):void {
 				// pause all tracks in the container
 				try {
 					t.pause();
@@ -414,7 +416,7 @@ package editor_panel.containers
 					// something went wrong, grr
 					Logger.warn(sprintf('Problem trying to pause playback of %s:\n%s', t.toString(), err.message));
 				}
-			}
+			});
 		}
 
 		
@@ -423,8 +425,7 @@ package editor_panel.containers
 		 * Resume container.
 		 */
 		public function resume():void {
-			for each(var t:StandardTrack in $trackList) {
-				
+			this.eachTrack(function(t:StandardTrack):void {				
 				// resume all tracks in the container
 				try {
 					if(position < t.milliseconds) {
@@ -436,7 +437,7 @@ package editor_panel.containers
 					// something went wrong, grr
 					Logger.warn(sprintf('Problem trying to resume playback of %s:\n%s', t.toString(), err.message));
 				}
-			}
+			});
 		}
 
 		
@@ -446,8 +447,7 @@ package editor_panel.containers
 		 * @param position Seek position
 		 */
 		public function seek(position:uint, isPlaying:Boolean = false):void {
-			for each(var t:StandardTrack in $trackList) {
-
+			this.eachTrack(function(t:StandardTrack):void {
 				// seek all tracks in the container
 				try {
 					if(position < t.milliseconds) {
@@ -475,7 +475,7 @@ package editor_panel.containers
 					// something went wrong, grr
 					Logger.warn(sprintf('Problem trying to seek playback of %s:\n%s', t.toString(), err.message));
 				}
-			}
+			});
 		}
 		
 		

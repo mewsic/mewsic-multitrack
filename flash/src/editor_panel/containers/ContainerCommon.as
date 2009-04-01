@@ -5,12 +5,9 @@ package editor_panel.containers {
 	
 	import controls.MorphSprite;
 	
-	import de.popforge.utils.sprintf;
-	
 	import editor_panel.tracks.StandardTrack;
 	import editor_panel.tracks.TrackCommon;
 	
-	import org.osflash.thunderbolt.Logger;
 	import org.vancura.graphics.QSprite;
 	import org.vancura.util.addChildren;
 
@@ -124,6 +121,14 @@ package editor_panel.containers {
 			super.morph(c);
 		}
 		
+		
+		
+		public function eachTrack(callback:Function = null):Array {
+			for each(var t:TrackCommon in $trackList) {
+				if(callback != null) callback(t);
+			}
+			return $trackList;
+		}
 		
 		
 		/**

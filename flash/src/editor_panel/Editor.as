@@ -524,14 +524,15 @@ package editor_panel {
 		 * @param event Event data
 		 */
 		private function _onTrackPlaybackComplete(event:SamplerEvent):void {
-			if(_state == _STATE_RECORDING) {
+			if(_state & _STATE_RECORDING) {
 				Logger.info("playingTrackCount: " + playingTracksCount);
  
 				if(!playingTracksCount) {
 					Logger.info('Song recording completed.');
 
-					stopRecording();					
 					_state = _STATE_STOPPED;
+					stopRecording();					
+
 					_refreshVisual();
 				}
 				
@@ -939,11 +940,14 @@ package editor_panel {
 		
 		
 		private function _onContainerTrackKilled(event:ContainerEvent):void {
-			// stop playback
-			_state &= ~(_STATE_PLAYING|_STATE_PAUSED);
-			_state |= _STATE_STOPPED;
-			stop();
+			if(_standardContainer.playingTracksCount == 0) {
+				// stop playback
+				_state &= ~(_STATE_PLAYING|_STATE_PAUSED);
+				_state |= _STATE_STOPPED;
+				stop();
 			
+			}
+
 			// refresh buttons states
 			_refreshVisual();
 		}

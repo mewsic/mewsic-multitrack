@@ -207,35 +207,23 @@ package editor_panel.tracks {
 		
 		
 		override public function play():void {
-			$killBtn.alpha = .4;
-			$killBtn.areEventsEnabled = false;
-			
 			_sampler.play();
 		}
 
 		
 		
 		override public function stop():void {
-			$killBtn.alpha = 1;
-			$killBtn.areEventsEnabled = true;
-
 			_sampler.stop();			
 		}
 		
 		
 		
 		override public function pause():void {
-			$killBtn.alpha = 1;
-			$killBtn.areEventsEnabled = true;
-			
 			_sampler.pause();
 		}
 
 		
 		override public function resume():void {
-			$killBtn.alpha = .4;
-			$killBtn.areEventsEnabled = false;
-			
 			_sampler.resume();
 		}
 
