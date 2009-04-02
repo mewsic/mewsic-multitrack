@@ -11,7 +11,6 @@ package editor_panel {
 	
 	import controls.Button;
 	import controls.MorphSprite;
-	import controls.Slider;
 	import controls.Toolbar;
 	import controls.VUMeter;
 	
@@ -72,6 +71,7 @@ package editor_panel {
 		private static const _STATE_WAIT_REC:uint    = 0x08;
 		private static const _STATE_RECORDING:uint   = 0x10;
 		private static const _STATE_UPLOADING:uint   = 0x20;
+		private static const _STATE_LOADING:uint     = 0x40;
 		
 		private var _state:uint;
 		
@@ -251,11 +251,6 @@ package editor_panel {
 			//_topToolbar.x = $canvasSpr.width - _topToolbar.width - 14;
 			//_botToolbar.x = $canvasSpr.width - _botToolbar.width - 14;
 			
-			// deactivate the play button, it'll be enabled in _refreshVisual() after a
-			// track is being added, via the _onContainerTrackAdded listener
-			// 
-			_disableButton(_controllerPlayBtn);
-			
 			// set default volume
 			//_globalVolumeSlider.thumbPos = .9;
 			
@@ -312,17 +307,8 @@ package editor_panel {
 			// _globalVolumeSlider.addEventListener(SliderEvent.REFRESH, _onGlobalVolumeRefresh, false, 0, true);
 			
 			// phew! :D
-			_state = _STATE_STOPPED;
-		}
-
-		
-		
-		/**
-		 * Refresh song data.
-		 * Called from JavaScript when page information changes.
-		 */
-		public function refreshSongData():void {
-			Logger.info('REMOVE ME');
+			_state = _STATE_LOADING;
+			_refreshVisual();
 		}
 
 		
@@ -331,7 +317,10 @@ package editor_panel {
 		 * Initialize core song.
 		 */
 		public function postInit():void {
-			Logger.info(sprintf('REMOVE ME'));
+			_state = _STATE_STOPPED;
+			_refreshVisual();
+
+			Logger.info("Editor ready.");
 		}
 
 		
@@ -341,6 +330,9 @@ package editor_panel {
 		 * @param trackID Track ID
 		 */
 		public function addTrack(trackID:uint):void {
+			if(_state == _STATE_LOADING)
+				return;
+
 			// add standard track
 			_standardContainer.addTrack(trackID); 
 		
@@ -355,6 +347,9 @@ package editor_panel {
 		 * @param songID Song ID
 		 */
 		public function addSong(songID:uint):void {
+			if(_state == _STATE_LOADING)
+				return;
+
 			// add song
 			_standardContainer.addSong(songID); 
 			
@@ -441,8 +436,8 @@ package editor_panel {
 		private function _onRecordButtonClick(event:MouseEvent = null):void {
 			// only logged in users can use recording
 			if(!App.connection.coreUserLoginStatus) {
-				App.messageModal.show({title:'Record track',
-					description:'Please log in or wait until the multitrack is fully loaded.',
+				App.messageModal.show({title:'Record',
+					description:'Please log in to record your instruments!',
 					buttons:MessageModal.BUTTONS_OK});
 
 				return;
@@ -610,8 +605,8 @@ package editor_panel {
 		 */
 		private function _onUploadButtonClick(event:MouseEvent = null):void {
 			if(!App.connection.coreUserLoginStatus) {
-				App.messageModal.show({title:'Upload track',
-					description:'Please log in or wait until the multitrack is fully loaded.',
+				App.messageModal.show({title:'Upload',
+					description:'Please log in to upload your instruments!',
 					buttons:MessageModal.BUTTONS_OK});
 				return;
 			}
@@ -855,6 +850,18 @@ package editor_panel {
 		
 		
 		private function _refreshVisual():void {
+			if(_state == _STATE_LOADING) {
+				_disableButton(_controllerPlayBtn);
+				_disableButton(_controllerRecordBtn);
+				_disableButton(_controllerSearchBtn);
+				_disableButton(_controllerUploadBtn);
+				
+				_addtrackContainer.disableRecord();
+				_addtrackContainer.disableSearch();
+				_addtrackContainer.disableUpload();
+				return;
+			}
+
 			_recountSongLength();
 			
 			Logger.debug(sprintf('Current song length is %f ms', _milliseconds));

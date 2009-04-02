@@ -385,11 +385,8 @@ package application {
 		 * @param event Event data
 		 */
 		private function _onHelpServicesDone(event:RemotingEvent):void {
-			if(++_helpServicesCounter == 2) {				
-				if(_loadSong) {
-					Logger.info(sprintf('Autoloading song %u', _loadSong));
-					App.editor.addSong(_loadSong);
-				}
+			if(++_helpServicesCounter == 2) {
+				editor.postInit();				
 			}
 		}
 
