@@ -19,6 +19,9 @@ package config {
 		public static const WAVEFORM_WIDTH:uint = 432;
 		public static const TRACKCONTROLS_WIDTH:uint = 250;
 		
+		public static const KILL_BUTTON_Y:uint = 12;
+		public static const KILL_BUTTON_X:uint = WAVEFORM_WIDTH - 18;
+		
 		public static const TRACK_HEIGHT:uint = 65;
 		public static const BPM:uint = 60;
 		

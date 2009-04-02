@@ -105,7 +105,7 @@ package editor_panel.tracks {
 			_selectInstrumentButton = new Button({x:10, y:20, skin:new Embeds.iconSelectInstrument()}, Button.TYPE_NOSCALE_BUTTON); // XXX TEMPORARY
 			
 
-			$killBtn = new Button({x:Settings.WAVEFORM_WIDTH - 18, y:5, skin:c.killBtnSkin}, Button.TYPE_NOSCALE_BUTTON);
+			$killBtn = new Button({x:Settings.KILL_BUTTON_X, y:Settings.KILL_BUTTON_Y, skin:c.killBtnSkin}, Button.TYPE_NOSCALE_BUTTON);
 
 			$separator = new QBitmap({x:0, y:Settings.TRACK_HEIGHT - 4, height:2, embed:new Embeds.separatorTrack()});
 			
