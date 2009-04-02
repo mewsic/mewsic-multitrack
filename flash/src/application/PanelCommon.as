@@ -82,12 +82,12 @@ package application {
 		protected function $animateHeightChange(value:Number):void {
 			if(value == _currentHeight) {
 				// no change is going to happen
-				Logger.debug(sprintf('Panel %s asked to change it\'s height, but it\'s same, so no change will happen', $panelID));
+				Logger.debug(sprintf('Panel %s asked to change its height, but it\'s same, so no change will happen', $panelID));
 				return;
 			}
 			else {
 				// change height
-				Logger.debug(sprintf('Panel %s changes it\'s height to %u px', $panelID, value));
+				Logger.debug(sprintf('Panel %s changes its height to %u px', $panelID, value));
 				
 				var o:Object = new Object();
 				o.height = _currentHeight + 1;
