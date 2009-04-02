@@ -1,9 +1,10 @@
-=====================================
-= Adelao Myousica Multitrack Editor =
-=====================================
+=====================
+= Multitrack Editor =
+=====================
  
-Client: Adelao Group
-Description: 
-Publisher: Adelao Group
-Creator: Vaclav Vancura (vaclav.vancura.org)
-Documentation: http://vaclav.vancura.org/docs/myousica-multitrack-editor
+Client: Lime5
+Description: The MEWSIC multitrack
+Publisher: Lime5
+Creator: Vaclav Vancura (vaclav@vancura.org)
+Contributor: Marcello Barnaba (vjt@openssl.it)
+Documentation: http://mewsic.stage.lime5.it/rdoc/multitrack-editor

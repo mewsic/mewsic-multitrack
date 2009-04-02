@@ -27,7 +27,7 @@ package {
 	 * @author Vaclav Vancura (http://vaclav.vancura.org)
 	 * @since Jun 13, 2008
 	 */
-	public class Adelao_Myousica_Multitrack_Editor extends Sprite {
+	public class Multitrack_Editor extends Sprite {
 
 
 
@@ -39,7 +39,7 @@ package {
 		/**
 		 * Constructor.
 		 */
-		public function Adelao_Myousica_Multitrack_Editor() {
+		public function Multitrack_Editor() {
 			// we have to wait a while until stage is displayed:
 			Tweener.addTween((new Object()), {time:.05, onComplete:function():void {
 

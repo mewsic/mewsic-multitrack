@@ -84,7 +84,7 @@ package modals {
 		override public function show(c:Object = null):void {
 			if(c == null) c = new Object();
 			
-			if(c.title == undefined) c.title = 'Myousica';
+			if(c.title == undefined) c.title = 'Message';
 			if(c.description == undefined) c.description = '';
 			if(c.buttons == undefined) c.buttons = BUTTONS_OK;
 			if(c.icon == undefined) c.icon = ICON_NONE;

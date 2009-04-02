@@ -20,7 +20,7 @@ package remoting.static_services {
 	 */
 	public class ConfigService extends ServiceCommon implements IService {
 		
-		private var _streamGatewayURL:String; // e.g. 'rtmp://fms.myousica.com/live/'
+		private var _streamGatewayURL:String; // e.g. 'rtmp://red5.example.com/'
 		
 		private var _instrumentsRequestURL:String; // Instruments service (e.g. '/instruments.xml')
 		private var _userRequestURL:String; // User service (e.g. '/user/{:id}.xml')

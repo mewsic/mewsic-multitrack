@@ -28,7 +28,7 @@ package {
 		[Embed(source='../lib/assets/preloader_assets.swf', symbol='BackBD')] private static var _backBD:Class; 
 		[Embed(source='../lib/assets/preloader_assets.swf', symbol='ProgressBD')] private static var _progressBD:Class;
 		
-		private static const _MAIN_CLASS_NAME:String = 'Adelao_Myousica_Multitrack_Editor';
+		private static const _MAIN_CLASS_NAME:String = 'Multitrack_Editor';
 		private static const _STAGE_WIDTH:uint = 690;
 		private static const _PROGRESS_WIDTH:uint = 670;
 		private var _visualSpr:QSprite;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<actionScriptProperties mainApplicationPath="Adelao_Myousica_Multitrack_Editor.as" version="3">
-<compiler additionalCompilerArguments="-defaults-css-url=Adelao_Myousica_Multitrack_Editor-styles.css" copyDependentFiles="false" enableModuleDebug="true" flexSDK="Flex 3.2" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="true" htmlPlayerVersion="9.0.28" htmlPlayerVersionCheck="true" outputFolderPath="html/flash" sourceFolderPath="flash/src" strict="true" useApolloConfig="false" verifyDigests="true" warn="true">
+<actionScriptProperties mainApplicationPath="Multitrack_Editor.as" version="3">
+<compiler additionalCompilerArguments="-defaults-css-url=Multitrack_Editor-styles.css" copyDependentFiles="false" enableModuleDebug="true" flexSDK="Flex 3.2" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="true" htmlPlayerVersion="9.0.28" htmlPlayerVersionCheck="true" outputFolderPath="html/flash" sourceFolderPath="flash/src" strict="true" useApolloConfig="false" verifyDigests="true" warn="true">
 <compilerSourcePath>
 <compilerSourcePathEntry kind="1" linkType="1" path="flash/src"/>
 </compilerSourcePath>
@@ -25,7 +25,7 @@
 <sourceAttachmentPath/>
 </compiler>
 <applications>
-<application path="Adelao_Myousica_Multitrack_Editor.as"/>
+<application path="Multitrack_Editor.as"/>
 </applications>
 <modules/>
 <buildCSSFiles/>

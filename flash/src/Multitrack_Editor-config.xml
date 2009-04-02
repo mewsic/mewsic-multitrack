@@ -7,10 +7,11 @@
 	<!-- ============= -->
 
 	<metadata>
-		<title>Myousica Multitrack Editor</title>
+		<title>Multitrack Editor</title>
 		<description></description>
-		<publisher>Adelao Group</publisher>
-		<creator>Vaclav Vancura (vaclav.vancura.org)</creator>
+		<publisher>Lime5</publisher>
+		<creator>Vaclav Vancura (vaclav@vancura.org)</creator>
+		<contributor>Marcello Barnaba (vjt@openssl.it)</contributor>
 		<language>EN</language>
 	</metadata>
 
