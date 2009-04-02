@@ -17,15 +17,13 @@ package editor_panel {
 	
 	import de.popforge.utils.sprintf;
 	
-	import editor_panel.containers.StandardContainer;
-	import editor_panel.containers.RecordContainer;
+	import editor_panel.containers.AddtrackContainer;
 	import editor_panel.containers.ContainerEvent;
-	
+	import editor_panel.containers.RecordContainer;
+	import editor_panel.containers.StandardContainer;
 	import editor_panel.sampler.SamplerEvent;
-	
 	import editor_panel.tracks.RecordTrack;
 	import editor_panel.tracks.StandardTrack;
-	import editor_panel.tracks.TrackCommon;
 	import editor_panel.tracks.TrackEvent;
 	
 	import flash.events.Event;
@@ -34,7 +32,6 @@ package editor_panel {
 	import flash.net.FileFilter;
 	import flash.net.FileReference;
 	import flash.utils.ByteArray;
-	import flash.utils.setTimeout;
 	
 	import modals.MessageModal;
 	
@@ -76,14 +73,12 @@ package editor_panel {
 		private static const _STATE_RECORDING:uint   = 0x10;
 		private static const _STATE_UPLOADING:uint   = 0x20;
 		
-		private static const _OFF_PLAYHEAD:uint = 112;
-		private static const _OFF_STAGE:uint = 129;
-		
 		private var _state:uint;
 		
 		private var _playhead:Playhead;
 		private var _containersMaskSpr:MorphSprite;
 		private var _playheadMaskSpr:MorphSprite;
+
 		private var _headerSpr:MorphSprite;
 		private var _containersContentSpr:MorphSprite;
 		private var _footerSpr:MorphSprite;
@@ -114,6 +109,7 @@ package editor_panel {
 
 		private var _standardContainer:StandardContainer;
 		private var _recordContainer:RecordContainer;
+		private var _addtrackContainer:AddtrackContainer;
 
 		private var _milliseconds:uint;
 		private var _recordTrack:RecordTrack;
@@ -150,19 +146,33 @@ package editor_panel {
 		 */
 		public function launch():void {
 			// add masks
-			_containersMaskSpr = new MorphSprite({y:85, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'});
-			_playheadMaskSpr = new MorphSprite({y:_OFF_PLAYHEAD, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'});
+			_containersMaskSpr = new MorphSprite({y:Settings.HEADER_HEIGHT,
+				morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'});
 
-			// add modules
-			_playhead = new Playhead({x:Settings.TRACKCONTROLS_WIDTH, y:_OFF_PLAYHEAD + 5, mask:_playheadMaskSpr});
+			_playheadMaskSpr = new MorphSprite({y:Settings.HEADER_HEIGHT - 8,
+				morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'});
+
+			Drawing.drawRect(_containersMaskSpr, 0, 0, Settings.STAGE_WIDTH, 1);
+			Drawing.drawRect(_playheadMaskSpr, 0, 0, Settings.STAGE_WIDTH, 1);
+
+			_playhead = new Playhead({x:Settings.TRACKCONTROLS_WIDTH, y:Settings.HEADER_HEIGHT - 8, mask:_playheadMaskSpr});
 			//_beatClicker = new BeatClicker();
 
-			// add parts
-			_headerSpr = new MorphSprite(); // Header container			
-			_containersContentSpr = new MorphSprite({y:_OFF_STAGE, mask:_containersMaskSpr}); // tracks container
-			_footerSpr = new MorphSprite({y:124, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'}); // footer container
 
-			// add top panel background
+			// add macro parts
+			// Header container
+			_headerSpr = new MorphSprite();			
+			
+			// tracks container
+			_containersContentSpr = new MorphSprite({y:Settings.HEADER_HEIGHT + 4, mask:_containersMaskSpr});
+			
+			// footer container
+			_footerSpr = new MorphSprite({y:Settings.HEADER_HEIGHT, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'}); 
+
+
+			// draw header container
+			// 
+			// add background
 			_topDivBM = new QBitmap({y:5, embed:new Embeds.backgroundTopGrey()});
 
 			// add controller toolbar
@@ -225,17 +235,20 @@ package editor_panel {
 			//_globalVolumeSlider = new Slider({width:169, slideTime:1, marginBegin:19, marginEnd:19, backSkin:new Embeds.sliderVolumeHorizontalBD(), thumbSkin:new Embeds.buttonGlobalVolumeThumbBD});
 			//_globalVolumeToolbar.addChildRight(_globalVolumeSlider);
 
+
+			// draw footer container
+			// 
 			// add global vu meter toolbar
 			_globalVUToolbar = new Toolbar({visible:true,/*_isVUMeterEnabled,*/ x:650, y:0, width:35, height:35});
 			_globalVUMeter = new VUMeter({stereo:true, spacingV:-1, spacingH: 13, skin:new Embeds.vuMeter(), leds:7}, VUMeter.DIRECTION_VERTICAL);
 			_globalVUToolbar.addChildRight(_globalVUMeter);
 
-			// add containers
+			// draw main stage
+			// 
+			// add tracks, record and addtrack containers
 			_standardContainer = new StandardContainer();
 			_recordContainer = new RecordContainer();
-
-			Drawing.drawRect(_containersMaskSpr, 0, 0, Settings.STAGE_WIDTH, 121);
-			Drawing.drawRect(_playheadMaskSpr, 0, 0, Settings.STAGE_WIDTH, 10);
+			_addtrackContainer = new AddtrackContainer();
 
 			// align some toolbars right
 			//_topToolbar.x = $canvasSpr.width - _topToolbar.width - 14;
@@ -250,12 +263,14 @@ package editor_panel {
 			//_globalVolumeSlider.thumbPos = .9;
 			
 			// add to display list
+			// 
 			addChildren(_headerSpr, _topDivBM, _controllerToolbar/*, _globalVolumeToolbar*/);
-			addChildren(_containersContentSpr, _standardContainer, _recordContainer);
+			addChildren(_containersContentSpr, _standardContainer, _recordContainer, _addtrackContainer);
 			addChildren(_footerSpr, _globalVUToolbar);
 			addChildren($canvasSpr, _headerSpr, _containersContentSpr, _playhead, _footerSpr, _containersMaskSpr, _playheadMaskSpr);
 			
 			// add container event listeners
+			// standard container
 			_standardContainer.addEventListener(ContainerEvent.CONTENT_HEIGHT_CHANGE, _onContainerContentHeightChange, false, 0, true);
 
 			_standardContainer.addEventListener(ContainerEvent.TRACK_FETCH_FAILED, _onContainerTrackFetchFailed, false, 0, true);
@@ -269,16 +284,20 @@ package editor_panel {
 
 			_standardContainer.addEventListener(ContainerEvent.UPLOAD_TRACK_READY, _onUploadTrackReady, false, 0, true);
 
-
+			// record container
 			_recordContainer.addEventListener(ContainerEvent.CONTENT_HEIGHT_CHANGE, _onContainerContentHeightChange, false, 0, true);
 
-			_recordContainer.addEventListener(ContainerEvent.TRACK_KILL, _onContainerTrackKilled, false, 0, true);
+			//XXX _recordContainer.addEventListener(ContainerEvent.TRACK_KILL, _onContainerTrackKilled, false, 0, true);
 
 			_recordContainer.addEventListener(SamplerEvent.PLAYBACK_COMPLETE, _onTrackPlaybackComplete, false, 0, true);
 			_recordContainer.addEventListener(SamplerEvent.SAMPLE_ERROR, _onTrackSampleError, false, 0, true);
 
 			_recordContainer.addEventListener(TrackEvent.RECORD_START, _onRecordStart, false, 0, true);
 
+			// addtrack container
+			_addtrackContainer.addEventListener(ContainerEvent.CONTENT_HEIGHT_CHANGE, _onContainerContentHeightChange, false, 0, true);
+
+			
 			// add controller toolbar buttons event listeners
 			_controllerPlayBtn.addEventListener(MouseEvent.CLICK, _onPlayButtonClick, false, 0, true);
 			_controllerPauseBtn.addEventListener(MouseEvent.CLICK, _onPauseButtonClick, false, 0, true);
@@ -287,12 +306,15 @@ package editor_panel {
 			_controllerSearchBtn.addEventListener(MouseEvent.CLICK, _onSearchButtonClick, false, 0, true);
 			_controllerUploadBtn.addEventListener(MouseEvent.CLICK, _onUploadButtonClick, false, 0, true);
 
+			
 			// add playhead event listeners
 			_playhead.addEventListener(Event.ENTER_FRAME, _onPlayheadRefresh, false, 0, true);
+			
 			
 			// add global volume event listeners
 			// _globalVolumeSlider.addEventListener(SliderEvent.REFRESH, _onGlobalVolumeRefresh, false, 0, true);
 			
+			// phew! :D
 			_state = _STATE_STOPPED;
 		}
 
@@ -887,14 +909,20 @@ package editor_panel {
 		 */
 		private function _onContainerContentHeightChange(event:ContainerEvent):void {
 			_recordContainer.morph({y:_standardContainer.height});
-			
-			_footerSpr.morph({y:_standardContainer.height + _recordContainer.height + _containersContentSpr.y});
-			
-			_containersMaskSpr.morph({height:_standardContainer.height + _recordContainer.height + 40});
-			
-			_playheadMaskSpr.morph({height:_standardContainer.height + 10});
 
-			$animateHeightChange(_standardContainer.height + _recordContainer.height + _containersContentSpr.y + 40); // fixed 40px bottom margin
+			_addtrackContainer.morph({y:_standardContainer.height + _recordContainer.height});
+
+			_footerSpr.morph({y:_standardContainer.height + _recordContainer.height + _addtrackContainer.height + _containersContentSpr.y});
+
+			_containersMaskSpr.morph({height:_standardContainer.height + _recordContainer.height + _addtrackContainer.height});
+
+			if(_standardContainer.trackCount > 0) {
+				_playheadMaskSpr.morph({height:_standardContainer.height + 11, alpha:1});
+			} else {
+				_playheadMaskSpr.morph({height:0, alpha:0});
+			}
+
+			$animateHeightChange(_standardContainer.height + _recordContainer.height + _addtrackContainer.height + _containersContentSpr.y + 40); // fixed 40px bottom margin
 		}
 
 		
@@ -961,7 +989,8 @@ package editor_panel {
 		 * @param event Event data
 		 */
 		private function _onTrackSampleError(event:SamplerEvent):void {
-			App.messageModal.show({title:'Add track', description:'Sample error.', buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
+			App.messageModal.show({title:'Add track', description:'Sample error.',
+				buttons:MessageModal.BUTTONS_OK, icon:MessageModal.ICON_WARNING});
 		}
 
 		

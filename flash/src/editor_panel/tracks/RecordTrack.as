@@ -75,7 +75,7 @@ package editor_panel.tracks {
 			// add components
 			_vuMeter = new VUMeter({x:9, y:2, leds:10, spacingV:0, stereo:false, skin:new Embeds.vuMeter()}, VUMeter.DIRECTION_VERTICAL);
 			_visualTickSpr = new QSprite({alpha:0, visible:false, blendMode:BlendMode.HARDLIGHT});
-			Drawing.drawRect(_visualTickSpr, 0, 0, Settings.TRACKCONTROLS_WIDTH, Settings.TRACK_HEIGHT, 0xff0000, .9);
+			Drawing.drawRect(_visualTickSpr, 0, -2, Settings.TRACKCONTROLS_WIDTH - 1, Settings.TRACK_HEIGHT - 1, 0xff0000, .9);
 			
 			_recordProgress = new ProgressBar({x:Settings.TRACKCONTROLS_WIDTH, y:27,
 				background:new Embeds.recordProgressBack(), progress:new Embeds.recordProgress(),

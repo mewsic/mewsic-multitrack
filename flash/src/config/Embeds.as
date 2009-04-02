@@ -42,6 +42,13 @@ package config {
 		
 		
 		/// "Add track" bar buttons 
+		// Background			
+		//[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundRecordTrack')]
+		//	public static var backgroundRecordTrack:Class;
+
+		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundTab')]
+			public static var backgroundTab:Class;
+
 		// Record
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonRecordSmall')]
 			public static var buttonRecordSmall:Class;
@@ -59,10 +66,12 @@ package config {
 			public static var buttonUploadSmall:Class;
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='GlyphUploadSmall')]
 			public static var glyphUploadSmall:Class;
+
 		
-		// Canvas background
+		// Track background
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundCanvasWhite')]
 			public static var backgroundCanvasWhite:Class;
+		
 		
 		// top panel
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundTopGrey')]
@@ -70,9 +79,6 @@ package config {
 			
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundTrack')]
 			public static var backgroundTrack:Class;
-			
-		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundRecordTrack')]
-			public static var backgroundRecordTrack:Class;
 
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='SeparatorTrack')]
 			public static var separatorTrack:Class;			
@@ -87,11 +93,13 @@ package config {
 		// Volume slider
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='ButtonSliderVolume')]
 			public static var buttonSliderVolume:Class;
+		
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundSliderVolume')]
 			public static var backgroundSliderVolume:Class;
 
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundVolumeActive')]
 			public static var backgroundVolumeActive:Class;
+		
 		[Embed(source='../../lib/assets/main_assets_new.swf', symbol='BackgroundVolumeMuted')]
 			public static var backgroundVolumeMuted:Class;
 

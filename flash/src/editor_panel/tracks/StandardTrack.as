@@ -112,7 +112,7 @@ package editor_panel.tracks {
 			_volumeActive = new QBitmap({x:12, embed:new Embeds.backgroundVolumeActive()});
 			_volumeMuted = new QBitmap({x:12, embed:new Embeds.backgroundVolumeMuted()});
 
-			_background = new QBitmap({x:Settings.TRACKCONTROLS_WIDTH - 1, height:Settings.TRACK_HEIGHT - 1, y:1, embed:new Embeds.backgroundTrack()}); // Track lane background
+			_background = new QBitmap({x:Settings.TRACKCONTROLS_WIDTH - 1, height:Settings.TRACK_HEIGHT - 1, y:-2, embed:new Embeds.backgroundTrack()}); // Track lane background
 			_background.alpha = 0;
 			
 //			_balanceKnob = new Knob({x:458, y:1, backSkin:new Embeds.buttonContainerPanKnobBD(), pointerSpr:new Embeds.buttonContainerPanKnobPointerSpr(), rangeBegin:-118, rangeEnd:118});

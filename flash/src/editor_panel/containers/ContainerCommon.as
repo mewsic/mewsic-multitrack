@@ -64,7 +64,7 @@ package editor_panel.containers {
 		 */
 		protected function displayTrack(t:TrackCommon):void {
 			// set visual properties
-			t.y = Settings.TRACK_CONTAINER_HEADER_HEIGHT + $trackList.length * Settings.TRACK_HEIGHT;
+			t.y = $trackList.length * Settings.TRACK_HEIGHT;
 			
 			// add to the lists
 			$trackSpr.addChild(t);
@@ -95,7 +95,7 @@ package editor_panel.containers {
 			// reposition
 			var idx:uint = 0;
 			for each(var t:TrackCommon in $trackList) {
-				var trackY:uint = Settings.TRACK_CONTAINER_HEADER_HEIGHT + idx * Settings.TRACK_HEIGHT;
+				var trackY:uint = idx * Settings.TRACK_HEIGHT;
 				Tweener.addTween(t, {y:trackY, time:$morphTime, rounded:true, transition:'easeInOutQuad'});
 				idx++;
 			}
@@ -129,16 +129,6 @@ package editor_panel.containers {
 			}
 			return $trackList;
 		}
-		
-		
-		/**
-		 * Get content height.
-		 * @return Content height
-		 */
-		public function get contentHeight():Number {
-			return $contentHeight;
-		}
-
 		
 		
 		/**
@@ -190,10 +180,10 @@ package editor_panel.containers {
 		 * Recount height.
 		 */
 		private function _recountHeight():void {
-			var h:Number = Settings.TRACK_CONTAINER_HEADER_HEIGHT;
+			var h:Number = 0;
 
 			for each(var t:TrackCommon in $trackList) {
-				h += Settings.TRACK_HEIGHT + Settings.TRACK_MARGIN;
+				h += Settings.TRACK_HEIGHT;
 			}
 			
 			$contentHeight = h;

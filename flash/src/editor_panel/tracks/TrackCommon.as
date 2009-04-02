@@ -40,9 +40,6 @@ package editor_panel.tracks {
 
 		
 		
-		public static const RECORD_TRACK:String = 'recordTrack';
-		public static const STANDARD_TRACK:String = 'standardTrack';
-
 		// protected var $backBM:QBitmap; no background
 		protected var $titleTF:QTextField;
 		protected var $specsTagsTF:QTextField;
@@ -66,7 +63,6 @@ package editor_panel.tracks {
 		
 		protected var $trackID:uint;
 		
-		private var _isEnabled:Boolean = true;
 		private var _userService:UserService;
 
 		
@@ -111,7 +107,7 @@ package editor_panel.tracks {
 
 			$killBtn = new Button({x:Settings.WAVEFORM_WIDTH - 18, y:5, skin:c.killBtnSkin}, Button.TYPE_NOSCALE_BUTTON);
 
-			$separator = new QBitmap({x:0, y:Settings.TRACK_HEIGHT - 2, embed:new Embeds.separatorTrack()});
+			$separator = new QBitmap({x:0, y:Settings.TRACK_HEIGHT - 4, height:2, embed:new Embeds.separatorTrack()});
 			
 
 			// add to display list
@@ -148,8 +144,6 @@ package editor_panel.tracks {
 			catch(err3:Error) {
 				Logger.warn(sprintf('Error removing graphics for %s:\n%s', toString(), err3.message));
 			}
-
-			_isEnabled = false;
 		}
 		
 		
@@ -266,16 +260,6 @@ package editor_panel.tracks {
 		
 		public function get trackID():uint {
 			return $trackID;
-		}
-
-		
-		
-		/**
-		 * Get track enabled flag.
-		 * @return Track enabled flag.
-		 */
-		public function get isEnabled():Boolean {
-			return _isEnabled;
 		}
 
 		

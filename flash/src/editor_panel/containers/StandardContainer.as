@@ -211,6 +211,7 @@ package editor_panel.containers
 			var ret:StandardTrack = new StandardTrack(event.trackData.trackID);
 			// set track data
 			ret.trackData = event.trackData;
+			ret.trackData.trackVolume = .1;
 			
 			// load sample and waveform
 			ret.load();
