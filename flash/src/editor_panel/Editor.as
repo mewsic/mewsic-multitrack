@@ -368,10 +368,9 @@ package editor_panel {
 		
 		
 		public function killRecordTrack():void {
-			// kill track
-			_state = _STATE_STOPPED;
 			stop();
 
+			// kill track
 			_recordContainer.killTrack(_recordTrack);
 			_recordTrack = null;
 			
@@ -396,7 +395,6 @@ package editor_panel {
 				play();
 			}
 			else if(_state & _STATE_PAUSED) {
-				_state &= ~_STATE_PAUSED;
 				resume();
 			}
 			else {
@@ -404,14 +402,11 @@ package editor_panel {
 				return;
 			}
 
-			_state |= _STATE_PLAYING;
 			_refreshVisual();
 		}
 		
 		private function _onPauseButtonClick(event:MouseEvent = null):void {
 			if(_state & _STATE_PLAYING) {
-				_state &= ~_STATE_PLAYING;
-				_state |= _STATE_PAUSED;
 				pause();
 
 				_refreshVisual();
@@ -437,8 +432,6 @@ package editor_panel {
 			}
 			
 			if(_state & (_STATE_PAUSED|_STATE_PLAYING)) {
-				_state &= ~(_STATE_PAUSED|_STATE_PLAYING);
-				_state |= _STATE_STOPPED;
 				stop();
 			}
 
@@ -458,7 +451,6 @@ package editor_panel {
 
 		private function _onRecordStopButtonClick(event:MouseEvent):void {
 			if(_state & _STATE_RECORDING) {
-				_state = _STATE_STOPPED;
 				stopRecording();
 			} else {
 				Logger.warn("Machine error: should be in REC state, current: " + _state);
@@ -521,19 +513,18 @@ package editor_panel {
 				throw new Error('Machine error: should be in WAIT_REC state');
 			}
 			
+			_state &= ~_STATE_WAIT_REC;
 			_state |= _STATE_RECORDING;
+			_refreshVisual();
 
 			stop();
-			play();
-			_refreshVisual();
+			play();			
 		}
 
 
 
 		private function _onMicrophoneDenied(event:UserEvent = null):void {
-			_state = _STATE_STOPPED;
 			killRecordTrack();
-			
 			_refreshVisual();
 		}
 
@@ -552,7 +543,6 @@ package editor_panel {
 				if(!playingTracksCount) {
 					Logger.info('Song recording completed.');
 
-					_state = _STATE_STOPPED;
 					stopRecording();					
 
 					_refreshVisual();
@@ -564,8 +554,6 @@ package editor_panel {
 				if(!playingTracksCount) {
 					Logger.info('Song playback completed.');
 		
-					_state &= ~(_STATE_PLAYING|_STATE_PAUSED);
-					_state |= _STATE_STOPPED;
 					stop();
 					
 					_refreshVisual();
@@ -578,6 +566,8 @@ package editor_panel {
 		private function stopRecording():void {
 			var recorded:uint = _recordTrack.position;
 			_recordTrack.stopRecording();
+			
+			_state &= ~_STATE_RECORDING;
 
 			if(recorded) {
 				_standardContainer.addTrack(_recordTrack.trackID, {onComplete: _onEncodableTrackReady});
@@ -690,6 +680,10 @@ package editor_panel {
 		 */
 		public function play(event:Event = null):void {
 			Logger.info('Play!');
+
+			_state &= ~(_STATE_STOPPED|_STATE_PAUSED);
+			_state |= _STATE_PLAYING;
+
 			_standardContainer.play();
 		}
 
@@ -700,6 +694,10 @@ package editor_panel {
 		 */
 		public function stop(event:Event = null):void {
 			Logger.info('Stop playback.');
+	
+			_state &= ~(_STATE_PAUSED|_STATE_PLAYING);
+			_state |= _STATE_STOPPED;
+
 			_standardContainer.stop();
 		}
 
@@ -710,6 +708,10 @@ package editor_panel {
 		 */
 		public function pause(event:Event = null):void {
 			Logger.info('Pause playback.');
+
+			_state &= ~_STATE_PLAYING;
+			_state |= _STATE_PAUSED;
+
 			_standardContainer.pause();
 		}
 
@@ -720,6 +722,10 @@ package editor_panel {
 		 */
 		public function resume(event:Event = null):void {
 			Logger.info('Resume playback.');
+
+			_state &= ~_STATE_PAUSED;
+			_state |= _STATE_PLAYING;
+
 			_standardContainer.resume();
 		}
 
@@ -798,7 +804,7 @@ package editor_panel {
 		
 		
 		public function get currentPosition():uint {
-			if(_standardContainer.trackCount == 0 && _state == _STATE_RECORDING) {
+			if(_standardContainer.trackCount == 0 && _state & _STATE_RECORDING) {
 				// Recording first track
 				return _recordContainer.position;
 			} else {
@@ -824,7 +830,7 @@ package editor_panel {
 		
 		
 		private function _recountSongLength():void {
-			if((_state == _STATE_RECORDING) && _standardContainer.trackCount == 0) {
+			if((_state & _STATE_RECORDING) && _standardContainer.trackCount == 0) {
 				_milliseconds = RecordTrack.MAX_REC_LEN;
 			} else {
 				_milliseconds = _standardContainer.milliseconds;
@@ -1005,18 +1011,8 @@ package editor_panel {
 		}
 		
 		public function get playheadPosition():Number {
-			var msec:int;
-
-			if(_state == _STATE_RECORDING) {
-				// recording mode
-				msec = _recordTrack.position;
-			} else {
-				// playback mode
-				msec = currentPosition;
-			}
-
 			// Shift relative to waveform width
-			return msecToStageX(msec);
+			return msecToStageX(currentPosition);
 		}
 		
 		/**
