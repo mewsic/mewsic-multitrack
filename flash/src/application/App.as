@@ -374,11 +374,7 @@ package application {
 		 * @param e Event data
 		 */
 		private function _onHeightChange(e:AppEvent):void {
-			var sum:Number = 0;
-			sum += editor.height;
-			sum += 30;
-
-			stageHeight = sum;
+			stageHeight = editor.height;
 		}
 
 		

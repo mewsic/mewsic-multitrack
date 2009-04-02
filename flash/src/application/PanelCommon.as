@@ -120,7 +120,7 @@ package application {
 		 * @return Panel height
 		 */
 		override public function get height():Number {
-			return _currentHeight + 21;
+			return _currentHeight;
 		}
 
 		

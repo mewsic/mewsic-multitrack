@@ -102,8 +102,9 @@ package editor_panel {
 		// Volume toolbar - remove me
 		private var _globalVolumeToolbar:Toolbar;
 
-		private var _globalVolumeSlider:Slider;
+		//private var _globalVolumeSlider:Slider;
 		private var _globalVUMeter:VUMeter;
+		private var _vumeterEnabled:Boolean;
 
 		private var _topDivBM:QBitmap;
 
@@ -161,19 +162,15 @@ package editor_panel {
 
 			// add macro parts
 			// Header container
-			_headerSpr = new MorphSprite();			
+			_headerSpr = new MorphSprite({y:1});			
+			_topDivBM = new QBitmap({embed:new Embeds.backgroundTopGrey()});
 			
 			// tracks container
-			_containersContentSpr = new MorphSprite({y:Settings.HEADER_HEIGHT + 4, mask:_containersMaskSpr});
+			_containersContentSpr = new MorphSprite({y:Settings.HEADER_HEIGHT, mask:_containersMaskSpr});
 			
 			// footer container
 			_footerSpr = new MorphSprite({y:Settings.HEADER_HEIGHT, morphTime:Settings.STAGE_HEIGHT_CHANGE_TIME, morphTransition:'easeInOutQuad'}); 
 
-
-			// draw header container
-			// 
-			// add background
-			_topDivBM = new QBitmap({y:5, embed:new Embeds.backgroundTopGrey()});
 
 			// add controller toolbar
 			_controllerToolbar = new Toolbar({x:0, y:15});
@@ -884,6 +881,8 @@ package editor_panel {
 
 				_enableButton(_controllerSearchBtn);
 				_addtrackContainer.enableSearch();
+				
+				_vumeterEnabled = false;
 			}
 				
 			if(_state & _STATE_PLAYING) {
@@ -896,6 +895,8 @@ package editor_panel {
 
 				_enableButton(_controllerSearchBtn);
 				_addtrackContainer.enableSearch();
+
+				_vumeterEnabled = true;
 			}
 					
 			if(_state & _STATE_PAUSED) {
@@ -908,6 +909,8 @@ package editor_panel {
 
 				_enableButton(_controllerSearchBtn);
 				_addtrackContainer.enableSearch();
+
+				_vumeterEnabled = false;
 			}
 
 			if(_state & _STATE_WAIT_REC) {
@@ -921,6 +924,8 @@ package editor_panel {
 
 				_disableButton(_controllerUploadBtn);
 				_addtrackContainer.disableUpload();
+				
+				_vumeterEnabled = false;
 			}
 
 			if(_state & _STATE_RECORDING) {
@@ -934,6 +939,8 @@ package editor_panel {
 
 				_disableButton(_controllerUploadBtn);
 				_addtrackContainer.disableUpload();
+
+				_vumeterEnabled = false;
 			} else {
 				_enableButton(_controllerUploadBtn);
 			}
@@ -967,17 +974,17 @@ package editor_panel {
 
 			_addtrackContainer.morph({y:_standardContainer.height + _recordContainer.height});
 
-			_footerSpr.morph({y:_standardContainer.height + _recordContainer.height + _addtrackContainer.height + _containersContentSpr.y});
+			_footerSpr.morph({y:_standardContainer.height + _recordContainer.height + _addtrackContainer.height + _containersContentSpr.y - 35});
 
 			_containersMaskSpr.morph({height:_standardContainer.height + _recordContainer.height + _addtrackContainer.height});
 
 			if(_standardContainer.trackCount > 0) {
-				_playheadMaskSpr.morph({height:_standardContainer.height + 11, alpha:1});
+				_playheadMaskSpr.morph({height:_standardContainer.height + 8, alpha:1});
 			} else {
 				_playheadMaskSpr.morph({height:0, alpha:0});
 			}
 
-			$animateHeightChange(_standardContainer.height + _recordContainer.height + _addtrackContainer.height + _containersContentSpr.y + 40); // fixed 40px bottom margin
+			$animateHeightChange(_standardContainer.height + _recordContainer.height + _addtrackContainer.height + _containersContentSpr.y);
 		}
 
 		
@@ -1086,8 +1093,11 @@ package editor_panel {
 			}
 						
 			SoundMixer.computeSpectrum(_vuMeterBytes, false, 256);
-			_globalVUMeter.leftLevel = Math.abs(_vuMeterBytes.readFloat()) * 100;
-			_globalVUMeter.rightLevel = Math.abs(_vuMeterBytes.readFloat()) * 100;
+			
+			if(_vumeterEnabled) {
+				_globalVUMeter.leftLevel = Math.abs(_vuMeterBytes.readFloat()) * 100;
+				_globalVUMeter.rightLevel = Math.abs(_vuMeterBytes.readFloat()) * 100;
+			}
 		}
 
 		
