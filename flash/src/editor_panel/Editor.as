@@ -173,7 +173,7 @@ package editor_panel {
 
 
 			// add controller toolbar
-			_controllerToolbar = new Toolbar({x:0, y:15});
+			_controllerToolbar = new Toolbar({x:0, y:25});
 
 			_controllerPlayBtn = new Button({width:78, height:49, iconOffset:10,
 				skin:new Embeds.buttonPlayLarge(), icon:new Embeds.glyphPlayLarge()});

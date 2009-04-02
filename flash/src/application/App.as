@@ -103,8 +103,8 @@ package application {
 				// add fps meter and enable it if needed
 				if(Settings.isLogEnabled) {
 					fps = new FPS(Formats.fps);
-					fps.x = 520;
-					fps.y = 75;
+					fps.x = 600;
+					fps.y = 0;
 				}
 			}
 			catch(err1:Error) {
