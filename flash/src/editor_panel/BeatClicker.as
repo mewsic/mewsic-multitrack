@@ -45,8 +45,8 @@ package editor_panel {
 			_bpmSound = new Embeds.soundMetronomeSnd() as Sound;
 		}
 
-		
-		
+
+
 		/**
 		 * Set enabled flag.
 		 * @param value Enabled flag
@@ -56,15 +56,15 @@ package editor_panel {
 			else Logger.debug('Disabling beat click.');
 			_isEnabled = value;
 		}
-		
-		
+
+
 		
 		public function get isEnabled():Boolean {
 			return _isEnabled;
 		}
 
-		
-		
+
+
 		/**
 		 * Set BPM.
 		 * @param value BPM
@@ -78,8 +78,8 @@ package editor_panel {
 			}
 		}
 
-		
-		
+
+
 		/**
 		 * Start clicking.
 		 */
@@ -116,9 +116,9 @@ package editor_panel {
 				_isPaused = true;
 			}
 		}
-		
-		
-		
+
+
+
 		public function resume():void {
 			if(_isPaused) {
 				var v:int = ((_interval * _beatCounter) - _pauseOffset) * -1;
@@ -128,11 +128,6 @@ package editor_panel {
 				_isPaused = false;
 				_beatCounter++;
 			}
-		}
-		
-		
-		
-		public function seek(value:Number):void {
 		}
 		
 		

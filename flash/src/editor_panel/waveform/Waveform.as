@@ -114,7 +114,14 @@ package editor_panel.waveform {
 			removeChildren(_preloadInfoSpr, _preloadInfoBackBM, _preloadInfoLabelTF);
 			removeChildren(this, _waveformSpr, _waveformMaskSpr, _preloadInfoSpr);
 			
+
+			_waveformFrontBM.bitmapData = null;
+			_waveformBackBM.bitmapData = null;
+
 			_bitmap.dispose();
+			_bitmap = null;
+			
+			App.bulkLoader.remove(_waveformID);
 		}
 
 		
@@ -160,7 +167,7 @@ package editor_panel.waveform {
 		 */
 		private function _onWaveformDone(event:Event):void {
 			if(_bitmap) throw new Error("Bitmap already loaded for waveform " + _waveformID);
-			_bitmap = App.bulkLoader.getBitmapData(_waveformID, true).clone();
+			_bitmap = App.bulkLoader.getBitmapData(_waveformID, true);//.clone();
 
 			// draw preloader mask
 			Drawing.drawRect(_waveformLoadingSpr, 0, 0, Settings.WAVEFORM_WIDTH, 49, 0xFF0000, .3);

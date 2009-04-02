@@ -63,7 +63,20 @@ package editor_panel.sampler {
 			// remove sample
 			if(_sampleChannel) {
 				_sampleChannel.removeEventListener(Event.SOUND_COMPLETE, _onSoundComplete);
-			}			
+				_sampleChannel.stop();
+				_sampleChannel = null;
+			}
+			
+			if(_currentSoundTransform) {
+				_currentSoundTransform = null;
+			}
+			
+			if(_sampleSound) {
+				try { _sampleSound.close(); } catch(e:Error) { }
+				_sampleSound = null;
+			}
+			
+			App.bulkLoader.remove(_sampleID);
 		}
 
 		
