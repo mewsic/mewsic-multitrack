@@ -368,18 +368,38 @@ package editor_panel {
 		
 		
 		public function killRecordTrack():void {
-			stop();
+			_state &= ~(_STATE_RECORDING|_STATE_WAIT_REC);
 
 			// kill track
 			_recordContainer.killTrack(_recordTrack);
 			_recordTrack = null;
 			
+			stop();
+
 			// refresh buttons states
 			_refreshVisual();
 		}
 
 		
+
+		public function clickPlay():void {
+			_onPlayButtonClick();
+		}
 		
+		public function clickRecord():void {
+			_onRecordButtonClick();
+		}
+		
+		public function clickSearch():void {
+			_onSearchButtonClick();
+		}
+		
+		public function clickUpload():void {
+			_onUploadButtonClick();
+		}
+
+
+
 		/**
 		 *  Behavioural callback for the Play button: plays if stopped,
 		 *  sets pause if playing.
@@ -567,8 +587,6 @@ package editor_panel {
 			var recorded:uint = _recordTrack.position;
 			_recordTrack.stopRecording();
 			
-			_state &= ~_STATE_RECORDING;
-
 			if(recorded) {
 				_standardContainer.addTrack(_recordTrack.trackID, {onComplete: _onEncodableTrackReady});
 			}
@@ -854,10 +872,18 @@ package editor_panel {
 
 				// Set play active only if there's already a track loaded
 				_setButtonActive(_controllerPlayBtn, allTrackCount > 0);
-				// Set record active only if the stream service is available
-				_setButtonActive(_controllerRecordBtn, !App.connection.streamService.microphoneDenied);
+	
+				// Set record active only if the stream service and microphone are available
+				if(App.connection.streamService.microphoneDenied) {
+					_disableButton(_controllerRecordBtn);
+					_addtrackContainer.disableRecord();
+				} else {
+					_enableButton(_controllerRecordBtn);
+					_addtrackContainer.enableRecord();
+				}
 
 				_enableButton(_controllerSearchBtn);
+				_addtrackContainer.enableSearch();
 			}
 				
 			if(_state & _STATE_PLAYING) {
@@ -866,7 +892,10 @@ package editor_panel {
 				_controllerPauseBtn.visible = true;
 
 				_disableButton(_controllerRecordBtn);
+				_addtrackContainer.disableRecord();
+
 				_enableButton(_controllerSearchBtn);
+				_addtrackContainer.enableSearch();
 			}
 					
 			if(_state & _STATE_PAUSED) {
@@ -875,14 +904,23 @@ package editor_panel {
 				_controllerPauseBtn.visible = false;
 
 				_enableButton(_controllerRecordBtn);
+				_addtrackContainer.enableRecord();
+
 				_enableButton(_controllerSearchBtn);
+				_addtrackContainer.enableSearch();
 			}
 
 			if(_state & _STATE_WAIT_REC) {
 				_disableButton(_controllerPlayBtn);
+
 				_disableButton(_controllerRecordBtn);
+				_addtrackContainer.disableRecord();
+
 				_disableButton(_controllerSearchBtn);
+				_addtrackContainer.disableSearch();
+
 				_disableButton(_controllerUploadBtn);
+				_addtrackContainer.disableUpload();
 			}
 
 			if(_state & _STATE_RECORDING) {
@@ -890,19 +928,30 @@ package editor_panel {
 				_controllerRecordStopBtn.visible = true;
 
 				_disableButton(_controllerPlayBtn);
+
 				_disableButton(_controllerSearchBtn);
+				_addtrackContainer.disableSearch();
+
 				_disableButton(_controllerUploadBtn);
+				_addtrackContainer.disableUpload();
 			} else {
 				_enableButton(_controllerUploadBtn);
 			}
 
 			if(_state & _STATE_UPLOADING) {
 				_enableButton(_controllerPlayBtn);
+
 				_enableButton(_controllerSearchBtn);
+				_addtrackContainer.enableSearch();
+
 				_disableButton(_controllerRecordBtn);
+				_addtrackContainer.disableRecord();
+
 				_disableButton(_controllerUploadBtn);
+				_addtrackContainer.disableUpload();
 			} else {
 				_enableButton(_controllerUploadBtn);
+				_addtrackContainer.enableUpload();
 			}
 		}
 

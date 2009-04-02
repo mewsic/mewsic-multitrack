@@ -1,8 +1,12 @@
 package editor_panel.containers
 {
+	import application.App;
+	
 	import caurina.transitions.Tweener;
 	
 	import config.Embeds;
+	import config.Filters;
+	import config.Formats;
 	import config.Settings;
 	
 	import controls.Button;
@@ -14,6 +18,7 @@ package editor_panel.containers
 	import org.vancura.graphics.Drawing;
 	import org.vancura.graphics.QBitmap;
 	import org.vancura.graphics.QSprite;
+	import org.vancura.graphics.QTextField;
 	import org.vancura.util.addChildren;
 
 	public class AddtrackContainer extends MorphSprite
@@ -26,6 +31,8 @@ package editor_panel.containers
 		private var _tabSpr:QSprite;
 		private var _tabBackground:QBitmap;
 		private var _openButton:Button;
+		private var _addInstrumentSpr:QSprite;
+		private var _addInstrumentTF:QTextField;
 		
 		// closebutton
 		private var _closeButton:Button;
@@ -55,8 +62,16 @@ package editor_panel.containers
 			_tabSpr = new QSprite(); // visible
 
 			_tabBackground = new QBitmap({embed:new Embeds.backgroundTab()});
-			_openButton = new Button({x:5, y:10, skin:new Embeds.buttonKillTrack()}, Button.TYPE_NOSCALE_BUTTON);
+			_openButton = new Button({x:10, y:10, skin:new Embeds.buttonKillTrack()}, Button.TYPE_NOSCALE_BUTTON);
 			_openButton.addEventListener(MouseEvent.CLICK, _onOpenButtonClick, false, 0, true);
+
+			_addInstrumentTF = new QTextField({x:26, y:7, text:"Add new instrument", width:120,
+				defaultTextFormat:Formats.controllerText, filters:Filters.controllerText});
+
+			// Draw clickable sprite
+			_addInstrumentSpr = new QSprite({x:22, y:9, alpha:0, mouseEnabled:true, buttonMode:true, tabEnabled:false});
+			_addInstrumentSpr.addEventListener(MouseEvent.CLICK, _onOpenButtonClick, false, 0, true);
+			Drawing.drawRect(_addInstrumentSpr, 0, 0, _addInstrumentTF.width + 4, _addInstrumentTF.textHeight);
 
 			// add closebutton
 			_closeButton = new Button({x:Settings.TRACKCONTROLS_WIDTH + Settings.KILL_BUTTON_X, y:Settings.KILL_BUTTON_Y,
@@ -76,6 +91,10 @@ package editor_panel.containers
 			_searchButton = new Button({x:10, width:60, height:38, skin:new Embeds.buttonSearchSmall(), icon:new Embeds.glyphSearchSmall()});
 			_uploadButton = new Button({x:10, width:60, height:38, skin:new Embeds.buttonUploadSmall(), icon:new Embeds.glyphUploadSmall()});
 			
+			_recordButton.addEventListener(MouseEvent.CLICK, _onRecordButtonClick, false, 0, true);
+			_searchButton.addEventListener(MouseEvent.CLICK, _onSearchButtonClick, false, 0, true);
+			_uploadButton.addEventListener(MouseEvent.CLICK, _onUploadButtonClick, false, 0, true);
+			
 			_toolbar = new Toolbar({x:15, y:5, childSpacing:13});
 			_toolbar.addChildRight(_recordButton);
 			_toolbar.addChildRight(_searchButton);
@@ -91,7 +110,7 @@ package editor_panel.containers
 			$isMorphHeightEnabled = false;
 
 			// add to display list
-			addChildren(_tabSpr, _tabBackground, _openButton);
+			addChildren(_tabSpr, _tabBackground, _openButton, _addInstrumentTF, _addInstrumentSpr);
 			addChildren(_toolbarSpr, _toolbarBackground, _toolbar);
 			addChildren(this, _tabSpr, _closeButton, _toolbarSpr);
 			
@@ -108,11 +127,25 @@ package editor_panel.containers
 		
 		
 		
+		private function _onRecordButtonClick(event:MouseEvent):void {
+			App.editor.clickRecord();
+			close();
+		}
+		
+		private function _onSearchButtonClick(event:MouseEvent):void {
+			App.editor.clickSearch();
+			close();
+		}
+		
+		private function _onUploadButtonClick(event:MouseEvent):void {
+			App.editor.clickUpload();
+			close();
+		}
+		
 		public function open():void {
-			if(_isOpened) {
-				throw new Error('Panel already open');
-			}
-			
+			if(_isOpened)
+				return;
+
 			_isOpened = true;
 			_recountHeight();
 			
@@ -123,9 +156,8 @@ package editor_panel.containers
 		}
 		
 		public function close():void {
-			if(!_isOpened) {
-				throw new Error('Panel is not open');
-			}
+			if(!_isOpened)
+				return;
 			
 			_isOpened = false;
 
@@ -138,7 +170,43 @@ package editor_panel.containers
 		}
 
 
+		/// XXX NOT DRY, FUNCTION CODE REPEATED IN Editor.as
+		/// AND INLINE CODE REPEATED EVERYWHERE. FIXME FIXME
+		/// TODO
+		private function _setButtonActive(button:Button, active:Boolean):void {
+			button.areEventsEnabled = active;
+			button.alpha = active ? 1 : .4;
+		}
 		
+		private function _enableButton(button:Button):void {
+			_setButtonActive(button, true);
+		} 
+		
+		private function _disableButton(button:Button):void {
+			_setButtonActive(button, false);
+		}
+
+
+
+		public function disableRecord():void {
+			_disableButton(_recordButton);
+		}
+		public function enableRecord():void {			
+			_enableButton(_recordButton);
+		}
+		public function disableSearch():void {
+			_disableButton(_searchButton);			
+		}
+		public function enableSearch():void {			
+			_enableButton(_searchButton);
+		}
+		public function disableUpload():void {
+			_disableButton(_uploadButton);
+		}
+		public function enableUpload():void {			
+			_enableButton(_uploadButton);
+		}
+
 		private function _recountHeight():void {
 			_height = _isOpened ? _toolbarBackground.height : _tabBackground.height + 5;
 
