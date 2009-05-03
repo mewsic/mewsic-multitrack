@@ -386,7 +386,11 @@ package application {
 		 */
 		private function _onHelpServicesDone(event:RemotingEvent):void {
 			if(++_helpServicesCounter == 2) {
-				editor.postInit();				
+				editor.postInit();
+				if(_loadSong > 0) {
+				    Logger.debug("Automagically loading song " + _loadSong);
+				    editor.addSong(_loadSong);
+				}				
 			}
 		}
 
