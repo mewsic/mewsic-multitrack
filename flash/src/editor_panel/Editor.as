@@ -371,6 +371,12 @@ package editor_panel {
 			// refresh buttons states
 			_refreshVisual();
 		}
+		
+		
+		
+		public function status():Object {
+		    return({runtime: App.getTimeCode(_standardContainer.milliseconds), tracks: _standardContainer.tracks()});
+		}
 
 		
 
@@ -671,6 +677,9 @@ package editor_panel {
 		private function _onTrackFullyLoaded(event:TrackEvent):void {
 			var t:StandardTrack = event.data.track;
 			t.removeEventListener(TrackEvent.SAMPLE_DOWNLOADED, _onTrackFullyLoaded);
+
+            // Dispatch to the main app to call refreshStatus();
+            dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, false, true));
 			
 			if(_state & (_STATE_PAUSED|_STATE_PLAYING)) {
 				Logger.info("SEEK to " + _standardContainer.position + " after completed download");
@@ -1029,6 +1038,9 @@ package editor_panel {
 		private function _onPlayableTrackAdded(event:ContainerEvent):void {
 			var t:StandardTrack = event.data.track;
 			t.addEventListener(TrackEvent.SAMPLE_DOWNLOADED, _onTrackFullyLoaded, false, 0, true);
+            
+            // Dispatch to the main app to call refreshStatus();
+            dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, false, true));
 			
 			// refresh buttons states
 			_refreshVisual();
@@ -1044,6 +1056,9 @@ package editor_panel {
 				stop();
 			
 			}
+			
+			// Dispatch to the main app to call refreshStatus();
+			dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_KILL, false, true));
 
 			// refresh buttons states
 			_refreshVisual();

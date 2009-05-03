@@ -15,6 +15,7 @@ package application {
 	import de.popforge.utils.sprintf;
 	
 	import editor_panel.Editor;
+	import editor_panel.containers.ContainerEvent;
 	
 	import flash.display.*;
 	import flash.events.*;
@@ -121,17 +122,20 @@ package application {
 			connection.instrumentsService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
 			connection.coreUserService.addEventListener(RemotingEvent.REQUEST_DONE, _onHelpServicesDone, false, 0, true);
 			
+			editor.addEventListener(ContainerEvent.TRACK_ADDED, _onEditorTracksChanged, false, 0, true);
+			editor.addEventListener(ContainerEvent.TRACK_KILL, _onEditorTracksChanged, false, 0, true);
+			
 			// add this events
 			this.addEventListener(Event.ENTER_FRAME, _onEnterFrame, false, 0, true);
 			this.addEventListener(AppEvent.HEIGHT_CHANGE, _onHeightChange, false, 0, true);
-			//this.addEventListener(AppEvent.REFRESH_TOP_PANE, _onRefreshTopPane, false, 0, true);
 			this.addEventListener(AppEvent.RELOAD_PAGE, _onReloadPage, false, 0, true);
 
 			// init javascript to actionscript calls
 			try {
 				ExternalInterface.addCallback('loadSong', _onLoadSong);
 				ExternalInterface.addCallback('loadTrack', _onLoadTrack);
-				ExternalInterface.addCallback('killRecordTrack', _onKillRecordTrack);
+				//ExternalInterface.addCallback('killRecordTrack', _onKillRecordTrack);
+				ExternalInterface.addCallback('status', _onStatusRequest);
 			}
 			catch(err2:Error) {
 				// could not set up js bridge
@@ -387,22 +391,13 @@ package application {
 		private function _onHelpServicesDone(event:RemotingEvent):void {
 			if(++_helpServicesCounter == 2) {
 				editor.postInit();
+				_onEditorTracksChanged();
+
 				if(_loadSong > 0) {
 				    Logger.debug("Automagically loading song " + _loadSong);
 				    editor.addSong(_loadSong);
 				}				
 			}
-		}
-
-		
-		
-		/**
-		 * Refresh top pane in HTML, call JavaScript.
-		 * @param event Event data
-		 */
-		private function _onRefreshTopPane(event:AppEvent):void {
-			Logger.debug('Refreshing top pane');
-			ExternalInterface.call('refreshTopPane');
 		}
 
 		
@@ -432,6 +427,14 @@ package application {
 
 		 private function _onKillRecordTrack():void {
 			App.editor.killRecordTrack();
+		 }
+		 
+		 private function _onStatusRequest():Object {
+		     return App.editor.status();
+		 }
+		 
+		 private function _onEditorTracksChanged(event:ContainerEvent = null):void {
+		     ExternalInterface.call('refreshStatus', App.editor.status());
 		 }
 	}
 }

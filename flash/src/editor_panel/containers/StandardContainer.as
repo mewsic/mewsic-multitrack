@@ -243,7 +243,7 @@ package editor_panel.containers
 			ret.addEventListener(TrackEvent.REFRESH, _onTrackRefresh, false, 0, true);
 
 			// dispatch events
-			dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, true, false, {track:ret}));					
+			dispatchEvent(new ContainerEvent(ContainerEvent.TRACK_ADDED, false, false, {track:ret}));					
 		}
 
 
@@ -483,6 +483,14 @@ package editor_panel.containers
 		
 		public function get playingTracksCount():uint {
 			return $trackList.filter(function(t:StandardTrack, idx:uint, ary:Array):Boolean { return t.isPlaying; }).length;
+		}
+		
+		
+		
+		public function tracks():Array {
+		    return($trackList.map(function(t:StandardTrack, idx:int, ary:Array):Object {
+		        return({id:t.trackID, tags:t.trackData.trackTags, instrument:t.trackData.trackInstrumentID})
+		    }));
 		}
 
 
